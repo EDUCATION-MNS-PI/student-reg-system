@@ -16,7 +16,7 @@ pages['bulk-data'] = function() {
                 <div class="card-body">
                     <p style="color:var(--text-secondary); margin-bottom: 20px; font-size: 0.9rem;">นำเข้าหรือส่งออกรายชื่อและข้อมูลส่วนตัวพื้นฐานของนักศึกษา</p>
                     <div style="display:flex; flex-direction:column; gap:10px;">
-                        <button class="btn btn-outline" onclick="window.downloadCSVTemplate('students')" style="width:100%;">
+                        <button class="btn btn-outline" onclick="window.downloadBulkCSVTemplate('students')" style="width:100%;">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px; vertical-align:middle;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                             ดาวน์โหลด Template ข้อมูลนักศึกษา
                         </button>
@@ -37,7 +37,7 @@ pages['bulk-data'] = function() {
                 <div class="card-body">
                     <p style="color:var(--text-secondary); margin-bottom: 20px; font-size: 0.9rem;">อัปโหลดผลการเรียนของนักเรียน หรือส่งออกเกรดรวมทั้งหมด</p>
                     <div style="display:flex; flex-direction:column; gap:10px;">
-                        <button class="btn btn-outline" onclick="window.downloadCSVTemplate('grades')" style="width:100%;">
+                        <button class="btn btn-outline" onclick="window.downloadBulkCSVTemplate('grades')" style="width:100%;">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px; vertical-align:middle;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                             ดาวน์โหลด Template ผลการศึกษา
                         </button>
@@ -58,7 +58,7 @@ pages['bulk-data'] = function() {
                 <div class="card-body">
                     <p style="color:var(--text-secondary); margin-bottom: 20px; font-size: 0.9rem;">นำเข้าข้อมูลรายวิชาที่นักศึกษาลงทะเบียนในแต่ละภาคเรียน</p>
                     <div style="display:flex; flex-direction:column; gap:10px;">
-                        <button class="btn btn-outline" onclick="window.downloadCSVTemplate('registration')" style="width:100%;">
+                        <button class="btn btn-outline" onclick="window.downloadBulkCSVTemplate('registration')" style="width:100%;">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px; vertical-align:middle;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                             ดาวน์โหลด Template ลงทะเบียน
                         </button>
@@ -78,7 +78,7 @@ pages['bulk-data'] = function() {
                 <div class="card-body">
                     <p style="color:var(--text-secondary); margin-bottom: 20px; font-size: 0.9rem;">ข้อมูลสถานะสอบ เค้าโครง และวันสอบป้องกัน (Milestones)</p>
                     <div style="display:flex; flex-direction:column; gap:10px;">
-                        <button class="btn btn-outline" onclick="window.downloadCSVTemplate('thesis')" style="width:100%;">
+                        <button class="btn btn-outline" onclick="window.downloadBulkCSVTemplate('thesis')" style="width:100%;">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px; vertical-align:middle;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                             ดาวน์โหลด Template ความก้าวหน้า
                         </button>
@@ -98,7 +98,7 @@ pages['bulk-data'] = function() {
                 <div class="card-body">
                     <p style="color:var(--text-secondary); margin-bottom: 20px; font-size: 0.9rem;">อัปโหลดตารางเรียนตารางสอนรายภาคเรียนและห้องเรียน</p>
                     <div style="display:flex; flex-direction:column; gap:10px;">
-                        <button class="btn btn-outline" onclick="window.downloadCSVTemplate('schedule')" style="width:100%;">
+                        <button class="btn btn-outline" onclick="window.downloadBulkCSVTemplate('schedule')" style="width:100%;">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px; vertical-align:middle;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                             ดาวน์โหลด Template ตารางสอน
                         </button>
@@ -113,7 +113,7 @@ pages['bulk-data'] = function() {
     </div>`;
 };
 
-window.downloadCSVTemplate = function(type) {
+window.downloadBulkCSVTemplate = function(type) {
     let headers = [];
     let filename = '';
     
