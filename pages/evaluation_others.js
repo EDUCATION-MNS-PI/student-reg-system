@@ -192,25 +192,25 @@ function getEvalQuestions(mockKey, fallbackKey) {
 
 // 1. ประเมินความพึงพอใจต่อการบริหารหลักสูตร
 pages['eval-curriculum'] = function () {
-    return renderGenericEvaluationForm('curriculum', "ประเมินความพึงพอใจต่อการบริหารหลักสูตร", "กรุณาประเมินระดับความพึงพอใจต่อภาพรวมของการบริหารหลักสูตร", getEvalQuestions('evalCurriculumQuestions', 'curriculum'));
+    return renderGenericEvaluationForm('curriculum', "แบบประเมินความพึงพอใจต่อการบริหารหลักสูตร", "กรุณาประเมินระดับความพึงพอใจต่อภาพรวมของการบริหารหลักสูตร", getEvalQuestions('evalCurriculumQuestions', 'curriculum'));
 };
 
 // 2. ประเมินความพึงพอใจต่อสิ่งสนับสนุนการเรียนรู้
 pages['eval-facilities'] = function () {
-    return renderGenericEvaluationForm('facilities', "ประเมินความพึงพอใจต่อสิ่งสนับสนุนการเรียนรู้", "แบบประเมินทรัพยากร ห้องสมุด ระบบอินเทอร์เน็ต คอมพิวเตอร์ และสถานที่", getEvalQuestions('evalFacilitiesQuestions', 'facilities'));
+    return renderGenericEvaluationForm('facilities', "แบบประเมินความพึงพอใจต่อสิ่งสนับสนุนการเรียนรู้", "แบบประเมินทรัพยากร ห้องสมุด ระบบอินเทอร์เน็ต คอมพิวเตอร์ และสถานที่", getEvalQuestions('evalFacilitiesQuestions', 'facilities'));
 };
 
 // 3. ประเมินความพึงพอใจต่อการบริการนักศึกษา
 pages['eval-services'] = function () {
-    return renderGenericEvaluationForm('services', "ประเมินความพึงพอใจต่อการบริการนักศึกษา", "ประเมินการบริการของเจ้าหน้าที่ การให้คำปรึกษา และสวัสดิการมหาวิทยาลัย", getEvalQuestions('evalServicesQuestions', 'services'));
+    return renderGenericEvaluationForm('services', "แบบประเมินความพึงพอใจต่อการบริการนักศึกษา", "ประเมินการบริการของเจ้าหน้าที่ การให้คำปรึกษา และสวัสดิการมหาวิทยาลัย", getEvalQuestions('evalServicesQuestions', 'services'));
 };
 
 // 4. ประเมินผลลัพธ์การเรียนรู้ระดับหลักสูตร
 pages['eval-learning-outcomes'] = function () {
-    return renderGenericEvaluationForm('learning-outcomes', "ประเมินผลลัพธ์การเรียนรู้ (หลักสูตร)", "ประเมินพัฒนาการของตนเองตามเกณฑ์มาตรฐานผลลัพธ์การเรียนรู้ (PLOs)", getEvalQuestions('evalLearningOutcomesQuestions', 'learning-outcomes'));
+    return renderGenericEvaluationForm('learning-outcomes', "แบบประเมินผลลัพธ์การเรียนรู้ (หลักสูตร)", "ประเมินพัฒนาการของตนเองตามเกณฑ์มาตรฐานผลลัพธ์การเรียนรู้ (PLOs)", getEvalQuestions('evalLearningOutcomesQuestions', 'learning-outcomes'));
 };
 
 // 5. ประเมินอัตลักษณ์ผู้นำ
 pages['eval-leadership'] = function () {
-    return renderGenericEvaluationForm('leadership', "ประเมินอัตลักษณ์ผู้นำ", "แบบประเมินทักษะและพฤติกรรมสะท้อนความเป็นผู้นำของนักศึกษา", getEvalQuestions('evalLeadershipQuestions', 'leadership'));
+    return renderGenericEvaluationForm('leadership', "แบบประเมินอัตลักษณ์ผู้นำ", "แบบประเมินทักษะและพฤติกรรมสะท้อนความเป็นผู้นำของนักศึกษา", getEvalQuestions('evalLeadershipQuestions', 'leadership'));
 };

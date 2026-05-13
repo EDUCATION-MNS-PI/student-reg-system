@@ -11,65 +11,15 @@ pages['menu-permissions'] = function() {
         </div>`;
     }
 
-    const menuItems = [
-        { id: 'nav-dashboard', label: 'แดชบอร์ด', section: 'หน้าหลัก' },
-        { id: 'nav-analytics-reports', label: 'สถิติและรายงาน', section: 'หน้าหลัก' },
-        
-        { id: 'nav-student-profile', label: 'ข้อมูลนักศึกษา', section: 'ทะเบียน' },
-        { id: 'nav-teacher-profile', label: 'ข้อมูลอาจารย์', section: 'ทะเบียน' },
-        { id: 'nav-special-lecturers', label: 'ข้อมูลอาจารย์พิเศษ', section: 'ทะเบียน' },
-        { id: 'nav-alumni', label: 'ศิษย์เก่า', section: 'ทะเบียน' },
-        { id: 'nav-new-registration', label: 'ลงทะเบียนนักศึกษาใหม่', section: 'ทะเบียน' },
-        { id: 'nav-teacher-registration', label: 'เพิ่มข้อมูลอาจารย์', section: 'ทะเบียน' },
-        { id: 'nav-courses', label: 'รายวิชา', section: 'ทะเบียน' },
-        { id: 'nav-study-plan', label: 'แผนการศึกษา', section: 'ทะเบียน' },
-        { id: 'nav-manage-curriculum', label: 'จัดการหลักสูตร', section: 'ทะเบียน' },
-        { id: 'nav-student-status', label: 'ตรวจสอบสภาพนักศึกษา', section: 'ทะเบียน' },
-        
-        { id: 'nav-grades', label: 'ผลการเรียน / เกรด', section: 'ผลการศึกษา' },
-        { id: 'nav-schedule', label: 'ตารางเรียน', section: 'ผลการศึกษา' },
-        { id: 'nav-transcript', label: 'ใบแสดงผลการศึกษา', section: 'ผลการศึกษา' },
-        { id: 'nav-exams', label: 'ผลการสอบ', section: 'ผลการศึกษา' },
-        { id: 'nav-graduation', label: 'ยื่นเรื่องสำเร็จการศึกษา', section: 'ผลการศึกษา' },
-        
-        { id: 'nav-eval-course', label: 'ประเมินรายวิชา', section: 'แบบประเมิน' },
-        { id: 'nav-eval-instructor', label: 'ประเมินอาจารย์ผู้สอน', section: 'แบบประเมิน' },
-        { id: 'nav-eval-curriculum', label: 'ประเมินการบริหารหลักสูตร', section: 'แบบประเมิน' },
-        { id: 'nav-eval-facilities', label: 'ประเมินสิ่งสนับสนุนการเรียนรู้', section: 'แบบประเมิน' },
-        { id: 'nav-eval-services', label: 'ประเมินการบริการนักศึกษา', section: 'แบบประเมิน' },
-        { id: 'nav-eval-learning-outcomes', label: 'ประเมินผลลัพธ์การเรียนรู้ (หลักสูตร)', section: 'แบบประเมิน' },
-        { id: 'nav-eval-leadership', label: 'แบบประเมินอัตลักษณ์ผู้นำ', section: 'แบบประเมิน' },
-        
-        { id: 'nav-thesis-dashboard', label: 'รายงานความก้าวหน้า', section: 'วิทยานิพนธ์' },
-        { id: 'nav-thesis-reports', label: 'รายงานสรุปวิทยานิพนธ์', section: 'วิทยานิพนธ์' },
-        { id: 'nav-thesis-update', label: 'อัปเดตสถานะวิทยานิพนธ์', section: 'วิทยานิพนธ์' },
-        { id: 'nav-thesis-topic', label: 'แจ้งหัวข้อวิทยานิพนธ์', section: 'วิทยานิพนธ์' },
-        { id: 'nav-thesis-advisor', label: 'อาจารย์ที่ปรึกษาวิทยานิพนธ์', section: 'วิทยานิพนธ์' },
-        { id: 'nav-thesis-advising-log', label: 'บันทึกการพบที่ปรึกษา', section: 'วิทยานิพนธ์' },
-        { id: 'nav-academic-advisor', label: 'อาจารย์ที่ปรึกษาด้านวิชาการ', section: 'วิทยานิพนธ์' },
-        { id: 'nav-exam-committee', label: 'คณะกรรมการสอบ', section: 'วิทยานิพนธ์' },
-        { id: 'nav-student-presentation', label: 'นำเสนอผลงานของนักศึกษา', section: 'วิทยานิพนธ์' },
-        
-        { id: 'nav-payments', label: 'ค่าธรรมเนียม / การชำระเงิน', section: 'การเงิน' },
-        { id: 'nav-teaching-fees', label: 'ค่าตอบแทนการสอน', section: 'การเงิน' },
-        
-        { id: 'nav-petitions-student', label: 'ยื่นคำร้อง', section: 'บริการ' },
-        { id: 'nav-documents-status', label: 'ติดตามสถานะเอกสาร', section: 'บริการ' },
-        { id: 'nav-documents-admin', label: 'อนุมัติเอกสาร', section: 'บริการ' },
-        { id: 'nav-manage-evals', label: 'จัดการแบบประเมิน (Admin)', section: 'บริการ' },
-        { id: 'nav-eval-reports', label: 'รายงานผลการประเมิน', section: 'บริการ' },
-        { id: 'nav-calendar', label: 'ปฏิทินการศึกษา', section: 'บริการ' },
-        { id: 'nav-announcements', label: 'ประกาศ', section: 'บริการ' },
-        
-        { id: 'nav-settings', label: 'ตั้งค่าระบบ', section: 'ตั้งค่าระบบ' },
-        { id: 'nav-bulk-data', label: 'นำเข้า/ส่งออกข้อมูล (Bulk)', section: 'ตั้งค่าระบบ' },
-        { id: 'nav-user-management', label: 'จัดการผู้ใช้งาน', section: 'ตั้งค่าระบบ' },
-        { id: 'nav-login-history', label: 'ประวัติการเข้าสู่ระบบ', section: 'ตั้งค่าระบบ' },
-        { id: 'nav-menu-permissions', label: 'จัดการสิทธิ์การเข้าถึงเมนู', section: 'ตั้งค่าระบบ' },
-        { id: 'nav-manage-schedule', label: 'จัดการตารางเรียน', section: 'ตั้งค่าระบบ' },
-        { id: 'nav-manage-forms', label: 'จัดการแบบฟอร์ม', section: 'ตั้งค่าระบบ' },
-        { id: 'nav-admission', label: 'จัดการการรับสมัคร', section: 'ตั้งค่าระบบ' }
-    ];
+    // Dynamic Menu Discovery: Scan the sidebar to get all current menu items
+    const menuItems = Array.from(document.querySelectorAll('.nav-section')).flatMap(section => {
+        const sectionTitle = section.querySelector('.nav-section-title')?.innerText || 'ทั่วไป';
+        return Array.from(section.querySelectorAll('.nav-item')).map(nav => ({
+            id: nav.id,
+            label: nav.querySelector('.nav-label')?.innerText || nav.innerText.trim(),
+            section: sectionTitle
+        }));
+    });
 
     const roles = [
         { id: 'student', label: 'นักศึกษา' },

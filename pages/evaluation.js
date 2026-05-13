@@ -84,7 +84,7 @@ pages['eval-course'] = function () {
     return `
     <div class="animate-in">
         <div class="page-header">
-            <h1 class="page-title">ประเมินการจัดการเรียนการสอนของรายวิชา</h1>
+            <h1 class="page-title">แบบประเมินการจัดการเรียนการสอนของรายวิชา</h1>
             <p class="page-subtitle">เลือกรายวิชาที่ต้องการประเมินจากรายวิชาที่ท่านลงทะเบียนเรียน</p>
         </div>
         
@@ -262,7 +262,7 @@ pages['eval-instructor'] = function () {
     return `
     <div class="animate-in">
         <div class="page-header">
-            <h1 class="page-title">ประเมินอาจารย์ผู้สอน</h1>
+            <h1 class="page-title">แบบประเมินอาจารย์ผู้สอน</h1>
             <p class="page-subtitle">เลือกประเมินเฉพาะอาจารย์ที่ท่านเรียนด้วยในแต่ละวิชา</p>
         </div>
 
