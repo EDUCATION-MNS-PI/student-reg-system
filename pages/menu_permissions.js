@@ -51,7 +51,6 @@ pages['menu-permissions'] = function() {
         { id: 'nav-student-presentation', label: 'นำเสนอผลงานของนักศึกษา', section: 'วิทยานิพนธ์' },
         
         { id: 'nav-payments', label: 'ค่าธรรมเนียม / การชำระเงิน', section: 'การเงิน' },
-        { id: 'nav-fee-reports', label: 'รายงานค่าธรรมเนียม', section: 'การเงิน' },
         { id: 'nav-teaching-fees', label: 'ค่าตอบแทนการสอน', section: 'การเงิน' },
         
         { id: 'nav-petitions-student', label: 'ยื่นคำร้อง', section: 'บริการ' },
