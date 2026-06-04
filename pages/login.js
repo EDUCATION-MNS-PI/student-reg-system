@@ -1,4 +1,4 @@
-// ============================
+﻿// ============================
 // Authentication & Login Control
 // ============================
 
@@ -182,7 +182,7 @@ function performLogin(role, userData) {
 
     // Force a re-render/navigate to landing page only on fresh login
     if (typeof navigateTo === 'function') {
-        const landingPage = (role === 'student') ? 'student-profile' : 'dashboard';
+        const landingPage = (role === 'student') ? 'student-dashboard' : 'dashboard';
         navigateTo(landingPage);
     }
 }

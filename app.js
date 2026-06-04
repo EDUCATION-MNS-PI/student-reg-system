@@ -1,4 +1,4 @@
-// ============================
+﻿// ============================
 // Main Application Controller
 // (loaded AFTER core.js, data.js, and page scripts)
 // ============================
@@ -15,7 +15,7 @@ if (savedUser) {
         window.tempSession = { role, userData };
         // If student, the landing page should be their profile, not the dashboard
         if (role === 'student') {
-            currentPage = 'student-profile';
+            currentPage = 'student-dashboard';
         }
     } catch (e) {
         localStorage.removeItem('currentUser');
@@ -63,12 +63,12 @@ window.hasPermission = function (actionKey) {
 function renderPage() {
     if (!pages[currentPage]) {
         console.error('Page not found:', currentPage);
-        currentPage = (window.currentUserRole === 'student') ? 'student-profile' : 'dashboard'; 
+        currentPage = (window.currentUserRole === 'student') ? 'student-dashboard' : 'dashboard'; 
     }
 
     // Role-based Access Control: Prevent students from seeing the dashboard
     if (window.currentUserRole === 'student' && currentPage === 'dashboard') {
-        currentPage = 'student-profile';
+        currentPage = 'student-dashboard';
     }
 
     try {
