@@ -1,4 +1,4 @@
-﻿// ============================
+﻿﻿// ============================
 // Main Application Controller
 // (loaded AFTER core.js, data.js, and page scripts)
 // ============================
@@ -769,7 +769,7 @@ async function bootApp() {
                 syncActiveStudentData();
             }
         }
-        MOCK.permissions = allData.permissions || [];
+        if (allData.permissions && allData.permissions.length > 0) { MOCK.permissions = allData.permissions; }
 
         // Set sync flags to prevent redundant per-page syncs
         MOCK.adminDocsSyncDone = true;
