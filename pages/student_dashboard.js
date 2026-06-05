@@ -445,7 +445,7 @@ pages['student-dashboard'] = function () {
             </div>
             <div style="text-align: right; min-width: 150px;">
                 <div style="font-size: 0.8rem; opacity: 0.7; margin-bottom: 2px;">ภาคเรียนปัจจุบัน</div>
-                <div style="font-size: 1.15rem; font-weight: 700; color: #fbbf24;">ภาคการศึกษาที่ 2/2568</div>
+                <div style="font-size: 1.15rem; font-weight: 700; color: #fbbf24;">${MOCK.activeSemester}/${MOCK.activeYear}</div>
             </div>
         </div>
 

@@ -12,6 +12,16 @@ let registrationStep = 1;
 window.CURRENT_ACADEMIC_YEAR = 2568;
 window.CURRENT_SEMESTER = 3; // 1=First, 2=Second, 3=Summer
 
+// ====== Sync localStorage with CURRENT_SEMESTER ======
+// This ensures MOCK.activeSemester always reflects the configured semester,
+// overriding any stale localStorage value from a previous semester.
+(function syncActiveSemester() {
+    const semLabel = window.CURRENT_SEMESTER === 1 ? 'ภาคการศึกษาที่ 1' :
+                     window.CURRENT_SEMESTER === 2 ? 'ภาคการศึกษาที่ 2' : 'ภาคฤดูร้อน';
+    localStorage.setItem('activeSemester', semLabel);
+    localStorage.setItem('activeYear', String(window.CURRENT_ACADEMIC_YEAR));
+})();
+
 // ====== Utility Functions ======
 function formatMoney(n) {
     return n.toLocaleString('th-TH');
