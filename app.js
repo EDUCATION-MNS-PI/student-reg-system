@@ -269,7 +269,7 @@ async function bootApp() {
         } = allData;
 
         MOCK.applicants = applicantsData || [];
-        MOCK.documentTemplates = documentTemplatesData || [];
+        MOCK.documentTemplates = (documentTemplatesData && documentTemplatesData.length > 0) ? documentTemplatesData : (MOCK.documentTemplates || []);
         MOCK.thesisProgress = thesisProgressData || [];
         MOCK.graduationRequests = graduationRequestsData || [];
         MOCK.allExams = examsData || []; 
