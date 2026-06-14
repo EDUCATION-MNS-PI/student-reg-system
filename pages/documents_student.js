@@ -66,7 +66,7 @@ pages['petitions-student'] = function () {
                         <label class="form-label">หัวเรื่อง / แบบฟอร์ม <span style="color:var(--danger-color)">*</span></label>
                         <select class="form-select" id="docTemplateForm" style="height:45px;">
                             <option value="">-- กรุณาเลือกแบบฟอร์ม --</option>
-                            ${templates.map(t => `<option value="${t.id}">[${t.id}] ${t.name}</option>`).join('')}
+                            ${templates.map(t => `<option value="${t.id}">${t.id} - ${t.name}</option>`).join('')}
                         </select>
                     </div>
                     <div class="form-group">
@@ -735,4 +735,6 @@ window.submitStudentDocument = function () {
         }
     })();
 };
+
+
 
