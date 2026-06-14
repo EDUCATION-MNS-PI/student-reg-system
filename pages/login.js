@@ -189,6 +189,7 @@ function performLogin(role, userData) {
 
 window.applyLoginState = function(role, userData) {
     window.currentUserRole = role;
+    if (typeof currentPage !== 'undefined' && currentPage === 'dashboard' && role === 'student') { currentPage = 'student-dashboard'; }
     window.currentUserData = userData;
     window.isAdmin = (role === 'admin');
     
@@ -375,3 +376,4 @@ function formatLoginIdCard(input) {
     }
     input.value = formatted;
 }
+
