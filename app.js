@@ -274,20 +274,7 @@ async function bootApp() {
         MOCK.graduationRequests = graduationRequestsData || [];
         MOCK.allExams = examsData || []; 
 
-        MOCK.schedule.items = (schedulesData || []).map(s => ({
-            day: parseInt(s.Day) || 0,
-            startSlot: parseInt(s.StartSlot) || 0,
-            endSlot: parseInt(s.EndSlot) || 0,
-            code: s.CourseCode || '',
-            name: s.CourseName || '',
-            room: s.Room || '',
-            color: s.Color || 'blue',
-            instructorId: s.InstructorID || '',
-            instructorName: s.InstructorName || '',
-            semester: s.Semester || '',
-            academicYear: s.AcademicYear || '',
-            section: s.Section || ''
-        }));
+        if (schedulesData && schedulesData.length > 0) { MOCK.schedule.items = schedulesData.map(s => ({ day: parseInt(s.Day) || 0, startSlot: parseInt(s.StartSlot) || 0, endSlot: parseInt(s.EndSlot) || 0, code: s.CourseCode || '', name: s.CourseName || '', room: s.Room || '', color: s.Color || 'blue', instructorId: s.InstructorID || '', instructorName: s.InstructorName || '', semester: s.Semester || '', academicYear: s.AcademicYear || '', section: s.Section || '' })); }
 
         // Sync header semester badge with global state
         const headerSemEl = document.getElementById('headerSemester');
@@ -1301,3 +1288,4 @@ if (typeof window.showToast !== 'function') {
 }
 
 bootApp();
+

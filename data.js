@@ -88,11 +88,14 @@ const MOCK = {
     schedule: {
         timeSlots: ['08:00-09:00', '09:00-10:00', '10:00-11:00', '11:00-12:00', '12:00-13:00', '13:00-14:00', '14:00-15:00', '15:00-16:00'],
         days: ['จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์'],
-        items: [
-            { day: 0, startSlot: 0, endSlot: 2, code: 'NSG601', name: 'Advanced Nursing Science', room: 'R401', color: 'blue', instructorId: 'teacher-01', instructorName: 'ผศ.ดร.พนา รัตน์' },
-            { day: 1, startSlot: 4, endSlot: 7, code: 'NSG602', name: 'Nursing Research', room: 'R402', color: 'green', instructorId: 'teacher-02', instructorName: 'รศ.ดร.สมศรี ใจสว่าง' },
-            { day: 2, startSlot: 0, endSlot: 3, code: 'NSG603', name: 'Clinical Pharmacology', room: 'R405', color: 'purple', instructorId: 'teacher-01', instructorName: 'ผศ.ดร.พนา รัตน์' },
-            { day: 3, startSlot: 1, endSlot: 3, code: 'NSG604', name: 'Community Health', room: 'R101', color: 'orange', instructorId: 'teacher-03', instructorName: 'ดร.มานะ อดทน' }
+                items: [
+            { day: 0, startSlot: 0, endSlot: 2, code: 'NSG601', name: 'Advanced Nursing Science', room: 'R401', color: 'blue', instructorId: 'teacher-01', instructorName: 'รศ.ดร.สุขใจ ดีเสมอ', semester: '1', academicYear: '2567' },
+            { day: 1, startSlot: 4, endSlot: 7, code: 'NSG602', name: 'Nursing Research', room: 'R402', color: 'green', instructorId: 'teacher-02', instructorName: 'ผศ.ดร.สมชาย ใจทน', semester: '1', academicYear: '2567' },
+            { day: 2, startSlot: 0, endSlot: 3, code: 'NSG603', name: 'Clinical Pharmacology', room: 'R405', color: 'purple', instructorId: 'teacher-01', instructorName: 'รศ.ดร.สุขใจ ดีเสมอ', semester: '1', academicYear: '2567' },
+            { day: 3, startSlot: 1, endSlot: 3, code: 'NSG604', name: 'Community Health', room: 'R101', color: 'orange', instructorId: 'teacher-03', instructorName: 'อ.มานี มีตา', semester: '2', academicYear: '2567' },
+            { day: 0, startSlot: 1, endSlot: 3, code: 'NSG605', name: 'Advanced Health Assessment', room: 'R405', color: 'teal', instructorId: 'teacher-02', instructorName: 'ผศ.ดร.สมชาย ใจทน', semester: '2', academicYear: '2567' },
+            { day: 4, startSlot: 4, endSlot: 6, code: 'NSG601', name: 'Advanced Nursing Science', room: 'R401', color: 'blue', instructorId: 'teacher-01', instructorName: 'รศ.ดร.สุขใจ ดีเสมอ', semester: 'ภาคฤดูร้อน', academicYear: '2568' },
+            { day: 1, startSlot: 0, endSlot: 2, code: 'EXT001', name: 'Special Seminar', room: 'R101', color: 'red', instructorId: 'EXT-01', instructorName: 'ศ.ดร.สมศักดิ์ ภักดี', semester: 'ภาคฤดูร้อน', academicYear: '2568' }
         ]
     },
 
@@ -415,4 +418,5 @@ const MOCK = {
     // ติดตามความก้าวหน้าวิทยานิพนธ์ (จาก API — ThesisProgress sheet)
     thesisProgress: []
 };
+
 
