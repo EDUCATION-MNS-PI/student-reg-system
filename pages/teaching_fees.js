@@ -1,3 +1,89 @@
+﻿window.syncCoursesFromStudyPlan = function() {
+    if (!window._getRawStudyPlanForStudent) return alert('ไม่พบระบบแผนการศึกษา');
+    const dummies = [
+        { program: 'nursing-adult', studentId: '67100000', department: 'พยาบาลศาสตร์' },
+        { program: 'nursing-pediatric', studentId: '67100000', department: 'พยาบาลศาสตร์' },
+        { program: 'nursing-community', studentId: '67100000', department: 'พยาบาลศาสตร์' }
+    ];
+    let newItems = [];
+    const courseSet = new Set();
+    const instructors = [
+        { id: 'teacher-01', name: 'รศ.ดร.สุขใจ ดีเสมอ', type: 'internal_phd' },
+        { id: 'teacher-02', name: 'ผศ.ดร.สมชาย ใจทน', type: 'internal_phd' },
+        { id: 'teacher-03', name: 'อ.มานี มีตา', type: 'internal_master' },
+        { id: 'EXT-01', name: 'ศ.ดร.สมศักดิ์ ภักดี', type: 'external_specialist' }
+    ];
+    dummies.forEach(d => {
+        const plan = window._getRawStudyPlanForStudent(d);
+        if (plan && plan.data) {
+            plan.data.forEach(semPlan => {
+                const year = semPlan.year || 1;
+                const sem = semPlan.sem || 1;
+                const acaYear = 2567 + year - 1; 
+                semPlan.courses.forEach(cStr => {
+                    const match = cStr.match(/^(\S+)\s+(.+?)\s+(\d+)\s*\(([\d\.]+)-([\d\.]+)-([\d\.]+)\)$/);
+                    if (match) {
+                        const code = match[1];
+                        let name = match[2].trim().replace(/\s+\d+$/, '').trim();
+                        const lec = parseFloat(match[4]) || 0;
+                        const lab = parseFloat(match[5]) || 0;
+                        const hours = lec + (lab > 0 ? lab / 2 : 0);
+                        const key = code + '-' + acaYear + '-' + sem;
+                        if (!courseSet.has(key) && hours > 0) {
+                            courseSet.add(key);
+                            const inst = instructors[Math.floor(Math.random() * instructors.length)];
+                            const startSlot = Math.floor(Math.random() * 3);
+                            const endSlot = startSlot + Math.ceil(hours) - 1;
+                            newItems.push({
+                                day: Math.floor(Math.random() * 5),
+                                startSlot: startSlot,
+                                endSlot: endSlot >= startSlot ? endSlot : startSlot,
+                                code: code,
+                                name: name,
+                                room: 'R' + (Math.floor(Math.random() * 400) + 100),
+                                color: ['blue', 'green', 'purple', 'orange', 'teal', 'red'][Math.floor(Math.random()*6)],
+                                instructorId: inst.id,
+                                instructorName: inst.name,
+                                semester: String(sem),
+                                academicYear: String(acaYear)
+                            });
+                        }
+                    } else {
+                        const fallbackMatch = cStr.match(/^(\S+)\s+(.+)$/);
+                        if (fallbackMatch && !fallbackMatch[2].includes('เลือก') && !fallbackMatch[2].includes('...')) {
+                             const code = fallbackMatch[1];
+                             let name = fallbackMatch[2].split(/\s+\d+\s*\(/)[0].trim().replace(/\s+\d+$/, '').trim();
+                             const key = code + '-' + acaYear + '-' + sem;
+                             if (!courseSet.has(key) && code.length > 5) {
+                                 courseSet.add(key);
+                                 const inst = instructors[Math.floor(Math.random() * instructors.length)];
+                                 newItems.push({
+                                    day: Math.floor(Math.random() * 5),
+                                    startSlot: 0,
+                                    endSlot: 2,
+                                    code: code,
+                                    name: name,
+                                    room: 'R101',
+                                    color: 'blue',
+                                    instructorId: inst.id,
+                                    instructorName: inst.name,
+                                    semester: String(sem),
+                                    academicYear: String(acaYear)
+                                 });
+                             }
+                        }
+                    }
+                });
+            });
+        }
+    });
+    if (newItems.length > 0) {
+        MOCK.schedule.items = newItems;
+        if (typeof showToast === 'function') showToast('ดึงข้อมูล ' + newItems.length + ' รายวิชาจากแผนการศึกษาสำเร็จ', 'success');
+        if (typeof renderPage === 'function') renderPage();
+    }
+};
+
 // ============================
 // Teaching Remuneration (ค่าตอบแทนการสอน) Page
 // ============================
@@ -394,3 +480,4 @@ window.showFeeDetails = function(teacherName) {
 
     openModal('รายละเอียดค่าตอบแทนการสอนรายบุคคล', bodyHtml);
 };
+

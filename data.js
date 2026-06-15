@@ -88,14 +88,51 @@ const MOCK = {
     schedule: {
         timeSlots: ['08:00-09:00', '09:00-10:00', '10:00-11:00', '11:00-12:00', '12:00-13:00', '13:00-14:00', '14:00-15:00', '15:00-16:00'],
         days: ['จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์'],
-                items: [
-            { day: 0, startSlot: 0, endSlot: 2, code: 'NSG601', name: 'Advanced Nursing Science', room: 'R401', color: 'blue', instructorId: 'teacher-01', instructorName: 'รศ.ดร.สุขใจ ดีเสมอ', semester: '1', academicYear: '2567' },
-            { day: 1, startSlot: 4, endSlot: 7, code: 'NSG602', name: 'Nursing Research', room: 'R402', color: 'green', instructorId: 'teacher-02', instructorName: 'ผศ.ดร.สมชาย ใจทน', semester: '1', academicYear: '2567' },
-            { day: 2, startSlot: 0, endSlot: 3, code: 'NSG603', name: 'Clinical Pharmacology', room: 'R405', color: 'purple', instructorId: 'teacher-01', instructorName: 'รศ.ดร.สุขใจ ดีเสมอ', semester: '1', academicYear: '2567' },
-            { day: 3, startSlot: 1, endSlot: 3, code: 'NSG604', name: 'Community Health', room: 'R101', color: 'orange', instructorId: 'teacher-03', instructorName: 'อ.มานี มีตา', semester: '2', academicYear: '2567' },
-            { day: 0, startSlot: 1, endSlot: 3, code: 'NSG605', name: 'Advanced Health Assessment', room: 'R405', color: 'teal', instructorId: 'teacher-02', instructorName: 'ผศ.ดร.สมชาย ใจทน', semester: '2', academicYear: '2567' },
-            { day: 4, startSlot: 4, endSlot: 6, code: 'NSG601', name: 'Advanced Nursing Science', room: 'R401', color: 'blue', instructorId: 'teacher-01', instructorName: 'รศ.ดร.สุขใจ ดีเสมอ', semester: 'ภาคฤดูร้อน', academicYear: '2568' },
-            { day: 1, startSlot: 0, endSlot: 2, code: 'EXT001', name: 'Special Seminar', room: 'R101', color: 'red', instructorId: 'EXT-01', instructorName: 'ศ.ดร.สมศักดิ์ ภักดี', semester: 'ภาคฤดูร้อน', academicYear: '2568' }
+                        items: [
+            // === ปีการศึกษา 2567 ภาคเรียนที่ 1 ===
+            // วิชาแกนร่วม
+            { day: 0, startSlot: 0, endSlot: 2, code: '0100500101', name: 'วิทยาศาสตร์สุขภาพขั้นสูงทางการพยาบาล', room: 'R401', color: 'blue', instructorId: 'teacher-01', instructorName: 'รศ.ดร.สุขใจ ดีเสมอ', semester: '1', academicYear: '2567', section: '01', credits: 3 },
+            { day: 1, startSlot: 0, endSlot: 1, code: '0100500102', name: 'ระเบียบวิธีวิจัยทางการพยาบาล', room: 'R402', color: 'green', instructorId: 'teacher-02', instructorName: 'ผศ.ดร.สมชาย ใจทน', semester: '1', academicYear: '2567', section: '01', credits: 2 },
+            { day: 2, startSlot: 0, endSlot: 1, code: '0100500102', name: 'ระเบียบวิธีวิจัยทางการพยาบาล', room: 'R402', color: 'green', instructorId: 'teacher-02', instructorName: 'ผศ.ดร.สมชาย ใจทน', semester: '1', academicYear: '2567', section: '02', credits: 2 },
+            // วิชาเฉพาะสาขา - ผู้ใหญ่และผู้สูงอายุ
+            { day: 2, startSlot: 4, endSlot: 6, code: '0100504105', name: 'การพยาบาลผู้ใหญ่และผู้สูงอายุที่มีปัญหาซับซ้อน', room: 'R405', color: 'purple', instructorId: 'teacher-03', instructorName: 'อ.มานี มีตา', semester: '1', academicYear: '2567', section: '01', credits: 3 },
+            { day: 3, startSlot: 0, endSlot: 2, code: '0100504106', name: 'สัมมนาการพยาบาลผู้สูงอายุ', room: 'R406', color: 'orange', instructorId: 'teacher-01', instructorName: 'รศ.ดร.สุขใจ ดีเสมอ', semester: '1', academicYear: '2567', section: '01', credits: 3 },
+            // วิชาเฉพาะสาขา - การผดุงครรภ์
+            { day: 1, startSlot: 4, endSlot: 5, code: '0100502105', name: 'การพยาบาลมารดาทารกที่มีภาวะเสี่ยง', room: 'R301', color: 'pink', instructorId: 'teacher-04', instructorName: 'รศ.ดร.วิไลวรรณ รักเรียน', semester: '1', academicYear: '2567', section: '01', credits: 2 },
+            // วิชาเฉพาะสาขา - เด็ก
+            { day: 4, startSlot: 0, endSlot: 1, code: '0100503101', name: 'การพยาบาลเด็กขั้นสูง', room: 'R302', color: 'teal', instructorId: 'EXT-01', instructorName: 'ศ.ดร.สมศักดิ์ ภักดี', semester: '1', academicYear: '2567', section: '01', credits: 2 },
+            // วิชาเฉพาะสาขา - จิตเวช
+            { day: 4, startSlot: 4, endSlot: 5, code: '0100505102', name: 'เภสัชวิทยา (Psychopharmacology)', room: 'R501', color: 'red', instructorId: 'teacher-05', instructorName: 'ผศ.ดร.ปิยนุช สว่างจิต', semester: '1', academicYear: '2567', section: '01', credits: 2 },
+            // วิชาเฉพาะสาขา - บริหาร
+            { day: 3, startSlot: 4, endSlot: 5, code: '0100508101', name: 'ภาวะผู้นำทางการพยาบาล', room: 'R502', color: 'indigo', instructorId: 'teacher-06', instructorName: 'รศ.ดร.นภาพร แสงจันทร์', semester: '1', academicYear: '2567', section: '01', credits: 2 },
+
+            // === ปีการศึกษา 2567 ภาคเรียนที่ 2 ===
+            { day: 0, startSlot: 0, endSlot: 1, code: '0100500103', name: 'สถิติประยุกต์ทางการพยาบาล', room: 'R401', color: 'blue', instructorId: 'teacher-02', instructorName: 'ผศ.ดร.สมชาย ใจทน', semester: '2', academicYear: '2567', section: '01', credits: 2 },
+            { day: 0, startSlot: 4, endSlot: 5, code: '0100500104', name: 'นโยบายและระบบสุขภาพ', room: 'R402', color: 'green', instructorId: 'teacher-06', instructorName: 'รศ.ดร.นภาพร แสงจันทร์', semester: '2', academicYear: '2567', section: '01', credits: 2 },
+            { day: 1, startSlot: 0, endSlot: 2, code: '0100504107', name: 'ปฏิบัติการพยาบาลผู้สูงอายุ 1', room: 'โรงพยาบาล A', color: 'purple', instructorId: 'teacher-03', instructorName: 'อ.มานี มีตา', semester: '2', academicYear: '2567', section: '01', credits: 3 },
+            { day: 2, startSlot: 0, endSlot: 2, code: '0100502108', name: 'ปฏิบัติการพยาบาลมารดาทารก', room: 'โรงพยาบาล B', color: 'pink', instructorId: 'teacher-04', instructorName: 'รศ.ดร.วิไลวรรณ รักเรียน', semester: '2', academicYear: '2567', section: '01', credits: 3 },
+            { day: 3, startSlot: 0, endSlot: 1, code: '0100503102', name: 'การพยาบาลเด็กป่วยเรื้อรัง', room: 'R302', color: 'teal', instructorId: 'EXT-01', instructorName: 'ศ.ดร.สมศักดิ์ ภักดี', semester: '2', academicYear: '2567', section: '01', credits: 2 },
+            { day: 3, startSlot: 4, endSlot: 6, code: '0100505105', name: 'ปฏิบัติการพยาบาลจิตเวชขั้นสูง', room: 'โรงพยาบาล C', color: 'red', instructorId: 'teacher-05', instructorName: 'ผศ.ดร.ปิยนุช สว่างจิต', semester: '2', academicYear: '2567', section: '01', credits: 3 },
+            { day: 4, startSlot: 0, endSlot: 1, code: '0100508102', name: 'การจัดการคุณภาพทางการพยาบาล', room: 'R502', color: 'indigo', instructorId: 'teacher-06', instructorName: 'รศ.ดร.นภาพร แสงจันทร์', semester: '2', academicYear: '2567', section: '01', credits: 2 },
+
+            // === ปีการศึกษา 2567 ภาคฤดูร้อน ===
+            { day: 0, startSlot: 0, endSlot: 2, code: '0100504108', name: 'ปฏิบัติการพยาบาลผู้สูงอายุ 2', room: 'โรงพยาบาล A', color: 'purple', instructorId: 'teacher-01', instructorName: 'รศ.ดร.สุขใจ ดีเสมอ', semester: 'ภาคฤดูร้อน', academicYear: '2567', section: '01', credits: 3 },
+            { day: 1, startSlot: 0, endSlot: 2, code: '0100502109', name: 'สัมมนาการผดุงครรภ์ขั้นสูง', room: 'R301', color: 'pink', instructorId: 'teacher-04', instructorName: 'รศ.ดร.วิไลวรรณ รักเรียน', semester: 'ภาคฤดูร้อน', academicYear: '2567', section: '01', credits: 3 },
+            { day: 2, startSlot: 0, endSlot: 2, code: '0100505109', name: 'สัมมนาปัญหาสุขภาพจิตและจิตเวช', room: 'R501', color: 'red', instructorId: 'teacher-05', instructorName: 'ผศ.ดร.ปิยนุช สว่างจิต', semester: 'ภาคฤดูร้อน', academicYear: '2567', section: '01', credits: 3 },
+
+            // === ปีการศึกษา 2568 ภาคเรียนที่ 1 (ปัจจุบัน) ===
+            { day: 0, startSlot: 0, endSlot: 2, code: '0100500101', name: 'วิทยาศาสตร์สุขภาพขั้นสูงทางการพยาบาล', room: 'R401', color: 'blue', instructorId: 'teacher-01', instructorName: 'รศ.ดร.สุขใจ ดีเสมอ', semester: '1', academicYear: '2568', section: '01', credits: 3 },
+            { day: 1, startSlot: 0, endSlot: 1, code: '0100500102', name: 'ระเบียบวิธีวิจัยทางการพยาบาล', room: 'R402', color: 'green', instructorId: 'teacher-02', instructorName: 'ผศ.ดร.สมชาย ใจทน', semester: '1', academicYear: '2568', section: '01', credits: 2 },
+            { day: 2, startSlot: 4, endSlot: 6, code: '0100504105', name: 'การพยาบาลผู้ใหญ่และผู้สูงอายุที่มีปัญหาซับซ้อน', room: 'R405', color: 'purple', instructorId: 'teacher-03', instructorName: 'อ.มานี มีตา', semester: '1', academicYear: '2568', section: '01', credits: 3 },
+            { day: 3, startSlot: 0, endSlot: 2, code: '0100504106', name: 'สัมมนาการพยาบาลผู้สูงอายุ', room: 'R406', color: 'orange', instructorId: 'teacher-01', instructorName: 'รศ.ดร.สุขใจ ดีเสมอ', semester: '1', academicYear: '2568', section: '01', credits: 3 },
+            { day: 1, startSlot: 4, endSlot: 5, code: '0100502105', name: 'การพยาบาลมารดาทารกที่มีภาวะเสี่ยง', room: 'R301', color: 'pink', instructorId: 'teacher-04', instructorName: 'รศ.ดร.วิไลวรรณ รักเรียน', semester: '1', academicYear: '2568', section: '01', credits: 2 },
+            { day: 4, startSlot: 0, endSlot: 1, code: '0100503101', name: 'การพยาบาลเด็กขั้นสูง', room: 'R302', color: 'teal', instructorId: 'EXT-01', instructorName: 'ศ.ดร.สมศักดิ์ ภักดี', semester: '1', academicYear: '2568', section: '01', credits: 2 },
+            { day: 4, startSlot: 4, endSlot: 5, code: '0100505102', name: 'เภสัชวิทยา (Psychopharmacology)', room: 'R501', color: 'red', instructorId: 'teacher-05', instructorName: 'ผศ.ดร.ปิยนุช สว่างจิต', semester: '1', academicYear: '2568', section: '01', credits: 2 },
+            { day: 3, startSlot: 4, endSlot: 5, code: '0100508101', name: 'ภาวะผู้นำทางการพยาบาล', room: 'R502', color: 'indigo', instructorId: 'teacher-06', instructorName: 'รศ.ดร.นภาพร แสงจันทร์', semester: '1', academicYear: '2568', section: '01', credits: 2 },
+
+            // === ปีการศึกษา 2568 ภาคฤดูร้อน (ปัจจุบัน) ===
+            { day: 0, startSlot: 0, endSlot: 2, code: '0100504108', name: 'ปฏิบัติการพยาบาลผู้สูงอายุ 2', room: 'โรงพยาบาล A', color: 'purple', instructorId: 'teacher-01', instructorName: 'รศ.ดร.สุขใจ ดีเสมอ', semester: 'ภาคฤดูร้อน', academicYear: '2568', section: '01', credits: 3 },
+            { day: 1, startSlot: 0, endSlot: 2, code: '0100500103', name: 'สถิติประยุกต์ทางการพยาบาล', room: 'R401', color: 'blue', instructorId: 'teacher-02', instructorName: 'ผศ.ดร.สมชาย ใจทน', semester: 'ภาคฤดูร้อน', academicYear: '2568', section: '01', credits: 2 }
         ]
     },
 
@@ -418,5 +455,6 @@ const MOCK = {
     // ติดตามความก้าวหน้าวิทยานิพนธ์ (จาก API — ThesisProgress sheet)
     thesisProgress: []
 };
+
 
 
