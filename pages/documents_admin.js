@@ -1,4 +1,4 @@
-// ============================
+﻿// ============================
 // Admin Documents Approval Page
 // ============================
 pages['documents-admin'] = function() {
@@ -434,8 +434,8 @@ window.forwardAdminDoc = function(docId) {
         'เจ้าหน้าที่งานบัณฑิตศึกษา',
         'ประธานกรรมการบริหารหลักสูตร',
         'คณบดีคณะพยาบาลศาสตร์',
-        '-',
-        '-'
+        'นักศึกษา (' + (doc.studentName || doc.studentId || 'ไม่ระบุชื่อ') + ')',
+        'นักศึกษา (' + (doc.studentName || doc.studentId || 'ไม่ระบุชื่อ') + ')'
     ];
     
     let optionsHtml = steps.map((s, idx) => `
@@ -558,3 +558,5 @@ window.searchAdminDocs = function() {
         }
     }
 };
+
+
