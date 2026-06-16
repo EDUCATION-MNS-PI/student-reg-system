@@ -1,4 +1,4 @@
-﻿// ============================
+// ============================
 // Authentication & Login Control
 // ============================
 
@@ -328,6 +328,12 @@ function applyRolePermissions(role) {
             }
         });
     }
+
+    // Hide sections that have no visible children
+    document.querySelectorAll('.nav-section').forEach(section => {
+        const hasVisibleItems = Array.from(section.querySelectorAll('.nav-item')).some(el => el.style.display !== 'none');
+        section.style.display = hasVisibleItems ? 'block' : 'none';
+    });
 }
 
 // Ensure Login UI kicks off

@@ -256,8 +256,7 @@ function applyRolePermissions(role) {
             'nav-petitions-student',
             'nav-documents-status',
             'nav-calendar',
-            'nav-announcements',
-            'nav-settings'
+            'nav-announcements'
             // 'nav-user-management' is NOT in allowedIds, so it will be hidden
         ];
 
@@ -271,7 +270,8 @@ function applyRolePermissions(role) {
         const restrictedForStaff = [
             'nav-teacher-registration', // Usually for Super Admin
             'nav-manage-evals', // Usually for Super Admin
-            'nav-user-management' // Super Admin only
+            'nav-user-management', // Super Admin only
+            'nav-settings'
         ];
         allNavItems.forEach(el => {
             if (restrictedForStaff.includes(el.id)) {
@@ -280,6 +280,12 @@ function applyRolePermissions(role) {
         });
     }
     // Super Admin sees everything (all visible by default)
+
+    // Hide sections that have no visible children
+    document.querySelectorAll('.nav-section').forEach(section => {
+        const hasVisibleItems = Array.from(section.querySelectorAll('.nav-item')).some(el => el.style.display !== 'none');
+        section.style.display = hasVisibleItems ? 'block' : 'none';
+    });
 }
 
 // Ensure Login UI kicks off on script load
