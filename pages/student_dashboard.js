@@ -498,7 +498,7 @@ pages['student-dashboard'] = function () {
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
                 เมนูบริการวิชาการแบบกริด
             </div>
-            <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0 0 20px 0;" class="animate-in animate-delay-2">เข้าใช้งานระบบต่าง ๆ ของมหาวิทยาลัยผ่านทางลัดด้านล่าง</p>
+            <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0 0 20px 0;" class="animate-in animate-delay-2">เข้าใช้งานระบบต่าง ๆ ของสถาบันผ่านทางลัดด้านล่าง</p>
             
             <div class="student-grid">
                 ${menuItems.map((item, idx) => `
