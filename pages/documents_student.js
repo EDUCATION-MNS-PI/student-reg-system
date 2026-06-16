@@ -1,4 +1,4 @@
-﻿// ============================
+// ============================
 // Student Documents Page
 // ============================
 // ============================
@@ -134,11 +134,11 @@ window.updateGenerationField = function () {
             <label class="form-label">รุ่นที่ <span style="color:var(--danger-color)">*</span></label>
             <select id="docGeneration" class="form-select" style="height:45px;">
                 <option value="">-- เลือกรุ่นที่ --</option>
-                <option value="รุ่นที่ 1 (รหัส 65)">รุ่นที่ 1 (รหัส 65)</option>
-                <option value="รุ่นที่ 2 (รหัส 66)">รุ่นที่ 2 (รหัส 66)</option>
-                <option value="รุ่นที่ 3 (รหัส 67)">รุ่นที่ 3 (รหัส 67)</option>
-                <option value="รุ่นที่ 4 (รหัส 68)">รุ่นที่ 4 (รหัส 68)</option>
-                <option value="รุ่นที่ 5 (รหัส 69)">รุ่นที่ 5 (รหัส 69)</option>
+                <option value="รุ่นปีการศึกษา 2565 (รหัส 65)">รุ่นปีการศึกษา 2565 (รหัส 65)</option>
+                <option value="รุ่นปีการศึกษา 2566 (รหัส 66)">รุ่นปีการศึกษา 2566 (รหัส 66)</option>
+                <option value="รุ่นปีการศึกษา 2567 (รหัส 67)">รุ่นปีการศึกษา 2567 (รหัส 67)</option>
+                <option value="รุ่นปีการศึกษา 2568 (รหัส 68)">รุ่นปีการศึกษา 2568 (รหัส 68)</option>
+                <option value="รุ่นปีการศึกษา 2569 (รหัส 69)">รุ่นปีการศึกษา 2569 (รหัส 69)</option>
             </select>
         `;
     } else {
