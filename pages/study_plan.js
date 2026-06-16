@@ -283,7 +283,12 @@ window.getStudyPlanForStudent = function(student) {
 
 
 pages['study-plan'] = function() {
-    const plans = MOCK.studyPlans || [];
+    const programsOrder = (MOCK.programs || []).map(p => p.name);
+    const plans = [...(MOCK.studyPlans || [])].sort((a, b) => {
+        const idxA = programsOrder.findIndex(pName => pName && typeof a.name === 'string' && a.name.includes(pName));
+        const idxB = programsOrder.findIndex(pName => pName && typeof b.name === 'string' && b.name.includes(pName));
+        return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
+    });
 
     return `
     <div class="animate-in">
