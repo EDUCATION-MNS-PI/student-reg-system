@@ -26,12 +26,49 @@ window.buildCalendarHTML = function(year, month) {
     for (let i = firstDay - 1; i >= 0; i--) {
         days.push({ day: daysInPrevMonth - i, otherMonth: true });
     }
+    const parseLocalDate = (dateStr) => {
+        const parts = dateStr.split('-');
+        return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+    };
+
     for (let d = 1; d <= daysInMonth; d++) {
         const dObj = new Date(year, month, d);
-        const events = (MOCK.calendarEvents || []).filter(e => {
-            const start = new Date(e.startDate);
-            const end = new Date(e.endDate);
-            return dObj >= start && dObj <= end;
+        const events = (MOCK.calendarEvents || []).map(e => {
+            const start = parseLocalDate(e.startDate);
+            const end = parseLocalDate(e.endDate);
+            const durationDays = Math.round((end - start) / (1000 * 60 * 60 * 24)) + 1;
+            
+            const curYear = dObj.getFullYear();
+            const curMonth = String(dObj.getMonth() + 1).padStart(2, '0');
+            const curDay = String(dObj.getDate()).padStart(2, '0');
+            const curDateStr = `${curYear}-${curMonth}-${curDay}`;
+            
+            const isStart = curDateStr === e.startDate;
+            const isEnd = curDateStr === e.endDate;
+            
+            return {
+                ...e,
+                durationDays,
+                isStart,
+                isEnd,
+                inRange: dObj >= start && dObj <= end
+            };
+        }).filter(e => {
+            if (!e.inRange) return false;
+            if (e.durationDays >= 3) {
+                return e.isStart || e.isEnd;
+            }
+            return true;
+        }).map(e => {
+            let displayTitle = e.title;
+            if (e.durationDays >= 3) {
+                if (e.isStart) displayTitle += ' (เริ่ม)';
+                else if (e.isEnd) displayTitle += ' (สิ้นสุด)';
+            }
+            return {
+                ...e,
+                displayTitle
+            };
         });
         days.push({ day: d, today: d === todayDay, events });
     }
@@ -83,7 +120,7 @@ window.buildCalendarHTML = function(year, month) {
                         ${(d.events || []).map(e => `
                             <div class="calendar-event event-${e.type}" title="${e.title} ${e.cohort !== 'all' ? '('+e.cohort+')' : ''}">
                                 ${e.cohort !== 'all' ? `<small style="font-weight:800; opacity:0.8; margin-right:2px;">[${e.cohort}]</small>` : ''}
-                                ${e.title}
+                                ${e.displayTitle || e.title}
                             </div>
                         `).join('')}
                     </div>
