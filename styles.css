@@ -2312,3 +2312,20 @@ input, select, textarea {
     to { transform: translateX(100%); opacity: 0; }
 }
 
+/* ====== Print Page Number (Table Header Trick) ====== */
+.print-only-page-row {
+    display: none;
+}
+
+@media print {
+    body {
+        counter-reset: pagenum;
+    }
+    .print-only-page-row {
+        display: table-row !important;
+    }
+    .page-number-counter::before {
+        counter-increment: pagenum;
+        content: counter(pagenum);
+    }
+}

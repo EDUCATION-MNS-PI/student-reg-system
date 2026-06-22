@@ -165,6 +165,11 @@ pages.transcript = function() {
             
             <table class="report-table">
                 <thead>
+                    <tr class="print-only-page-row">
+                        <td colspan="4" style="text-align: right; border: none !important; font-size: 0.85rem; font-weight: bold; padding: 0 0 10px 0;">
+                            หน้า <span class="page-number-counter"></span>
+                        </td>
+                    </tr>
                     <tr>
                         <th style="width:15%">รหัสวิชา</th>
                         <th style="width:60%">รายวิชา</th>
