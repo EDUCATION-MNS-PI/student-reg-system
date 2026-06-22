@@ -147,6 +147,7 @@ pages.transcript = function() {
         </div>
         
         <div class="report-paper animate-in animate-delay-1" id="printable-transcript">
+            <div class="print-page-number"></div>
             <div class="report-header">
                 <img src="assets/logo_faculty.png" alt="โลโก้คณะพยาบาลศาสตร์" style="width:70px;height:70px;object-fit:contain;margin-right:20px;">
                 <div class="report-header-text">

@@ -2311,3 +2311,24 @@ input, select, textarea {
     from { transform: translateX(0); opacity: 1; }
     to { transform: translateX(100%); opacity: 0; }
 }
+
+/* ====== Print Page Number ====== */
+.print-page-number {
+    display: none;
+}
+
+@media print {
+    .print-page-number {
+        display: block !important;
+        position: fixed;
+        top: 15mm;
+        right: 15mm;
+        font-size: 14px;
+        font-weight: 700;
+        color: black !important;
+        z-index: 1000;
+    }
+    .print-page-number::after {
+        content: "หน้า " counter(page);
+    }
+}
