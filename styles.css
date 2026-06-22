@@ -1998,7 +1998,7 @@ input, select, textarea {
     /* Setup Page Orientation */
     @page {
         size: auto;
-        margin: 15mm 10mm;
+        margin: 20mm 15mm; /* Equal top/bottom margins */
     }
 
     /* Prevent breaking inside semester blocks */
@@ -2312,23 +2312,3 @@ input, select, textarea {
     to { transform: translateX(100%); opacity: 0; }
 }
 
-/* ====== Print Page Number ====== */
-.print-page-number {
-    display: none;
-}
-
-@media print {
-    .print-page-number {
-        display: block !important;
-        position: fixed;
-        top: 15mm;
-        right: 15mm;
-        font-size: 14px;
-        font-weight: 700;
-        color: black !important;
-        z-index: 1000;
-    }
-    .print-page-number::after {
-        content: "หน้า " counter(page);
-    }
-}
