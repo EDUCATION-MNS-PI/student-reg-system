@@ -74,7 +74,7 @@ function renderStudentExams(st) {
         if (typeExams.length > 0) {
             const latest = typeExams[0];
             statusSummary = latest.status || 'รอผล';
-            if (statusSummary === 'ผ่าน' || statusSummary === 'Pass') statusClass = 'status-active';
+            if (statusSummary === 'ผ่าน' || statusSummary === 'Pass' || statusSummary === 'ผ่านแบบมีเงื่อนไข') statusClass = 'status-active';
             else if (statusSummary === 'ไม่ผ่าน' || statusSummary === 'Fail') statusClass = 'status-inactive';
         }
 
@@ -93,7 +93,7 @@ function renderStudentExams(st) {
                 const note = ex.note || '-';
                 
                 let rowStatusClass = 'status-pending';
-                if (status === 'ผ่าน' || status === 'Pass') rowStatusClass = 'status-active';
+                if (status === 'ผ่าน' || status === 'Pass' || status === 'ผ่านแบบมีเงื่อนไข') rowStatusClass = 'status-active';
                 else if (status === 'ไม่ผ่าน' || status === 'Fail') rowStatusClass = 'status-inactive';
 
                 historyRows += `
@@ -171,10 +171,12 @@ function renderStudentExams(st) {
                         ${EXAM_TYPES.map((type, idx) => {
                             const typeExams = exams.filter(ex => ex.exam_type === type);
                             const lastStatus = typeExams.length > 0 ? typeExams.sort((a,b)=>new Date(b.date)-new Date(a.date))[0].status : null;
-                            let state = 'pending'; // gray
-                            if (lastStatus === 'ผ่าน' || lastStatus === 'Pass') state = 'completed'; // green
-                            else if (lastStatus === 'ไม่ผ่าน' || lastStatus === 'รอผล') state = 'active'; // yellow
-
+                            let state = 'neutral';
+                            if (lastStatus === 'ผ่าน') state = 'success';
+                            else if (lastStatus === 'ผ่านแบบมีเงื่อนไข') state = 'info';
+                            else if (lastStatus === 'ไม่ผ่าน' || lastStatus === 'รอผล') state = 'active';
+                            else if (lastStatus === 'ยังไม่สอบ') state = 'neutral';
+                            
                             return `
                                 <div class="step ${state}" onclick="document.getElementById('exam-card-${idx}').scrollIntoView({behavior:'smooth', block:'center'});">
                                     <div class="step-number">${idx + 1}</div>
@@ -232,11 +234,18 @@ function renderAdminExams() {
                         <td>ครั้งที่ ${idx + 1}</td>
                         <td>
                             <select class="form-control status-select" style="min-width:100px;">
-                                <option value="" ${!status ? 'selected' : ''}>- เลือกสถานะ -</option>
-                                <option value="ผ่าน" ${status === 'ผ่าน' ? 'selected' : ''}>ผ่าน (Pass)</option>
-                                <option value="ไม่ผ่าน" ${status === 'ไม่ผ่าน' ? 'selected' : ''}>ไม่ผ่าน (Fail)</option>
-                                <option value="รอผล" ${status === 'รอผล' ? 'selected' : ''}>รอผล (Pending)</option>
-                                <option value="ยังไม่สอบ" ${status === 'ยังไม่สอบ' ? 'selected' : ''}>ยังไม่สอบ</option>
+                                ${type === 'โครงร่างวิทยานิพนธ์' ? `
+                                    <option value="" ${!status ? 'selected' : ''}>- เลือกสถานะ -</option>
+                                    <option value="ผ่าน" ${status === 'ผ่าน' ? 'selected' : ''}>ผ่าน (Pass)</option>
+                                    <option value="ผ่านแบบมีเงื่อนไข" ${status === 'ผ่านแบบมีเงื่อนไข' ? 'selected' : ''}>ผ่านแบบมีเงื่อนไข (Pass with conditions)</option>
+                                    <option value="ไม่ผ่าน" ${status === 'ไม่ผ่าน' ? 'selected' : ''}>ไม่ผ่าน (Fail)</option>
+                                ` : `
+                                    <option value="" ${!status ? 'selected' : ''}>- เลือกสถานะ -</option>
+                                    <option value="ผ่าน" ${status === 'ผ่าน' ? 'selected' : ''}>ผ่าน (Pass)</option>
+                                    <option value="ไม่ผ่าน" ${status === 'ไม่ผ่าน' ? 'selected' : ''}>ไม่ผ่าน (Fail)</option>
+                                    <option value="รอผล" ${status === 'รอผล' ? 'selected' : ''}>รอผล (Pending)</option>
+                                    <option value="ยังไม่สอบ" ${status === 'ยังไม่สอบ' ? 'selected' : ''}>ยังไม่สอบ</option>
+                                `}
                             </select>
                         </td>
                         <td><input type="text" class="form-control score-input" value="${score}" placeholder="เช่น 70/100"></td>
@@ -377,11 +386,18 @@ window.addNewExamRow = function(studentId, type, btn) {
         <td style="font-weight:600; color:var(--primary-color);">+ ใหม่</td>
         <td>
             <select class="form-control status-select" style="min-width:100px;">
-                <option value="" selected>- เลือกสถานะ -</option>
-                <option value="ผ่าน">ผ่าน (Pass)</option>
-                <option value="ไม่ผ่าน">ไม่ผ่าน (Fail)</option>
-                <option value="รอผล">รอผล (Pending)</option>
-                <option value="ยังไม่สอบ">ยังไม่สอบ</option>
+                ${type === 'โครงร่างวิทยานิพนธ์' ? `
+                    <option value="" selected>- เลือกสถานะ -</option>
+                    <option value="ผ่าน">ผ่าน (Pass)</option>
+                    <option value="ผ่านแบบมีเงื่อนไข">ผ่านแบบมีเงื่อนไข (Pass with conditions)</option>
+                    <option value="ไม่ผ่าน">ไม่ผ่าน (Fail)</option>
+                ` : `
+                    <option value="" selected>- เลือกสถานะ -</option>
+                    <option value="ผ่าน">ผ่าน (Pass)</option>
+                    <option value="ไม่ผ่าน">ไม่ผ่าน (Fail)</option>
+                    <option value="รอผล">รอผล (Pending)</option>
+                    <option value="ยังไม่สอบ">ยังไม่สอบ</option>
+                `}
             </select>
         </td>
         <td><input type="text" class="form-control score-input" placeholder="เช่น 70/100"></td>
@@ -415,7 +431,7 @@ window.downloadExamCSVTemplate = function() {
         ['', '', '', '', '', ''],
         ['* คำชี้แจง:', '', '', '', '', ''],
         ['- ประเภทการสอบ:', EXAM_TYPES.join(', '), '', '', '', ''],
-        ['- สถานะ:', 'ผ่าน, ไม่ผ่าน, รอผล, ยังไม่สอบ', '', '', '', ''],
+        ['- สถานะ:', 'ผ่าน, ผ่านแบบมีเงื่อนไข, ไม่ผ่าน, รอผล, ยังไม่สอบ', '', '', '', ''],
         ['- วันที่:', 'รูปแบบ YYYY-MM-DD', '', '', '', '']
     ];
     
