@@ -61,7 +61,10 @@ pages.exams = function() {
 function renderStudentExams(st) {
     if (!st) return `<div class="card"><div class="card-body">ไม่พบข้อมูลนักศึกษา</div></div>`;
     
-    const exams = st.exams || [];
+    const sId = String(st.studentId || st.id || '').trim();
+    const exams = (MOCK.allExams && MOCK.allExams.length > 0) 
+        ? MOCK.allExams.filter(ex => String(ex.student_id || '').trim() === sId) 
+        : (st.exams || []);
     
     let cardsHtml = '';
     EXAM_TYPES.forEach((type, typeIdx) => {
@@ -216,7 +219,11 @@ function renderAdminExams() {
 
     let cardsHtml = '';
     if (selectedStudent) {
-        const exams = selectedStudent.exams || [];
+        const sId = String(selectedStudent.studentId || selectedStudent.id || '').trim();
+        const exams = (MOCK.allExams && MOCK.allExams.length > 0) 
+            ? MOCK.allExams.filter(ex => String(ex.student_id || '').trim() === sId) 
+            : (selectedStudent.exams || []);
+            
         EXAM_TYPES.forEach((type, typeIdx) => {
             const typeExams = exams.filter(ex => ex.exam_type === type)
                                   .sort((a, b) => new Date(a.date) - new Date(b.date));
