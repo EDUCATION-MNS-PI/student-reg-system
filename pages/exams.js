@@ -234,7 +234,7 @@ function renderAdminExams() {
                         <td>ครั้งที่ ${idx + 1}</td>
                         <td>
                             <select class="form-control status-select" style="min-width:100px;">
-                                ${type === 'โครงร่างวิทยานิพนธ์' ? `
+                                ${type === 'โครงร่างวิทยานิพนธ์' || type === 'ป้องกันวิทยานิพนธ์' ? `
                                     <option value="" ${!status ? 'selected' : ''}>- เลือกสถานะ -</option>
                                     <option value="ผ่าน" ${status === 'ผ่าน' ? 'selected' : ''}>ผ่าน (Pass)</option>
                                     <option value="ผ่านแบบมีเงื่อนไข" ${status === 'ผ่านแบบมีเงื่อนไข' ? 'selected' : ''}>ผ่านแบบมีเงื่อนไข (Pass with conditions)</option>
@@ -386,7 +386,7 @@ window.addNewExamRow = function(studentId, type, btn) {
         <td style="font-weight:600; color:var(--primary-color);">+ ใหม่</td>
         <td>
             <select class="form-control status-select" style="min-width:100px;">
-                ${type === 'โครงร่างวิทยานิพนธ์' ? `
+                ${type === 'โครงร่างวิทยานิพนธ์' || type === 'ป้องกันวิทยานิพนธ์' ? `
                     <option value="" selected>- เลือกสถานะ -</option>
                     <option value="ผ่าน">ผ่าน (Pass)</option>
                     <option value="ผ่านแบบมีเงื่อนไข">ผ่านแบบมีเงื่อนไข (Pass with conditions)</option>
