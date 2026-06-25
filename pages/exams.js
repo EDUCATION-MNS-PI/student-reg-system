@@ -75,7 +75,7 @@ function renderStudentExams(st) {
             const latest = typeExams[0];
             statusSummary = latest.status || 'รอผล';
             if (statusSummary === 'ผ่าน' || statusSummary === 'Pass' || statusSummary === 'ผ่านแบบมีเงื่อนไข') statusClass = 'status-active';
-            else if (statusSummary === 'ไม่ผ่าน' || statusSummary === 'Fail') statusClass = 'status-inactive';
+            else if (statusSummary === 'ไม่ผ่าน' || statusSummary === 'Fail' || statusSummary === 'ขาดสอบ') statusClass = 'status-inactive';
         }
 
         let historyRows = '';
@@ -94,7 +94,7 @@ function renderStudentExams(st) {
                 
                 let rowStatusClass = 'status-pending';
                 if (status === 'ผ่าน' || status === 'Pass' || status === 'ผ่านแบบมีเงื่อนไข') rowStatusClass = 'status-active';
-                else if (status === 'ไม่ผ่าน' || status === 'Fail') rowStatusClass = 'status-inactive';
+                else if (status === 'ไม่ผ่าน' || status === 'Fail' || status === 'ขาดสอบ') rowStatusClass = 'status-inactive';
 
                 historyRows += `
                     <tr>
@@ -174,7 +174,7 @@ function renderStudentExams(st) {
                             let state = 'neutral';
                             if (lastStatus === 'ผ่าน') state = 'success';
                             else if (lastStatus === 'ผ่านแบบมีเงื่อนไข') state = 'info';
-                            else if (lastStatus === 'ไม่ผ่าน' || lastStatus === 'รอผล') state = 'active';
+                            else if (lastStatus === 'ไม่ผ่าน' || lastStatus === 'รอผล' || lastStatus === 'ขาดสอบ') state = 'active';
                             else if (lastStatus === 'ยังไม่สอบ') state = 'neutral';
                             
                             return `
@@ -239,10 +239,12 @@ function renderAdminExams() {
                                     <option value="ผ่าน" ${status === 'ผ่าน' ? 'selected' : ''}>ผ่าน (Pass)</option>
                                     <option value="ผ่านแบบมีเงื่อนไข" ${status === 'ผ่านแบบมีเงื่อนไข' ? 'selected' : ''}>ผ่านแบบมีเงื่อนไข (Pass with conditions)</option>
                                     <option value="ไม่ผ่าน" ${status === 'ไม่ผ่าน' ? 'selected' : ''}>ไม่ผ่าน (Fail)</option>
+                                    <option value="ขาดสอบ" ${status === 'ขาดสอบ' ? 'selected' : ''}>ขาดสอบ (Absent)</option>
                                 ` : `
                                     <option value="" ${!status ? 'selected' : ''}>- เลือกสถานะ -</option>
                                     <option value="ผ่าน" ${status === 'ผ่าน' ? 'selected' : ''}>ผ่าน (Pass)</option>
                                     <option value="ไม่ผ่าน" ${status === 'ไม่ผ่าน' ? 'selected' : ''}>ไม่ผ่าน (Fail)</option>
+                                    <option value="ขาดสอบ" ${status === 'ขาดสอบ' ? 'selected' : ''}>ขาดสอบ (Absent)</option>
                                     <option value="รอผล" ${status === 'รอผล' ? 'selected' : ''}>รอผล (Pending)</option>
                                     <option value="ยังไม่สอบ" ${status === 'ยังไม่สอบ' ? 'selected' : ''}>ยังไม่สอบ</option>
                                 `}
@@ -391,10 +393,12 @@ window.addNewExamRow = function(studentId, type, btn) {
                     <option value="ผ่าน">ผ่าน (Pass)</option>
                     <option value="ผ่านแบบมีเงื่อนไข">ผ่านแบบมีเงื่อนไข (Pass with conditions)</option>
                     <option value="ไม่ผ่าน">ไม่ผ่าน (Fail)</option>
+                    <option value="ขาดสอบ">ขาดสอบ (Absent)</option>
                 ` : `
                     <option value="" selected>- เลือกสถานะ -</option>
                     <option value="ผ่าน">ผ่าน (Pass)</option>
                     <option value="ไม่ผ่าน">ไม่ผ่าน (Fail)</option>
+                    <option value="ขาดสอบ">ขาดสอบ (Absent)</option>
                     <option value="รอผล">รอผล (Pending)</option>
                     <option value="ยังไม่สอบ">ยังไม่สอบ</option>
                 `}
@@ -413,11 +417,7 @@ window.addNewExamRow = function(studentId, type, btn) {
 };
 
 async function callApi(data) {
-    const response = await fetch(API_URL, {
-        method: 'POST',
-        body: JSON.stringify(data)
-    });
-    return response.json();
+    return await postData(data.action, data.payload);
 }
 
 /**
@@ -432,7 +432,7 @@ window.downloadExamCSVTemplate = function() {
         ['', '', '', '', '', ''],
         ['* คำชี้แจง:', '', '', '', '', ''],
         ['- ประเภทการสอบ:', EXAM_TYPES.join(', '), '', '', '', ''],
-        ['- สถานะ:', 'ผ่าน, ผ่านแบบมีเงื่อนไข, ไม่ผ่าน, รอผล, ยังไม่สอบ', '', '', '', ''],
+        ['- สถานะ:', 'ผ่าน, ผ่านแบบมีเงื่อนไข, ไม่ผ่าน, ขาดสอบ, รอผล, ยังไม่สอบ', '', '', '', ''],
         ['- วันที่:', 'รูปแบบ YYYY-MM-DD', '', '', '', '']
     ];
     
