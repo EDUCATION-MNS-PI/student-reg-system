@@ -1,4 +1,4 @@
-﻿﻿// ============================
+﻿// ============================
 // Main Application Controller
 // (loaded AFTER core.js, data.js, and page scripts)
 // ============================
@@ -460,7 +460,7 @@ async function bootApp() {
 
             // Filter for different roles/views
             MOCK.teachers = allMappedTeachers;
-            MOCK.academicAdvisors = allMappedTeachers.filter(t => t.type === 'อาจารย์ประจำ');
+            MOCK.academicAdvisors = allMappedTeachers.filter(t => t.type === 'อาจารย์ประจำ' || t.type === 'อาจารย์ผู้รับผิดชอบหลักสูตร');
             MOCK.specialLecturers = allMappedTeachers.filter(t => t.type === 'อาจารย์พิเศษ');
             
             // If academic advisors list is empty (e.g. initial setup), fall back to all teachers for compatibility

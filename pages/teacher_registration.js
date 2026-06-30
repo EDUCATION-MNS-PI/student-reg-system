@@ -70,6 +70,7 @@ pages['teacher-registration'] = function() {
                             <label class="form-label">ประเภทอาจารย์</label>
                             <select id="t_type" class="form-select">
                                 <option value="อาจารย์ประจำ">อาจารย์ประจำ</option>
+                                <option value="อาจารย์ผู้รับผิดชอบหลักสูตร">อาจารย์ผู้รับผิดชอบหลักสูตร</option>
                                 <option value="อาจารย์พิเศษ">อาจารย์พิเศษ</option>
                             </select>
                         </div>
@@ -226,7 +227,7 @@ window.downloadTeacherTemplate = function() {
     const sampleRow = [
         'รศ.ดร.','สมศรี','ใจสว่าง','รองศาสตราจารย์',
         'การพยาบาลจิตเวชและสุขภาพจิต','somsri.j@pi.ac.th','02-123-4567 ต่อ 201','คณะพยาบาลศาสตร์ สถาบันพระบรมราชชนก','8',
-        'somsri.j','111111','อาจารย์ประจำ'
+        'somsri.j','111111','อาจารย์ผู้รับผิดชอบหลักสูตร'
     ];
     const BOM = '\uFEFF';
     const csv = BOM + headers.join(',') + '\n' + sampleRow.join(',') + '\n';
