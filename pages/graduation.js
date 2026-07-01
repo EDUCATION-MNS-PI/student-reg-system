@@ -201,7 +201,7 @@ window.submitGraduationRequest = async function() {
             id: 'REQ-' + Date.now(),
             studentId: st.studentId || st.id,
             studentName: `${st.prefix || ''}${st.firstName} ${st.lastName}`,
-            requestDate: window.formatDateTh ? window.formatDateTh(new Date().toISOString().split('T')[0]) : new Date().toLocaleDateString('th-TH'),
+            requestDate: window.formatDateTh ? window.formatDateTh(new Date().toISOString().split('T')[0]) : window.formatDateThai(new Date()),
             status: 'Pending',
             note: ''
         };

@@ -96,7 +96,7 @@ function renderStudentExams(st) {
                     try {
                         const d = new Date(date);
                         if (!isNaN(d.getTime())) {
-                            date = d.toLocaleDateString('th-TH', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                            date = window.formatDateThai(d);
                         }
                     } catch(e) {}
                 }

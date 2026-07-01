@@ -80,7 +80,7 @@ pages['fee-reports'] = function() {
                                 <td>${s.name}</td>
                                 <td>รหัส ${s.cohort}</td>
                                 <td style="text-align:right; color:#ef4444; font-weight:bold;">${formatCurrency(s.amount)}</td>
-                                <td><span class="badge danger">${new Date(s.due).toLocaleDateString('th-TH')}</span></td>
+                                <td><span class="badge danger">${window.formatDateThai(s.due)}</span></td>
                                 <td style="text-align:center;">
                                     <button class="btn btn-secondary" style="padding:4px 8px; font-size:0.75rem;" onclick="alert('ส่งอีเมลแจ้งเตือนไปยัง ${s.name} เรียบร้อย')">แจ้งเตือน</button>
                                 </td>

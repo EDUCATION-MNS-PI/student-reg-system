@@ -212,7 +212,7 @@ pages['analytics-reports'] = function() {
                     <line x1="8" y1="2" x2="8" y2="6"></line>
                     <line x1="3" y1="10" x2="21" y2="10"></line>
                 </svg>
-                <span>อัปเดตล่าสุด: <span style="color:var(--accent-primary); font-weight: 700;">${new Date().toLocaleDateString('th-TH')}</span></span>
+                <span>อัปเดตล่าสุด: <span style="color:var(--accent-primary); font-weight: 700;">${window.formatDateThai(new Date())}</span></span>
             </div>
         </div>
 

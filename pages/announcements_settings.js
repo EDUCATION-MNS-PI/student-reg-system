@@ -45,7 +45,7 @@ pages.announcements = function() {
                             <span class="badge ${typeColors[a.type] || 'neutral'}">${a.type}</span>
                         </div>
                         <p>${a.content.substring(0, 100)}${a.content.length > 100 ? '...' : ''}</p>
-                        <div class="announcement-date">📅 ${a.date ? new Date(a.date).toLocaleDateString('th-TH') : '-'}</div>
+                        <div class="announcement-date">📅 ${a.date ? window.formatDateThai(a.date) : '-'}</div>
                     </div>
                 </div>
             `).join('')}
@@ -68,7 +68,7 @@ window.viewAnnouncementDetail = function(id) {
             <span class="badge ${typeColors[a.type] || 'neutral'}" style="margin-bottom:15px;">${a.type}</span>
             <div style="line-height:1.8; color:var(--text-secondary); white-space: pre-wrap; font-size:1.05rem;">${a.content}</div>
             <div style="margin-top:25px; padding-top:15px; border-top:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-size:0.85rem; color:var(--text-muted);">📅 วันที่ประกาศ: ${new Date(a.date).toLocaleDateString('th-TH')} ${new Date(a.date).toLocaleTimeString('th-TH')} น.</span>
+                <span style="font-size:0.85rem; color:var(--text-muted);">📅 วันที่ประกาศ: ${window.formatDateThai(a.date, true)}</span>
                 <span style="font-size:0.85rem; color:var(--text-muted);">👤 โดย: ${a.author || 'Admin'}</span>
             </div>
             <div style="margin-top:20px; display:flex; justify-content:flex-end;">

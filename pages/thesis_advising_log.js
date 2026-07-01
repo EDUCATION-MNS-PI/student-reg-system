@@ -45,7 +45,7 @@ pages['thesis-advising-log'] = function() {
                         <tbody>
                             ${logs.length > 0 ? logs.sort((a,b) => new Date(b.date) - new Date(a.date)).map(l => `
                             <tr>
-                                <td>${new Date(l.date).toLocaleDateString('th-TH', {year:'numeric', month:'short', day:'numeric'})}</td>
+                                <td>${window.formatDateThai(l.date)}</td>
                                 ${!isStudent ? `<td><strong>${l.studentId}</strong></td><td>${l.studentName}</td>` : ''}
                                 <td><strong>${l.topic}</strong></td>
                                 <td>${l.notes}</td>

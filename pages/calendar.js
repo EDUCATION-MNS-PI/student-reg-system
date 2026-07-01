@@ -148,14 +148,12 @@ window.buildEventListHTML = function(year, month) {
         ${monthEvents.map(e => {
             const start = new Date(e.startDate);
             const end = new Date(e.endDate);
-            let dateText = start.toLocaleDateString('th-TH', { day:'numeric', month:'short', year:'numeric' });
-            if (e.startDate !== e.endDate) {
-                const endText = end.toLocaleDateString('th-TH', { day:'numeric', month:'short', year:'numeric' });
-                // If same month and year, simplify
-                if (start.getMonth() === end.getMonth() && start.getFullYear() === end.getFullYear()) {
-                    dateText = `${start.getDate()} - ${endText}`;
-                } else {
-                    dateText = `${start.toLocaleDateString('th-TH', { day:'numeric', month:'short' })} - ${endText}`;
+            let dateText = window.formatDateThai(start);
+            if (end && end.getTime() !== start.getTime()) {
+                const endText = window.formatDateThai(end);
+                if (dateText !== endText) {
+                    // Just show full date range 
+                    dateText = `${dateText} - ${endText}`;
                 }
             }
             

@@ -700,7 +700,7 @@ window.submitStudentDocument = function () {
 
             if (saveResult && saveResult.status === 'success') {
                 const docId = saveResult.id;
-                const today = new Date().toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' });
+                const today = window.formatDateThai(new Date());
 
                 const newDoc = {
                     id: docId,

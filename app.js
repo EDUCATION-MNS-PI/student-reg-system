@@ -1,4 +1,4 @@
-﻿// ============================
+// ============================
 // Main Application Controller
 // (loaded AFTER core.js, data.js, and page scripts)
 // ============================
@@ -6,6 +6,25 @@
 let currentPage = 'dashboard';
 window.apiDataLoaded = false;
 window.APP_VERSION = "V.1.2 By Watcharaphon.c";
+
+window.formatDateThai = function(dateStr, includeTime = false) {
+    if (!dateStr || dateStr === '-' || String(dateStr).trim() === '') return '-';
+    try {
+        const d = new Date(dateStr);
+        if (isNaN(d.getTime())) return dateStr;
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+        if (includeTime) {
+            options.hour = '2-digit';
+            options.minute = '2-digit';
+            let formatted = d.toLocaleString('th-TH', options).replace(',', '');
+            if (!formatted.includes('น.')) formatted += ' น.';
+            return formatted;
+        }
+        return d.toLocaleDateString('th-TH', options);
+    } catch (e) {
+        return dateStr;
+    }
+};
 
 // Initialize or Restore session
 const savedUser = localStorage.getItem('currentUser');
@@ -579,25 +598,13 @@ async function bootApp() {
                 docsToMap = MOCK.documents.filter(d => String(d.studentId || '').trim() === sId);
             }
             MOCK.studentDocuments = docsToMap.map(d => {
-                let displayDate = String(d.date || '-');
-                try {
-                    const dateObj = new Date(d.date);
-                    if (!isNaN(dateObj.getTime())) {
-                        const day = String(dateObj.getDate()).padStart(2, '0');
-                        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-                        let year = dateObj.getFullYear();
-                        if (year < 2400) year += 543;
-                        const hours = String(dateObj.getHours()).padStart(2, '0');
-                        const minutes = String(dateObj.getMinutes()).padStart(2, '0');
-                        displayDate = `${day}/${month}/${year} ${hours}:${minutes} น.`;
-                    }
-                } catch (e) {}
-
+                let displayDate = window.formatDateThai(d.date, true);
+                
                 let lastUpdate = displayDate;
                 try {
                     const hist = JSON.parse(d.history || '[]');
                     if (hist.length > 0 && hist[hist.length - 1].timestamp) {
-                        lastUpdate = hist[hist.length - 1].timestamp;
+                        lastUpdate = window.formatDateThai(hist[hist.length - 1].timestamp, true);
                     }
                 } catch (e) {}
 
@@ -619,19 +626,7 @@ async function bootApp() {
 
             // Sync for Admin view
             MOCK.adminDocuments = MOCK.documents.map((d) => {
-                let displayDate = String(d.date || '-');
-                try {
-                    const dateObj = new Date(d.date);
-                    if (!isNaN(dateObj.getTime())) {
-                        const day = String(dateObj.getDate()).padStart(2, '0');
-                        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-                        let year = dateObj.getFullYear();
-                        if (year < 2400) year += 543;
-                        const hours = String(dateObj.getHours()).padStart(2, '0');
-                        const minutes = String(dateObj.getMinutes()).padStart(2, '0');
-                        displayDate = `${day}/${month}/${year} ${hours}:${minutes} น.`;
-                    }
-                } catch (e) {}
+                let displayDate = window.formatDateThai(d.date, true);
                 
                 return {
                     ...d,

@@ -78,7 +78,7 @@ pages.dashboard = function() {
                 <p class="page-subtitle">ภาพรวมข้อมูลระบบและการวิเคราะห์สถิติอัจฉริยะ</p>
             </div>
             <div class="header-semester" style="margin-bottom: 5px;">
-                อัปเดตล่าสุด: <span style="font-weight: 700; color: var(--accent-primary);">${new Date().toLocaleDateString('th-TH')}</span>
+                อัปเดตล่าสุด: <span style="font-weight: 700; color: var(--accent-primary);">${window.formatDateThai(new Date())}</span>
             </div>
         </div>
 

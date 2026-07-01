@@ -348,7 +348,7 @@ window.renderEvalReports = function() {
         <table class="data-table">
             <thead><tr><th>วิชา</th><th>อาจารย์</th><th>ข้อเสนอแนะ</th><th>วันที่</th></tr></thead>
             <tbody>
-                ${allComments.map(c => `<tr><td style="font-weight:600;">${c.course}</td><td>${c.instructor}</td><td>${c.text}</td><td>${new Date(c.date).toLocaleDateString('th-TH')}</td></tr>`).join('')}
+                ${allComments.map(c => `<tr><td style="font-weight:600;">${c.course}</td><td>${c.instructor}</td><td>${c.text}</td><td>${window.formatDateThai(c.date)}</td></tr>`).join('')}
             </tbody>
         </table>
         `}
