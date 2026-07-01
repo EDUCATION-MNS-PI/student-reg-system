@@ -181,11 +181,11 @@ function renderStudentExams(st) {
                         ${EXAM_TYPES.map((type, idx) => {
                             const typeExams = exams.filter(ex => ex.exam_type === type);
                             const lastStatus = typeExams.length > 0 ? typeExams.sort((a,b)=>new Date(b.date)-new Date(a.date))[0].status : null;
-                            let state = 'neutral';
-                            if (lastStatus === 'ผ่าน') state = 'success';
-                            else if (lastStatus === 'ผ่านแบบมีเงื่อนไข') state = 'info';
-                            else if (lastStatus === 'ไม่ผ่าน' || lastStatus === 'รอผล' || lastStatus === 'ขาดสอบ') state = 'active';
-                            else if (lastStatus === 'ยังไม่สอบ') state = 'neutral';
+                            let state = 'nodata';
+                            if (lastStatus === 'ผ่าน' || lastStatus === 'ผ่านแบบมีเงื่อนไข') state = 'completed';
+                            else if (lastStatus === 'ไม่ผ่าน') state = 'fail';
+                            else if (lastStatus === 'รอผล' || lastStatus === 'ขาดสอบ') state = 'active';
+                            else if (lastStatus === 'ยังไม่สอบ' || !lastStatus) state = 'nodata';
                             
                             return `
                                 <div class="step ${state}" onclick="document.getElementById('exam-card-${idx}').scrollIntoView({behavior:'smooth', block:'center'});">

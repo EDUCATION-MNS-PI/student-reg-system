@@ -2078,6 +2078,26 @@ input, select, textarea {
     color: var(--warning-dark);
 }
 
+.step.fail .step-number {
+    background: #fee2e2;
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+.step.fail .step-label {
+    color: #ef4444;
+}
+
+.step.nodata .step-number {
+    background: #f3e8ff;
+    border-color: #a855f7;
+    color: #9333ea;
+}
+
+.step.nodata .step-label {
+    color: #9333ea;
+}
+
 .step-connector {
     flex: 1;
     height: 3px;
