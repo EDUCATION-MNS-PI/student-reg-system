@@ -14,9 +14,8 @@ const EXAM_MECHANISMS = {
     'ประมวลความรู้': [
         { step: 1, desc: 'ตรวจสอบคุณสมบัติ (ลงทะเบียนมาแล้วไม่น้อยกว่า 2 ภาคการศึกษาปกติ)' },
         { step: 2, desc: 'ยื่นคำร้องขอสอบประมวลความรู้ (Comprehensive Exam)' },
-        { step: 3, desc: 'ชำระค่าธรรมเนียมการสอบ' },
-        { step: 4, desc: 'เข้ารับการสอบ (ข้อเขียน/ปากเปล่า)' },
-        { step: 5, desc: 'ประกาศผลการสอบ' }
+        { step: 3, desc: 'เข้ารับการสอบ (ข้อเขียน/ปากเปล่า)' },
+        { step: 4, desc: 'ประกาศผลการสอบ' }
     ],
     'หัวข้อวิทยานิพนธ์': [
         { step: 1, desc: 'ปรึกษาและเลือกอาจารย์ที่ปรึกษาวิทยานิพนธ์' },
@@ -92,7 +91,15 @@ function renderStudentExams(st) {
             typeExams.forEach((ex, idx) => {
                 const status = ex.status || 'รอผล';
                 const score = ex.score || '-';
-                const date = ex.date || '-';
+                let date = ex.date || '-';
+                if (date !== '-') {
+                    try {
+                        const d = new Date(date);
+                        if (!isNaN(d.getTime())) {
+                            date = d.toLocaleDateString('th-TH', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                        }
+                    } catch(e) {}
+                }
                 const note = ex.note || '-';
                 
                 let rowStatusClass = 'status-pending';
@@ -232,7 +239,7 @@ function renderAdminExams() {
             typeExams.forEach((ex, idx) => {
                 const status = ex.status || '';
                 const score = ex.score || '';
-                const date = ex.date || '';
+                const date = ex.date ? ex.date.split('T')[0] : '';
                 const note = ex.note || '';
                 const examId = ex.id || '';
 
