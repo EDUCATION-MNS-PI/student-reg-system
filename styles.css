@@ -1995,10 +1995,19 @@ input, select, textarea {
         color: black !important;
     }
 
-    /* Setup Page Orientation */
+    /* Setup Page Orientation with page numbers */
     @page {
         size: auto;
-        margin: 20mm 15mm; /* Equal top/bottom margins */
+        margin: 20mm 15mm 15mm 15mm;
+
+        /* Page number at top-right corner */
+        @top-right {
+            content: "หน้า " counter(page) " / " counter(pages);
+            font-family: 'Sarabun', 'TH Sarabun New', sans-serif;
+            font-size: 10pt;
+            font-weight: bold;
+            color: #333;
+        }
     }
 
     /* Prevent breaking inside semester blocks */
@@ -2008,6 +2017,12 @@ input, select, textarea {
     
     .report-header, .report-title-center {
         page-break-inside: avoid;
+    }
+
+    /* Hide the old manual page-number row in thead when printing
+       (the CSS @page @top-right handles it now) */
+    .print-only-page-row {
+        display: none !important;
     }
 }
 
