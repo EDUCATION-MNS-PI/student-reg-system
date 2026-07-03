@@ -27,21 +27,53 @@ function parseCourseString(str) {
 }
 
 pages.transcript = function() {
-    const st = MOCK.student || {};
-    const studentGrades = st.grades || MOCK.grades || [];
+    const isAdmin = (window.currentUserRole === 'staff' || window.currentUserRole === 'admin');
+    const st = MOCK.student;
+
+    if (!st && isAdmin) {
+        return `
+        <div class="animate-in">
+            <div class="page-header" style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <h1 class="page-title">ใบแสดงผลการศึกษา</h1>
+                    <p class="page-subtitle">กรุณาเลือกนักศึกษาเพื่อดูใบแสดงผลการศึกษา</p>
+                </div>
+                <div style="flex-grow: 1; max-width: 400px; margin: 0 20px;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <select id="studentSelector" class="form-input" onchange="changeProfileStudent(this.value)" style="padding-right: 30px;">
+                            <option value="">-- เลือกนักศึกษาเพื่อดูข้อมูล --</option>
+                            ${(MOCK.students || []).map(s => `
+                                <option value="${s.id || s.studentId}">
+                                    ${s.studentId || ''} - ${s.prefix || ''}${s.firstName || ''} ${s.lastName || ''}
+                                </option>
+                            `).join('')}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="card"><div class="card-body" style="text-align:center; padding:60px;">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.5" style="margin-bottom:20px; opacity:0.5;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                <h3 style="color:var(--text-muted);">กรุณาเลือกนักศึกษา</h3>
+                <p style="color:var(--text-muted);">ค้นหาและเลือกรายชื่อนักศึกษาจากรายการด้านบนเพื่อดูใบแสดงผลการศึกษา</p>
+            </div></div>
+        </div>`;
+    }
+
+    const studentData = st || {};
+    const studentGrades = studentData.grades || MOCK.grades || [];
     
     // Fallbacks and Info
-    const studentId = st.studentId || st.id || '---------';
-    const studentPrefix = st.prefix || '';
-    const studentFirstName = st.firstName || '';
-    const studentLastName = st.lastName || '';
-    const studentProgramRaw = st.program || '';
+    const studentId = studentData.studentId || studentData.id || '---------';
+    const studentPrefix = studentData.prefix || '';
+    const studentFirstName = studentData.firstName || '';
+    const studentLastName = studentData.lastName || '';
+    const studentProgramRaw = studentData.program || '';
     const studentProgram = studentProgramRaw.includes('หลักสูตร') ? studentProgramRaw.replace('หลักสูตร', '').trim() : studentProgramRaw;
-    const admissionYear = st.admissionYear || '----';
-    const departmentName = st.department || '';
+    const admissionYear = studentData.admissionYear || '----';
+    const departmentName = studentData.department || '';
 
     const planId = getPlanIdFromDept(departmentName);
-    const mockPlanData = window.getStudyPlanForStudent(st).data;
+    const mockPlanData = window.getStudyPlanForStudent(studentData).data;
 
     // Data-Centric Rendering: Loop through actual grades grouped by semester in app.js
     let totalPointsGPA = 0;
@@ -135,15 +167,30 @@ pages.transcript = function() {
 
     return `
     <div class="animate-in">
-        <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:15px;">
             <div>
                 <h1 class="page-title">ใบแสดงผลการศึกษา</h1>
                 <p class="page-subtitle">รายงานผลการเรียนแบบเป็นทางการ</p>
             </div>
-            <button class="btn btn-primary" onclick="window.print()">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-                พิมพ์ / ดาวน์โหลด
-            </button>
+            
+            <div style="display:flex; gap:12px; align-items: center;">
+                ${isAdmin ? `
+                <div style="flex-grow: 1; min-width: 250px;">
+                    <select id="studentSelector" class="form-input" onchange="changeProfileStudent(this.value)" style="padding-right: 30px; height:38px;">
+                        <option value="">-- เลือกนักศึกษา --</option>
+                        ${(MOCK.students || []).map(s => `
+                            <option value="${s.id || s.studentId}" ${(studentData && (studentData.id === s.id || studentData.studentId === s.studentId)) ? 'selected' : ''}>
+                                ${s.studentId || ''} - ${s.prefix || ''}${s.firstName || ''} ${s.lastName || ''}
+                            </option>
+                        `).join('')}
+                    </select>
+                </div>
+                ` : ''}
+                <button class="btn btn-primary" onclick="window.print()" style="height:38px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                    พิมพ์ / ดาวน์โหลด
+                </button>
+            </div>
         </div>
         
         <div class="report-paper animate-in animate-delay-1" id="printable-transcript">
