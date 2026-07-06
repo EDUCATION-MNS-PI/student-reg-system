@@ -100,6 +100,7 @@ function handleLogin(role) {
             const name = studentRecord ? ((studentRecord.firstName && studentRecord.lastName) ? studentRecord.firstName + ' ' + studentRecord.lastName : studentRecord.name || id) : (userRecord.name || id);
             performLogin('student', { id: id, name: name });
         } else {
+            recordLoginAttempt(id, 'Student', 'ล้มเหลว (ไม่พบบัญชีในระบบ)');
             return showError("ไม่พบข้อมูลนักศึกษาในระบบ หรือบัญชียังไม่ถูกสร้าง");
         }
 
@@ -124,6 +125,7 @@ function handleLogin(role) {
             const name = userRecord ? userRecord.name : teacherRecord.name;
             performLogin('staff', { email: email, name: name, roleName: roleName });
         } else {
+            recordLoginAttempt(email, 'Staff', 'ล้มเหลว (รหัสผ่านผิด)');
             return showError("ชือผู้ใช้ หรือรหัสผ่านไม่ถูกต้อง");
         }
 
@@ -140,15 +142,47 @@ function handleLogin(role) {
         if (adminUser) {
             performLogin('admin', { name: adminUser.name || 'ผู้ดูแลระบบ', roleName: 'Admin' });
         } else {
+            recordLoginAttempt('admin', 'Admin', 'ล้มเหลว (รหัสผ่านผิด)');
             return showError("รหัสผ่านไม่ถูกต้อง");
         }
     }
 }
 
+// ============================
+// Login History Recording
+// ============================
+function recordLoginAttempt(username, role, status) {
+    if (!MOCK.loginHistory) MOCK.loginHistory = [];
+    MOCK.loginHistory.unshift({
+        time: new Date(),
+        user: username || '-',
+        role: role || '-',
+        ip: getApproxIP(),
+        status: status
+    });
+    // Keep max 200 entries
+    if (MOCK.loginHistory.length > 200) MOCK.loginHistory.length = 200;
+}
+
+function getApproxIP() {
+    // Generate a plausible masked IP for display (client-side cannot get real IP)
+    const stored = sessionStorage.getItem('_sysip');
+    if (stored) return stored;
+    const octets = [Math.floor(Math.random()*223)+1, Math.floor(Math.random()*255)].join('.');
+    const masked = octets + '.x.x';
+    sessionStorage.setItem('_sysip', masked);
+    return masked;
+}
+
 function performLogin(role, userData) {
     window.currentUserRole = role;
     window.currentUserData = userData;
-    window.isAdmin = (role === 'admin'); // Staff is not admin per new rules
+    window.isAdmin = (role === 'admin');
+
+    // --- Record successful login ---
+    const roleLabel = role === 'admin' ? 'Admin' : role === 'staff' ? (userData.roleName || 'Staff') : 'Student';
+    const usernameLabel = userData.email || userData.id || userData.name || '-';
+    recordLoginAttempt(usernameLabel, roleLabel, 'สำเร็จ');
 
     // Bind current user to MOCK globally for profile rendering
     if (role === 'student' && userData.id) {
