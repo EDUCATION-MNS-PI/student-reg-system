@@ -486,7 +486,10 @@ pages['student-dashboard'] = function () {
                 </div>
                 <div class="student-stat-info">
                     <div class="student-stat-val" style="font-size:1.02rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px;">
-                        ${st.advisor || 'ยังไม่มีที่ปรึกษา'}
+                        ${(() => {
+                            const adv = [st.advisor, st.mainAdvisor, st.thesisAdvisor].find(a => a && a !== '-' && a.trim() !== '');
+                            return adv || 'ยังไม่ระบุ';
+                        })()}
                     </div>
                     <div class="student-stat-lbl">อาจารย์ที่ปรึกษา</div>
                 </div>
