@@ -493,7 +493,7 @@ pages['student-dashboard'] = function () {
                     <div class="student-stat-val" style="font-size:0.95rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:130px;" title="${(st.advisor && st.advisor !== '-') ? st.advisor : 'ยังไม่ระบุ'}">
                         ${(st.advisor && st.advisor !== '-' && st.advisor.trim() !== '') ? st.advisor : 'ยังไม่ระบุ'}
                     </div>
-                    <div class="student-stat-lbl">อาจารย์ที่ปรึกษา (ทั่วไป)</div>
+                    <div class="student-stat-lbl">อาจารย์ที่ปรึกษาด้านวิชาการ</div>
                 </div>
             </div>
 
@@ -508,7 +508,7 @@ pages['student-dashboard'] = function () {
                             return a || 'ยังไม่ระบุ';
                         })()}
                     </div>
-                    <div class="student-stat-lbl">อาจารย์ที่ปรึกษาหลัก</div>
+                    <div class="student-stat-lbl">อาจารย์ที่ปรึกษาวิทยานิพนธ์หลัก</div>
                 </div>
             </div>
         </div>
