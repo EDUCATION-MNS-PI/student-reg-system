@@ -9,18 +9,20 @@ const pages = {};
 let registrationStep = 1;
 
 // ====== Global Academic State ======
-window.CURRENT_ACADEMIC_YEAR = 2568;
-window.CURRENT_SEMESTER = 3; // 1=First, 2=Second, 3=Summer
+const savedYear = localStorage.getItem('activeYear');
+const savedSem = localStorage.getItem('activeSemester');
 
-// ====== Sync localStorage with CURRENT_SEMESTER ======
-// This ensures MOCK.activeSemester always reflects the configured semester,
-// overriding any stale localStorage value from a previous semester.
-(function syncActiveSemester() {
-    const semLabel = window.CURRENT_SEMESTER === 1 ? 'ภาคการศึกษาที่ 1' :
-                     window.CURRENT_SEMESTER === 2 ? 'ภาคการศึกษาที่ 2' : 'ภาคฤดูร้อน';
-    localStorage.setItem('activeSemester', semLabel);
+window.CURRENT_ACADEMIC_YEAR = savedYear ? parseInt(savedYear) : 2568;
+window.CURRENT_SEMESTER = 1;
+
+if (savedSem) {
+    if (savedSem.includes('1')) window.CURRENT_SEMESTER = 1;
+    else if (savedSem.includes('2')) window.CURRENT_SEMESTER = 2;
+    else window.CURRENT_SEMESTER = 3;
+} else {
     localStorage.setItem('activeYear', String(window.CURRENT_ACADEMIC_YEAR));
-})();
+    localStorage.setItem('activeSemester', 'ภาคเรียนที่ 1');
+}
 
 // ====== Utility Functions ======
 function formatMoney(n) {

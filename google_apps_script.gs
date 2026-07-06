@@ -954,7 +954,7 @@ function setupInitialSheets() {
     [SHEETS.COURSE_INSTRUCTORS]: ['course_code', 'course_name', 'instructor_id', 'instructor_name', 'group', 'semester', 'academic_year'],
     [SHEETS.EVAL_INSTRUCTOR_QUESTIONS]: ['question_id', 'question_text'],
     [SHEETS.APPLICANTS]: ['ApplicationID', 'Status', 'Date', 'Prefix', 'FirstName', 'LastName', 'FirstNameEn', 'LastNameEn', 'IdCard', 'Dob', 'Age', 'Religion', 'Nationality', 'Email', 'Phone', 'PhoneHome', 'PhoneWork', 'Program', 'Major', 'Address', 'EducationHistory', 'TrainingHistory', 'WorkStatus', 'WorkHistory', 'CurrentWorkplace', 'ResearchTopic', 'DocumentsLink', 'Notes'],
-    [SHEETS.SCHEDULE]: ['Day', 'StartSlot', 'EndSlot', 'CourseCode', 'CourseName', 'InstructorID', 'InstructorName', 'Room', 'Semester', 'AcademicYear', 'Section', 'Color'],
+    [SHEETS.SCHEDULE]: ['วันที่', 'เวลา', 'หัวข้อ', 'อาจารย์ผู้สอน', 'ภาคเรียน', 'ปีการศึกษา'],
     [SHEETS.DOCUMENT_TEMPLATES]: ['id', 'name', 'type'],
     [SHEETS.THESIS_PROGRESS]: [
       'StudentID','StudentName','Major','Cohort','AdvisorName',
