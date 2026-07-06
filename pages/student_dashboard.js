@@ -236,16 +236,21 @@ pages['student-dashboard'] = function () {
 
         .student-stats-row {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
         }
 
-        @media (max-width: 1024px) {
+        @media (max-width: 1280px) {
+            .student-stats-row {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        @media (max-width: 768px) {
             .student-stats-row {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
-        @media (max-width: 576px) {
+        @media (max-width: 480px) {
             .student-stats-row {
                 grid-template-columns: 1fr;
             }
@@ -482,16 +487,28 @@ pages['student-dashboard'] = function () {
 
             <div class="student-stat-card">
                 <div class="student-stat-icon-wrap" style="background: linear-gradient(135deg, #a78bfa, #7c3aed);">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 </div>
                 <div class="student-stat-info">
-                    <div class="student-stat-val" style="font-size:1.02rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px;">
+                    <div class="student-stat-val" style="font-size:0.95rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:130px;" title="${(st.advisor && st.advisor !== '-') ? st.advisor : 'ยังไม่ระบุ'}">
+                        ${(st.advisor && st.advisor !== '-' && st.advisor.trim() !== '') ? st.advisor : 'ยังไม่ระบุ'}
+                    </div>
+                    <div class="student-stat-lbl">อาจารย์ที่ปรึกษา (ทั่วไป)</div>
+                </div>
+            </div>
+
+            <div class="student-stat-card">
+                <div class="student-stat-icon-wrap" style="background: linear-gradient(135deg, #f472b6, #be185d);">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                </div>
+                <div class="student-stat-info">
+                    <div class="student-stat-val" style="font-size:0.95rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:130px;" title="${(() => { const a = [st.mainAdvisor, st.thesisAdvisor].find(x => x && x !== '-' && x.trim() !== ''); return a || 'ยังไม่ระบุ'; })()}">
                         ${(() => {
-                            const adv = [st.advisor, st.mainAdvisor, st.thesisAdvisor].find(a => a && a !== '-' && a.trim() !== '');
-                            return adv || 'ยังไม่ระบุ';
+                            const a = [st.mainAdvisor, st.thesisAdvisor].find(x => x && x !== '-' && x.trim() !== '');
+                            return a || 'ยังไม่ระบุ';
                         })()}
                     </div>
-                    <div class="student-stat-lbl">อาจารย์ที่ปรึกษา</div>
+                    <div class="student-stat-lbl">อาจารย์ที่ปรึกษาหลัก</div>
                 </div>
             </div>
         </div>
