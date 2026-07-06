@@ -84,12 +84,13 @@ pages.schedule = function() {
                     <tr>
                         <th style="min-width:110px;">วันที่</th>
                         <th style="min-width:110px;">เวลา</th>
+                        <th style="min-width:200px;">วิชา</th>
                         <th style="min-width:280px;">หัวข้อ / เนื้อหา</th>
                         <th style="min-width:180px;">อาจารย์ผู้สอน</th>
                     </tr>
                 </thead>
                 <tbody>
-                    ${filtered.length === 0 ? `<tr><td colspan="4" style="text-align:center; padding:40px; color:var(--text-muted);">ไม่พบข้อมูลในเงื่อนไขที่เลือก</td></tr>` : 
+                    ${filtered.length === 0 ? `<tr><td colspan="5" style="text-align:center; padding:40px; color:var(--text-muted);">ไม่พบข้อมูลในเงื่อนไขที่เลือก</td></tr>` : 
                     filtered.map((s, i) => {
                         const instructors = (s.instructor || '').split(/[,\/\n]/).map(n => n.trim()).filter(Boolean);
                         const instrHtml = instructors.length > 1
@@ -97,19 +98,24 @@ pages.schedule = function() {
                             : `<span style="font-size:0.88rem;">${instructors[0] || '-'}</span>`;
 
                         const topicLines = (s.topic || '-').split(/\n/).map(l => l.trim()).filter(Boolean);
-                        const courseLabel = (s.courseCode || s.courseName) ? `<div style="font-size:0.8rem; color:var(--accent-primary); font-weight:700; margin-bottom:4px;">${s.courseCode || ''} ${s.courseName || ''}</div>` : '';
                         const topicHtml = topicLines.length > 1
-                            ? `${courseLabel}<div style="font-weight:600; font-size:0.9rem; margin-bottom:4px;">${topicLines[0]}</div>
+                            ? `<div style="font-weight:600; font-size:0.9rem; margin-bottom:4px;">${topicLines[0]}</div>
                                <ul style="margin:0; padding-left:18px; color:var(--text-secondary); font-size:0.85rem;">
                                    ${topicLines.slice(1).map(l => `<li>${l}</li>`).join('')}
                                </ul>`
-                            : `${courseLabel}<div style="font-size:0.9rem;">${topicLines[0] || '-'}</div>`;
+                            : `<div style="font-size:0.9rem;">${topicLines[0] || '-'}</div>`;
+
+                        const courseHtml = `
+                            ${s.courseCode ? `<div style="font-weight:700; font-size:0.85rem; color:var(--accent-primary);">${s.courseCode}</div>` : ''}
+                            ${s.courseName ? `<div style="font-size:0.85rem; color:var(--text-secondary); margin-top:2px;">${s.courseName}</div>` : (s.courseCode ? '' : '-')}
+                        `;
 
                         const rowBg = i % 2 === 0 ? '' : 'background:var(--bg-secondary);';
                         return `
                         <tr style="${rowBg} transition:background 0.2s;" onmouseover="this.style.background='var(--accent-primary-glow)'" onmouseout="this.style.background='${i%2===0?'':'var(--bg-secondary)'}'">
                             <td style="vertical-align:top; padding:14px 16px; white-space:nowrap; font-size:0.88rem; font-weight:600; color:var(--text-primary);">${s.date || '-'}</td>
                             <td style="vertical-align:top; padding:14px 16px; white-space:nowrap; font-size:0.85rem; color:var(--text-secondary);">${s.time || '-'}</td>
+                            <td style="vertical-align:top; padding:14px 16px;">${courseHtml}</td>
                             <td style="vertical-align:top; padding:14px 16px;">${topicHtml}</td>
                             <td style="vertical-align:top; padding:14px 16px;">${instrHtml}</td>
                         </tr>`;
@@ -202,22 +208,26 @@ pages.schedule = function() {
                             for (let i = startIndex + 1; i <= endIndex; i++) slotOccupied[i] = 'skip';
                             
                             // Determine block color based on topic
+                            let title = item.topic || '';
                             let bgColor = '#f1f5f9';
                             let textColor = '#334155';
-                            let title = item.topic || '';
                             
                             if (title.includes('เวชปฏิบัติ')) { bgColor = '#ffedd5'; textColor = '#9a3412'; }
                             else if (title.includes('ขั้นสูง')) { bgColor = '#dcfce7'; textColor = '#166534'; }
                             else if (title.includes('กฎหมาย') || title.includes('จริยธรรม')) { bgColor = '#f3e8ff'; textColor = '#6b21a8'; }
                             else if (title.includes('ปฐมนิเทศ')) { bgColor = '#ffffff'; textColor = '#1e293b'; }
                             
+                            let courseInfo = [];
+                            if (item.courseCode) courseInfo.push(item.courseCode);
+                            if (item.courseName) courseInfo.push(item.courseName);
+                            let courseDisplay = courseInfo.length > 0 ? 
+                                `<div style="font-size:0.75rem; font-weight:800; color:${textColor}; opacity:0.85; margin-bottom:4px; line-height:1.2;">${courseInfo.join(' ')}</div>` : '';
+                            
                             let instr = (item.instructor||'').split(/[,\/\n]/).map(n => n.trim()).filter(Boolean);
                             let instrStr = instr.length > 2 ? instr[0] + ' และคณะ' : instr.join(', ');
-                            
-                            let courseLabel = (item.courseCode || item.courseName) ? `<div style="font-size:0.75rem; color:var(--accent-primary); font-weight:800; margin-bottom:4px; text-transform:uppercase;">${item.courseCode || ''} ${item.courseName || ''}</div>` : '';
 
                             slotHtml[startIndex] = `<td colspan="${span}" style="padding:12px; border:1px solid var(--border-color); ${endIndex === timeSlots.length-1 ? 'border-right:none;' : ''} background:${bgColor}; text-align:center; vertical-align:middle; position:relative;">
-                                ${courseLabel}
+                                ${courseDisplay}
                                 <div style="font-weight:600; font-size:0.85rem; margin-bottom:6px; color:${textColor}; line-height:1.4;">${title.replace(/\n/g, '<br>')}</div>
                                 ${instrStr ? `<div style="font-size:0.75rem; color:${textColor}; opacity:0.85;">${instrStr}</div>` : ''}
                             </td>`;
