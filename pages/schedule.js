@@ -1,5 +1,5 @@
 // ============================
-// Schedule Page — ตารางการเรียนการสอน (Date-based format)
+// Schedule Page — ตารางการเรียนการสอน (Date-based format & Grid view)
 // ============================
 pages.schedule = function() {
     const list = MOCK.scheduleList || [];
@@ -9,6 +9,7 @@ pages.schedule = function() {
     const allYears     = [...new Set(list.map(s => s.academicYear).filter(Boolean))];
     const activeSem  = window._schedSem  || allSemesters[0] || '';
     const activeYear = window._schedYear || allYears[0]     || '';
+    const viewMode   = window._schedView || 'grid'; // 'grid' or 'list'
 
     const filtered = list.filter(s => {
         const semOk  = !activeSem  || s.semester     === activeSem;
@@ -38,72 +39,218 @@ pages.schedule = function() {
         </div>`;
     }
 
-    // ---- Filter bar ----
-    const filterBar = (allSemesters.length > 1 || allYears.length > 1) ? `
-    <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:20px; align-items:center;">
-        ${allYears.length > 1 ? `
-        <div style="display:flex; align-items:center; gap:8px;">
-            <label style="font-size:0.85rem; font-weight:600; color:var(--text-secondary);">ปีการศึกษา</label>
-            <select class="form-input" style="height:36px; padding:0 10px; min-width:130px;" onchange="changeSchedFilter('Year', this.value)">
-                <option value="">-- ทั้งหมด --</option>
-                ${allYears.map(y => `<option value="${y}" ${y===activeYear?'selected':''}>${y}</option>`).join('')}
-            </select>
-        </div>` : ''}
-        ${allSemesters.length > 1 ? `
-        <div style="display:flex; align-items:center; gap:8px;">
-            <label style="font-size:0.85rem; font-weight:600; color:var(--text-secondary);">ภาคเรียน</label>
-            <select class="form-input" style="height:36px; padding:0 10px; min-width:130px;" onchange="changeSchedFilter('Sem', this.value)">
-                <option value="">-- ทั้งหมด --</option>
-                ${allSemesters.map(s => `<option value="${s}" ${s===activeSem?'selected':''}>${s}</option>`).join('')}
-            </select>
-        </div>` : ''}
-        <span style="font-size:0.82rem; color:var(--text-muted); margin-left:auto;">${filtered.length} รายการ</span>
-    </div>` : '';
+    // ---- Filter bar & View Toggle ----
+    const filterBar = `
+    <div style="display:flex; justify-content:space-between; flex-wrap:wrap; margin-bottom:20px; align-items:center; gap:16px;">
+        <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+            ${allYears.length > 1 ? `
+            <div style="display:flex; align-items:center; gap:8px;">
+                <label style="font-size:0.85rem; font-weight:600; color:var(--text-secondary);">ปีการศึกษา</label>
+                <select class="form-input" style="height:36px; padding:0 10px; min-width:110px;" onchange="changeSchedFilter('Year', this.value)">
+                    <option value="">-- ทั้งหมด --</option>
+                    ${allYears.map(y => `<option value="${y}" ${y===activeYear?'selected':''}>${y}</option>`).join('')}
+                </select>
+            </div>` : ''}
+            ${allSemesters.length > 1 ? `
+            <div style="display:flex; align-items:center; gap:8px;">
+                <label style="font-size:0.85rem; font-weight:600; color:var(--text-secondary);">ภาคเรียน</label>
+                <select class="form-input" style="height:36px; padding:0 10px; min-width:110px;" onchange="changeSchedFilter('Sem', this.value)">
+                    <option value="">-- ทั้งหมด --</option>
+                    ${allSemesters.map(s => `<option value="${s}" ${s===activeSem?'selected':''}>${s}</option>`).join('')}
+                </select>
+            </div>` : ''}
+            <span style="font-size:0.82rem; color:var(--text-muted); margin-left:8px;">${filtered.length} รายการ</span>
+        </div>
+        
+        <!-- View Toggle -->
+        <div style="display:flex; background:var(--bg-secondary); border-radius:8px; padding:4px;">
+            <button onclick="changeSchedFilter('View', 'grid')" style="border:none; padding:6px 14px; border-radius:6px; cursor:pointer; font-size:0.85rem; font-weight:600; transition:all 0.2s; ${viewMode === 'grid' ? 'background:white; color:var(--accent-primary); box-shadow:0 1px 3px rgba(0,0,0,0.1);' : 'background:transparent; color:var(--text-secondary);'}">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px; vertical-align:-2px;"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg> แบบตาราง
+            </button>
+            <button onclick="changeSchedFilter('View', 'list')" style="border:none; padding:6px 14px; border-radius:6px; cursor:pointer; font-size:0.85rem; font-weight:600; transition:all 0.2s; ${viewMode === 'list' ? 'background:white; color:var(--accent-primary); box-shadow:0 1px 3px rgba(0,0,0,0.1);' : 'background:transparent; color:var(--text-secondary);'}">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px; vertical-align:-2px;"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg> แบบรายการ
+            </button>
+        </div>
+    </div>`;
 
-    // ---- Table rows ----
-    const rows = filtered.map((s, i) => {
-        const instructors = (s.instructor || '').split(/[,\/\n]/).map(n => n.trim()).filter(Boolean);
-        const instrHtml = instructors.length > 1
-            ? `<ul style="margin:0; padding-left:18px; font-size:0.88rem;">${instructors.map(n => `<li>${n}</li>`).join('')}</ul>`
-            : `<span style="font-size:0.88rem;">${instructors[0] || '-'}</span>`;
+    // ==========================================
+    // 1. LIST VIEW RENDERING
+    // ==========================================
+    const listHtml = `
+    <div class="card animate-in animate-delay-1">
+        <div class="card-body" style="padding:0; overflow-x:auto;">
+            <table class="data-table sched-table" style="width:100%; border-collapse:collapse;">
+                <thead>
+                    <tr>
+                        <th style="min-width:110px;">วันที่</th>
+                        <th style="min-width:110px;">เวลา</th>
+                        <th style="min-width:280px;">หัวข้อ / เนื้อหา</th>
+                        <th style="min-width:180px;">อาจารย์ผู้สอน</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${filtered.length === 0 ? `<tr><td colspan="4" style="text-align:center; padding:40px; color:var(--text-muted);">ไม่พบข้อมูลในเงื่อนไขที่เลือก</td></tr>` : 
+                    filtered.map((s, i) => {
+                        const instructors = (s.instructor || '').split(/[,\/\n]/).map(n => n.trim()).filter(Boolean);
+                        const instrHtml = instructors.length > 1
+                            ? `<ul style="margin:0; padding-left:18px; font-size:0.88rem;">${instructors.map(n => `<li>${n}</li>`).join('')}</ul>`
+                            : `<span style="font-size:0.88rem;">${instructors[0] || '-'}</span>`;
 
-        const topicLines = (s.topic || '-').split(/\n/).map(l => l.trim()).filter(Boolean);
-        const topicHtml = topicLines.length > 1
-            ? `<div style="font-weight:600; font-size:0.9rem; margin-bottom:4px;">${topicLines[0]}</div>
-               <ul style="margin:0; padding-left:18px; color:var(--text-secondary); font-size:0.85rem;">
-                   ${topicLines.slice(1).map(l => `<li>${l}</li>`).join('')}
-               </ul>`
-            : `<div style="font-size:0.9rem;">${topicLines[0] || '-'}</div>`;
+                        const topicLines = (s.topic || '-').split(/\n/).map(l => l.trim()).filter(Boolean);
+                        const topicHtml = topicLines.length > 1
+                            ? `<div style="font-weight:600; font-size:0.9rem; margin-bottom:4px;">${topicLines[0]}</div>
+                               <ul style="margin:0; padding-left:18px; color:var(--text-secondary); font-size:0.85rem;">
+                                   ${topicLines.slice(1).map(l => `<li>${l}</li>`).join('')}
+                               </ul>`
+                            : `<div style="font-size:0.9rem;">${topicLines[0] || '-'}</div>`;
 
-        const rowBg = i % 2 === 0 ? '' : 'background:var(--bg-secondary);';
-        return `
-        <tr style="${rowBg} transition:background 0.2s;" onmouseover="this.style.background='var(--accent-primary-glow)'" onmouseout="this.style.background='${i%2===0?'':'var(--bg-secondary)'}'">
-            <td style="vertical-align:top; padding:14px 16px; white-space:nowrap; font-size:0.88rem; font-weight:600; color:var(--text-primary);">${s.date || '-'}</td>
-            <td style="vertical-align:top; padding:14px 16px; white-space:nowrap; font-size:0.85rem; color:var(--text-secondary);">${s.time || '-'}</td>
-            <td style="vertical-align:top; padding:14px 16px;">${topicHtml}</td>
-            <td style="vertical-align:top; padding:14px 16px;">${instrHtml}</td>
-        </tr>`;
-    }).join('');
+                        const rowBg = i % 2 === 0 ? '' : 'background:var(--bg-secondary);';
+                        return `
+                        <tr style="${rowBg} transition:background 0.2s;" onmouseover="this.style.background='var(--accent-primary-glow)'" onmouseout="this.style.background='${i%2===0?'':'var(--bg-secondary)'}'">
+                            <td style="vertical-align:top; padding:14px 16px; white-space:nowrap; font-size:0.88rem; font-weight:600; color:var(--text-primary);">${s.date || '-'}</td>
+                            <td style="vertical-align:top; padding:14px 16px; white-space:nowrap; font-size:0.85rem; color:var(--text-secondary);">${s.time || '-'}</td>
+                            <td style="vertical-align:top; padding:14px 16px;">${topicHtml}</td>
+                            <td style="vertical-align:top; padding:14px 16px;">${instrHtml}</td>
+                        </tr>`;
+                    }).join('')}
+                </tbody>
+            </table>
+        </div>
+    </div>`;
 
+    // ==========================================
+    // 2. GRID VIEW RENDERING
+    // ==========================================
+    const timeSlots = [
+        { label: '08.00-09.00', start: 8 },
+        { label: '09.00-10.00', start: 9 },
+        { label: '10.00-11.00', start: 10 },
+        { label: '11.00-12.00', start: 11 },
+        { label: '12.00-13.00', start: 12 }, // Lunch
+        { label: '13.00-14.00', start: 13 },
+        { label: '14.00-15.00', start: 14 },
+        { label: '15.00-16.00', start: 15 },
+        { label: '16.00-17.00', start: 16 }
+    ];
+
+    const groupedByDate = {};
+    const dateKeys = [];
+    filtered.forEach(item => {
+        const d = item.date || 'ไม่ระบุวันที่';
+        if (!groupedByDate[d]) {
+            groupedByDate[d] = [];
+            dateKeys.push(d);
+        }
+        groupedByDate[d].push(item);
+    });
+
+    let gridHtml = `
+    <div class="card animate-in animate-delay-1" style="background:white; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.03);">
+        <div class="card-body" style="padding:0; overflow-x:auto;">
+            <table style="width:100%; min-width:1100px; border-collapse:collapse; font-size:0.85rem;">
+                <thead>
+                    <tr>
+                        <th style="padding:16px 10px; border:1px solid var(--border-color); background:var(--bg-secondary); border-top:none; border-left:none; text-align:center; width:130px; font-weight:700; color:var(--text-secondary); position:relative;">
+                            <div style="position:absolute; top:0; left:0; width:100%; height:100%; background:linear-gradient(to bottom right, transparent 49%, var(--border-color) 49%, var(--border-color) 51%, transparent 51%);"></div>
+                            <span style="position:absolute; bottom:6px; left:12px;">วัน</span>
+                            <span style="position:absolute; top:6px; right:12px;">เวลา</span>
+                        </th>
+                        ${timeSlots.map(t => `<th style="padding:12px 4px; border:1px solid var(--border-color); background:var(--bg-secondary); border-top:none; ${t.start===16?'border-right:none;':''} text-align:center; font-weight:600; color:var(--text-secondary);">${t.label}</th>`).join('')}
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+
+    if (dateKeys.length === 0) {
+        gridHtml += `<tr><td colspan="${timeSlots.length + 1}" style="text-align:center; padding:50px; color:var(--text-muted);">ไม่พบข้อมูลในเงื่อนไขที่เลือก</td></tr>`;
+    } else {
+        dateKeys.forEach((date, rowIdx) => {
+            let rowHtml = `<tr>
+                <td style="padding:12px 10px; border:1px solid var(--border-color); border-left:none; font-weight:600; background:#f8fafc; white-space:nowrap; vertical-align:top; color:#334155;">
+                    ${date.replace(' ', '<br><span style="font-weight:400; font-size:0.8rem; color:var(--text-muted);">')}</span>
+                </td>`;
+            
+            let slotOccupied = new Array(timeSlots.length).fill(false);
+            let slotHtml = new Array(timeSlots.length).fill('');
+            let items = groupedByDate[date];
+
+            items.forEach(item => {
+                let tStr = String(item.time || '').replace(/น\./gi, '').trim();
+                let parts = tStr.split('-');
+                if (parts.length === 2) {
+                    let startHr = parseInt(parts[0].replace(':', '.'));
+                    let endHr = parseInt(parts[1].replace(':', '.'));
+                    
+                    if (!isNaN(startHr) && !isNaN(endHr)) {
+                        let startIndex = timeSlots.findIndex(ts => ts.start === startHr);
+                        let endIndex = timeSlots.findIndex(ts => ts.start === (endHr - 1));
+                        if (endHr === 12 && startIndex !== -1) endIndex = 3; // 11.00-12.00
+                        if (endHr > 17 && startIndex !== -1) endIndex = timeSlots.length - 1;
+
+                        if (startIndex !== -1 && endIndex !== -1 && endIndex >= startIndex) {
+                            let span = (endIndex - startIndex) + 1;
+                            slotOccupied[startIndex] = true;
+                            for (let i = startIndex + 1; i <= endIndex; i++) slotOccupied[i] = 'skip';
+                            
+                            // Determine block color based on topic
+                            let bgColor = '#f1f5f9';
+                            let textColor = '#334155';
+                            let title = item.topic || '';
+                            
+                            if (title.includes('เวชปฏิบัติ')) { bgColor = '#ffedd5'; textColor = '#9a3412'; }
+                            else if (title.includes('ขั้นสูง')) { bgColor = '#dcfce7'; textColor = '#166534'; }
+                            else if (title.includes('กฎหมาย') || title.includes('จริยธรรม')) { bgColor = '#f3e8ff'; textColor = '#6b21a8'; }
+                            else if (title.includes('ปฐมนิเทศ')) { bgColor = '#ffffff'; textColor = '#1e293b'; }
+                            
+                            let instr = (item.instructor||'').split(/[,\/\n]/).map(n => n.trim()).filter(Boolean);
+                            let instrStr = instr.length > 2 ? instr[0] + ' และคณะ' : instr.join(', ');
+
+                            slotHtml[startIndex] = `<td colspan="${span}" style="padding:12px; border:1px solid var(--border-color); ${endIndex === timeSlots.length-1 ? 'border-right:none;' : ''} background:${bgColor}; text-align:center; vertical-align:middle; position:relative;">
+                                <div style="font-weight:600; font-size:0.85rem; margin-bottom:6px; color:${textColor}; line-height:1.4;">${title.replace(/\n/g, '<br>')}</div>
+                                ${instrStr ? `<div style="font-size:0.75rem; color:${textColor}; opacity:0.85;">${instrStr}</div>` : ''}
+                            </td>`;
+                        }
+                    }
+                }
+            });
+
+            // Handle Lunch break (index 4 = 12.00-13.00)
+            const lunchIdx = 4;
+            if (slotOccupied[lunchIdx] === false) {
+                slotOccupied[lunchIdx] = true;
+                slotHtml[lunchIdx] = `<td style="padding:10px; border:1px solid var(--border-color); text-align:center; color:#94a3b8; font-size:0.8rem; background:#f8fafc; font-weight:500;">พักกลางวัน</td>`;
+            }
+
+            // Render row cells
+            for (let i = 0; i < timeSlots.length; i++) {
+                if (slotOccupied[i] === 'skip') continue;
+                if (slotOccupied[i] === false) {
+                    let bRight = (i === timeSlots.length - 1) ? 'border-right:none;' : '';
+                    rowHtml += `<td style="padding:10px; border:1px solid var(--border-color); ${bRight} text-align:center; color:#cbd5e1; font-size:0.8rem; background:#ffffff;">Self-study</td>`;
+                } else {
+                    rowHtml += slotHtml[i];
+                }
+            }
+            
+            rowHtml += `</tr>`;
+            gridHtml += rowHtml;
+        });
+    }
+
+    gridHtml += `
+                </tbody>
+            </table>
+        </div>
+    </div>`;
+
+    // ==========================================
+    // FINAL RENDER
+    // ==========================================
     return `
     <style>
-        .sched-table th {
-            background: var(--bg-secondary);
-            font-size: 0.82rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-muted);
-            padding: 12px 16px;
-            border-bottom: 2px solid var(--border-color);
-            white-space: nowrap;
-        }
-        .sched-table td {
-            border-bottom: 1px solid var(--border-color);
-        }
-        .sched-table tr:last-child td {
-            border-bottom: none;
-        }
+        .sched-table th { background: var(--bg-secondary); font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); padding: 12px 16px; border-bottom: 2px solid var(--border-color); white-space: nowrap; }
+        .sched-table td { border-bottom: 1px solid var(--border-color); }
+        .sched-table tr:last-child td { border-bottom: none; }
     </style>
     <div class="animate-in">
         <div class="page-header" style="margin-bottom:20px;">
@@ -112,23 +259,6 @@ pages.schedule = function() {
         </div>
 
         ${filterBar}
-
-        <div class="card animate-in animate-delay-1">
-            <div class="card-body" style="padding:0; overflow-x:auto;">
-                <table class="data-table sched-table" style="width:100%; border-collapse:collapse;">
-                    <thead>
-                        <tr>
-                            <th style="min-width:110px;">วันที่</th>
-                            <th style="min-width:110px;">เวลา</th>
-                            <th style="min-width:280px;">หัวข้อ / เนื้อหา</th>
-                            <th style="min-width:180px;">อาจารย์ผู้สอน</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${rows || `<tr><td colspan="4" style="text-align:center; padding:40px; color:var(--text-muted);">ไม่พบข้อมูลในเงื่อนไขที่เลือก</td></tr>`}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        ${viewMode === 'grid' ? gridHtml : listHtml}
     </div>`;
 };
