@@ -97,12 +97,13 @@ pages.schedule = function() {
                             : `<span style="font-size:0.88rem;">${instructors[0] || '-'}</span>`;
 
                         const topicLines = (s.topic || '-').split(/\n/).map(l => l.trim()).filter(Boolean);
+                        const courseLabel = (s.courseCode || s.courseName) ? `<div style="font-size:0.8rem; color:var(--accent-primary); font-weight:700; margin-bottom:4px;">${s.courseCode || ''} ${s.courseName || ''}</div>` : '';
                         const topicHtml = topicLines.length > 1
-                            ? `<div style="font-weight:600; font-size:0.9rem; margin-bottom:4px;">${topicLines[0]}</div>
+                            ? `${courseLabel}<div style="font-weight:600; font-size:0.9rem; margin-bottom:4px;">${topicLines[0]}</div>
                                <ul style="margin:0; padding-left:18px; color:var(--text-secondary); font-size:0.85rem;">
                                    ${topicLines.slice(1).map(l => `<li>${l}</li>`).join('')}
                                </ul>`
-                            : `<div style="font-size:0.9rem;">${topicLines[0] || '-'}</div>`;
+                            : `${courseLabel}<div style="font-size:0.9rem;">${topicLines[0] || '-'}</div>`;
 
                         const rowBg = i % 2 === 0 ? '' : 'background:var(--bg-secondary);';
                         return `
@@ -212,8 +213,11 @@ pages.schedule = function() {
                             
                             let instr = (item.instructor||'').split(/[,\/\n]/).map(n => n.trim()).filter(Boolean);
                             let instrStr = instr.length > 2 ? instr[0] + ' และคณะ' : instr.join(', ');
+                            
+                            let courseLabel = (item.courseCode || item.courseName) ? `<div style="font-size:0.75rem; color:var(--accent-primary); font-weight:800; margin-bottom:4px; text-transform:uppercase;">${item.courseCode || ''} ${item.courseName || ''}</div>` : '';
 
                             slotHtml[startIndex] = `<td colspan="${span}" style="padding:12px; border:1px solid var(--border-color); ${endIndex === timeSlots.length-1 ? 'border-right:none;' : ''} background:${bgColor}; text-align:center; vertical-align:middle; position:relative;">
+                                ${courseLabel}
                                 <div style="font-weight:600; font-size:0.85rem; margin-bottom:6px; color:${textColor}; line-height:1.4;">${title.replace(/\n/g, '<br>')}</div>
                                 ${instrStr ? `<div style="font-size:0.75rem; color:${textColor}; opacity:0.85;">${instrStr}</div>` : ''}
                             </td>`;

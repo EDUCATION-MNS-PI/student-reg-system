@@ -297,9 +297,10 @@ async function bootApp() {
             MOCK.scheduleList = schedulesData.map(s => ({
                 date:        s['วันที่']        || s['Date']       || s['date']       || '',
                 time:        s['เวลา']          || s['Time']       || s['time']       || '',
-                topic:       s['หัวข้อ']        || s['Topic']      || s['topic']      || s['CourseName'] || s['course_name'] || '',
+                topic:       s['หัวข้อ']        || s['Topic']      || s['topic']      || '',
                 instructor:  s['อาจารย์ผู้สอน'] || s['Instructor'] || s['instructor'] || s['InstructorName'] || '',
                 courseCode:  s['รหัสวิชา']      || s['CourseCode'] || s['course_code'] || '',
+                courseName:  s['ชื่อวิชา']      || s['CourseName'] || s['course_name'] || '',
                 room:        s['ห้อง']          || s['Room']       || s['room']       || '',
                 semester:    s['ภาคเรียน']      || s['Semester']   || s['semester']   || '',
                 academicYear:s['ปีการศึกษา']    || s['AcademicYear']|| s['academic_year'] || '',
