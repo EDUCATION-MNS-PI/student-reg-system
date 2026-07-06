@@ -490,7 +490,7 @@ pages['student-dashboard'] = function () {
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 </div>
                 <div class="student-stat-info">
-                    <div class="student-stat-val" style="font-size:0.95rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:130px;" title="${(st.advisor && st.advisor !== '-') ? st.advisor : 'ยังไม่ระบุ'}">
+                    <div class="student-stat-val" style="font-size:0.85rem; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; line-height:1.35;" title="${(st.advisor && st.advisor !== '-') ? st.advisor : 'ยังไม่ระบุ'}">
                         ${(st.advisor && st.advisor !== '-' && st.advisor.trim() !== '') ? st.advisor : 'ยังไม่ระบุ'}
                     </div>
                     <div class="student-stat-lbl">อาจารย์ที่ปรึกษาด้านวิชาการ</div>
@@ -502,7 +502,7 @@ pages['student-dashboard'] = function () {
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
                 </div>
                 <div class="student-stat-info">
-                    <div class="student-stat-val" style="font-size:0.95rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:130px;" title="${(() => { const a = [st.mainAdvisor, st.thesisAdvisor].find(x => x && x !== '-' && x.trim() !== ''); return a || 'ยังไม่ระบุ'; })()}">
+                    <div class="student-stat-val" style="font-size:0.85rem; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; line-height:1.35;" title="${(() => { const a = [st.mainAdvisor, st.thesisAdvisor].find(x => x && x !== '-' && x.trim() !== ''); return a || 'ยังไม่ระบุ'; })()}">
                         ${(() => {
                             const a = [st.mainAdvisor, st.thesisAdvisor].find(x => x && x !== '-' && x.trim() !== '');
                             return a || 'ยังไม่ระบุ';

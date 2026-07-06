@@ -293,7 +293,18 @@ async function bootApp() {
         MOCK.graduationRequests = graduationRequestsData || [];
         MOCK.allExams = examsData || []; 
 
-        if (schedulesData && schedulesData.length > 0) { MOCK.schedule.items = schedulesData.map(s => ({ day: parseInt(s.Day) || 0, startSlot: parseInt(s.StartSlot) || 0, endSlot: parseInt(s.EndSlot) || 0, code: s.CourseCode || '', name: s.CourseName || '', room: s.Room || '', color: s.Color || 'blue', instructorId: s.InstructorID || '', instructorName: s.InstructorName || '', semester: s.Semester || '', academicYear: s.AcademicYear || '', section: s.Section || '' })); }
+        if (schedulesData && schedulesData.length > 0) {
+            MOCK.scheduleList = schedulesData.map(s => ({
+                date:        s['วันที่']        || s['Date']       || s['date']       || '',
+                time:        s['เวลา']          || s['Time']       || s['time']       || '',
+                topic:       s['หัวข้อ']        || s['Topic']      || s['topic']      || s['CourseName'] || s['course_name'] || '',
+                instructor:  s['อาจารย์ผู้สอน'] || s['Instructor'] || s['instructor'] || s['InstructorName'] || '',
+                courseCode:  s['รหัสวิชา']      || s['CourseCode'] || s['course_code'] || '',
+                room:        s['ห้อง']          || s['Room']       || s['room']       || '',
+                semester:    s['ภาคเรียน']      || s['Semester']   || s['semester']   || '',
+                academicYear:s['ปีการศึกษา']    || s['AcademicYear']|| s['academic_year'] || '',
+            })).filter(s => s.date || s.topic || s.time); // exclude blank rows
+        }
 
         // Sync header semester badge with global state
         const headerSemEl = document.getElementById('headerSemester');
