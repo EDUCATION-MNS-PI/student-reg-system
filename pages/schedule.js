@@ -178,14 +178,22 @@ pages.schedule = function() {
                 let tStr = String(item.time || '').replace(/น\./gi, '').trim();
                 let parts = tStr.split('-');
                 if (parts.length === 2) {
-                    let startHr = parseInt(parts[0].replace(':', '.'));
-                    let endHr = parseInt(parts[1].replace(':', '.'));
+                    let startStr = parts[0].replace(':', '.').trim();
+                    let endStr = parts[1].replace(':', '.').trim();
+                    let startHr = parseInt(startStr);
+                    let endHr = parseInt(endStr);
+                    let endMin = parseFloat(endStr) - endHr; // e.g. 10.30 -> 0.30
                     
                     if (!isNaN(startHr) && !isNaN(endHr)) {
                         let startIndex = timeSlots.findIndex(ts => ts.start === startHr);
-                        let endIndex = timeSlots.findIndex(ts => ts.start === (endHr - 1));
-                        if (endHr === 12 && startIndex !== -1) endIndex = 3; // 11.00-12.00
-                        if (endHr > 17 && startIndex !== -1) endIndex = timeSlots.length - 1;
+                        
+                        // ถ้านาที > 0 หรือชั่วโมงเท่ากัน (เช่น 10.00-10.30) ให้ block สุดท้ายเป็นชั่วโมงนั้น
+                        // ถ้าจบตรงชั่วโมงพอดี (เช่น 08.00-12.00) ให้ block สุดท้ายคือชั่วโมงก่อนหน้า (11)
+                        let endBlockHr = (endMin > 0 || startHr === endHr) ? endHr : endHr - 1;
+                        let endIndex = timeSlots.findIndex(ts => ts.start === endBlockHr);
+                        
+                        if (endHr === 12 && endMin === 0 && startIndex !== -1) endIndex = 3; // 11.00-12.00
+                        if (endBlockHr >= 17 && startIndex !== -1) endIndex = timeSlots.length - 1;
 
                         if (startIndex !== -1 && endIndex !== -1 && endIndex >= startIndex) {
                             let span = (endIndex - startIndex) + 1;
