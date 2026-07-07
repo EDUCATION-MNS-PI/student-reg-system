@@ -221,15 +221,10 @@ pages.schedule = function() {
                             if (item.courseCode) courseInfo.push(item.courseCode);
                             if (item.courseName) courseInfo.push(item.courseName);
                             let courseDisplay = courseInfo.length > 0 ? 
-                                `<div style="font-size:0.75rem; font-weight:800; color:${textColor}; opacity:0.85; margin-bottom:4px; line-height:1.2;">${courseInfo.join(' ')}</div>` : '';
-                            
-                            let instr = (item.instructor||'').split(/[,\/\n]/).map(n => n.trim()).filter(Boolean);
-                            let instrStr = instr.length > 2 ? instr[0] + ' และคณะ' : instr.join(', ');
+                                `<div style="font-size:0.85rem; font-weight:700; color:${textColor}; line-height:1.4;">${courseInfo.join(' ')}</div>` : '';
 
                             slotHtml[startIndex] = `<td colspan="${span}" style="padding:12px; border:1px solid var(--border-color); ${endIndex === timeSlots.length-1 ? 'border-right:none;' : ''} background:${bgColor}; text-align:center; vertical-align:middle; position:relative;">
                                 ${courseDisplay}
-                                <div style="font-weight:600; font-size:0.85rem; margin-bottom:6px; color:${textColor}; line-height:1.4;">${title.replace(/\n/g, '<br>')}</div>
-                                ${instrStr ? `<div style="font-size:0.75rem; color:${textColor}; opacity:0.85;">${instrStr}</div>` : ''}
                             </td>`;
                         }
                     }
