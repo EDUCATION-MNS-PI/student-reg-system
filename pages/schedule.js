@@ -4,6 +4,22 @@
 pages.schedule = function() {
     const list = MOCK.scheduleList || [];
 
+    const monthMap = {
+        'ม.ค.': 'มกราคม', 'ก.พ.': 'กุมภาพันธ์', 'มี.ค.': 'มีนาคม', 'เม.ย.': 'เมษายน',
+        'พ.ค.': 'พฤษภาคม', 'มิ.ย.': 'มิถุนายน', 'ก.ค.': 'กรกฎาคม', 'ส.ค.': 'สิงหาคม',
+        'ก.ย.': 'กันยายน', 'ต.ค.': 'ตุลาคม', 'พ.ย.': 'พฤศจิกายน', 'ธ.ค.': 'ธันวาคม'
+    };
+    function getFullDate(shortDate) {
+        if (!shortDate) return '-';
+        let d = shortDate;
+        for (let short in monthMap) {
+            if (d.includes(short)) {
+                return d.replace(short, monthMap[short]);
+            }
+        }
+        return d;
+    }
+
     // ---- Filter Controls ----
     const allSemesters = [...new Set(list.map(s => s.semester).filter(Boolean))];
     const allYears     = [...new Set(list.map(s => s.academicYear).filter(Boolean))];
@@ -133,7 +149,7 @@ pages.schedule = function() {
                         const rowBg = i % 2 === 0 ? '' : 'background:var(--bg-secondary);';
                         return `
                         <tr style="${rowBg} transition:background 0.2s;" onmouseover="this.style.background='var(--accent-primary-glow)'" onmouseout="this.style.background='${i%2===0?'':'var(--bg-secondary)'}'">
-                            <td style="vertical-align:top; padding:16px 16px; white-space:nowrap; font-size:0.88rem; font-weight:600; color:var(--text-primary);">${s.date || '-'}</td>
+                            <td style="vertical-align:top; padding:16px 16px; white-space:nowrap; font-size:0.88rem; font-weight:700; color:var(--text-primary);">${getFullDate(s.date)}</td>
                             <td style="vertical-align:top; padding:16px 16px; white-space:nowrap; font-size:0.85rem; color:var(--text-secondary);"><span style="display:inline-block; padding:4px 8px; background:var(--bg-primary); border:1px solid var(--border-color); border-radius:6px; font-weight:600;">${s.time || '-'}</span></td>
                             ${!activeCourse ? `<td style="vertical-align:top; padding:16px 16px;">${courseHtml}</td>` : ''}
                             <td style="vertical-align:top; padding:16px 16px;">${topicHtml}</td>
@@ -190,9 +206,10 @@ pages.schedule = function() {
         gridHtml += `<tr><td colspan="${timeSlots.length + 1}" style="text-align:center; padding:50px; color:var(--text-muted);">ไม่พบข้อมูลในเงื่อนไขที่เลือก</td></tr>`;
     } else {
         dateKeys.forEach((date, rowIdx) => {
+            let displayDate = getFullDate(date);
             let rowHtml = `<tr>
-                <td style="padding:12px 10px; border:1px solid var(--border-color); border-left:none; font-weight:600; background:#f8fafc; white-space:nowrap; vertical-align:top; color:#334155;">
-                    ${date.replace(' ', '<br><span style="font-weight:400; font-size:0.8rem; color:var(--text-muted);">')}</span>
+                <td style="padding:12px 10px; border:1px solid var(--border-color); border-left:none; font-weight:700; text-align:center; vertical-align:middle; background:#f8fafc; white-space:nowrap; color:#334155; font-size:0.85rem;">
+                    ${displayDate}
                 </td>`;
             
             let slotOccupied = new Array(timeSlots.length).fill(false);
