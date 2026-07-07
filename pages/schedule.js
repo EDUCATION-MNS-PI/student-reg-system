@@ -9,13 +9,25 @@ pages.schedule = function() {
     const allYears     = [...new Set(list.map(s => s.academicYear).filter(Boolean))];
     const activeSem  = window._schedSem  || allSemesters[0] || '';
     const activeYear = window._schedYear || allYears[0]     || '';
+    const activeCourse = window._schedCourse || '';
     const viewMode   = window._schedView || 'grid'; // 'grid' or 'list'
 
-    const filtered = list.filter(s => {
+    let preFiltered = list.filter(s => {
         const semOk  = !activeSem  || s.semester     === activeSem;
         const yearOk = !activeYear || s.academicYear === activeYear;
         return semOk && yearOk;
     });
+
+    const allCourses = [];
+    const courseSet = new Set();
+    preFiltered.forEach(s => {
+        if (s.courseCode && !courseSet.has(s.courseCode)) {
+            courseSet.add(s.courseCode);
+            allCourses.push({ code: s.courseCode, name: s.courseName || '' });
+        }
+    });
+
+    const filtered = activeCourse ? preFiltered.filter(s => s.courseCode === activeCourse) : preFiltered;
 
     // Set filter handlers
     window.changeSchedFilter = function(key, val) {
@@ -59,6 +71,14 @@ pages.schedule = function() {
                     ${allSemesters.map(s => `<option value="${s}" ${s===activeSem?'selected':''}>${s}</option>`).join('')}
                 </select>
             </div>` : ''}
+            ${allCourses.length > 0 ? `
+            <div style="display:flex; align-items:center; gap:8px;">
+                <label style="font-size:0.85rem; font-weight:600; color:var(--text-secondary);">วิชา</label>
+                <select class="form-input" style="height:36px; padding:0 10px; max-width:300px; text-overflow:ellipsis;" onchange="changeSchedFilter('Course', this.value)">
+                    <option value="">-- ทุกวิชา --</option>
+                    ${allCourses.map(c => `<option value="${c.code}" ${c.code===activeCourse?'selected':''}>${c.code} ${c.name}</option>`).join('')}
+                </select>
+            </div>` : ''}
             <span style="font-size:0.82rem; color:var(--text-muted); margin-left:8px;">${filtered.length} รายการ</span>
         </div>
         
@@ -84,7 +104,7 @@ pages.schedule = function() {
                     <tr>
                         <th style="min-width:110px;">วันที่</th>
                         <th style="min-width:110px;">เวลา</th>
-                        <th style="min-width:200px;">วิชา</th>
+                        ${!activeCourse ? `<th style="min-width:200px;">วิชา</th>` : ''}
                         <th style="min-width:280px;">หัวข้อ / เนื้อหา</th>
                         <th style="min-width:180px;">อาจารย์ผู้สอน</th>
                     </tr>
@@ -113,11 +133,11 @@ pages.schedule = function() {
                         const rowBg = i % 2 === 0 ? '' : 'background:var(--bg-secondary);';
                         return `
                         <tr style="${rowBg} transition:background 0.2s;" onmouseover="this.style.background='var(--accent-primary-glow)'" onmouseout="this.style.background='${i%2===0?'':'var(--bg-secondary)'}'">
-                            <td style="vertical-align:top; padding:14px 16px; white-space:nowrap; font-size:0.88rem; font-weight:600; color:var(--text-primary);">${s.date || '-'}</td>
-                            <td style="vertical-align:top; padding:14px 16px; white-space:nowrap; font-size:0.85rem; color:var(--text-secondary);">${s.time || '-'}</td>
-                            <td style="vertical-align:top; padding:14px 16px;">${courseHtml}</td>
-                            <td style="vertical-align:top; padding:14px 16px;">${topicHtml}</td>
-                            <td style="vertical-align:top; padding:14px 16px;">${instrHtml}</td>
+                            <td style="vertical-align:top; padding:16px 16px; white-space:nowrap; font-size:0.88rem; font-weight:600; color:var(--text-primary);">${s.date || '-'}</td>
+                            <td style="vertical-align:top; padding:16px 16px; white-space:nowrap; font-size:0.85rem; color:var(--text-secondary);"><span style="display:inline-block; padding:4px 8px; background:var(--bg-primary); border:1px solid var(--border-color); border-radius:6px; font-weight:600;">${s.time || '-'}</span></td>
+                            ${!activeCourse ? `<td style="vertical-align:top; padding:16px 16px;">${courseHtml}</td>` : ''}
+                            <td style="vertical-align:top; padding:16px 16px;">${topicHtml}</td>
+                            <td style="vertical-align:top; padding:16px 16px;">${instrHtml}</td>
                         </tr>`;
                     }).join('')}
                 </tbody>
@@ -207,15 +227,10 @@ pages.schedule = function() {
                             slotOccupied[startIndex] = true;
                             for (let i = startIndex + 1; i <= endIndex; i++) slotOccupied[i] = 'skip';
                             
-                            // Determine block color based on topic
+                            // Determine block color
                             let title = item.topic || '';
-                            let bgColor = '#f1f5f9';
+                            let bgColor = '#f8fafc'; // light slate
                             let textColor = '#334155';
-                            
-                            if (title.includes('เวชปฏิบัติ')) { bgColor = '#ffedd5'; textColor = '#9a3412'; }
-                            else if (title.includes('ขั้นสูง')) { bgColor = '#dcfce7'; textColor = '#166534'; }
-                            else if (title.includes('กฎหมาย') || title.includes('จริยธรรม')) { bgColor = '#f3e8ff'; textColor = '#6b21a8'; }
-                            else if (title.includes('ปฐมนิเทศ')) { bgColor = '#ffffff'; textColor = '#1e293b'; }
                             
                             let courseInfo = [];
                             if (item.courseCode) courseInfo.push(item.courseCode);
@@ -265,8 +280,8 @@ pages.schedule = function() {
     // ==========================================
     return `
     <style>
-        .sched-table th { background: var(--bg-secondary); font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); padding: 12px 16px; border-bottom: 2px solid var(--border-color); white-space: nowrap; }
-        .sched-table td { border-bottom: 1px solid var(--border-color); }
+        .sched-table th { background: #f8fafc; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #475569; padding: 14px 16px; border-bottom: 1px solid #e2e8f0; border-top: 1px solid #e2e8f0; white-space: nowrap; }
+        .sched-table td { border-bottom: 1px solid #f1f5f9; }
         .sched-table tr:last-child td { border-bottom: none; }
     </style>
     <div class="animate-in">
