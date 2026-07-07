@@ -49,6 +49,14 @@ pages.schedule = function() {
 
     const filtered = activeCourse ? preFiltered.filter(s => s.courseCode === activeCourse) : preFiltered;
 
+    const courseColors = ['#fbcfe8', '#ddd6fe', '#bae6fd', '#fed7aa', '#fecaca', '#bbf7d0', '#e9d5ff', '#fde047'];
+    const courseColorMap = {};
+    let colorIdx = 0;
+    allCourses.forEach(c => {
+        courseColorMap[c.code] = courseColors[colorIdx % courseColors.length];
+        colorIdx++;
+    });
+
     const monthShorts = [
         'ม.ค', 'ก.พ', 'มี.ค', 'เม.ย', 'พ.ค', 'มิ.ย',
         'ก.ค', 'ส.ค', 'ก.ย', 'ต.ค', 'พ.ย', 'ธ.ค'
@@ -62,12 +70,35 @@ pages.schedule = function() {
         let year = parseInt(parts[2], 10) || 0;
         let monthIdx = 0;
         for (let i = 0; i < monthShorts.length; i++) {
-            if (monthStr.includes(monthShorts[i])) {
+            let fullMonth = monthMap[monthShorts[i] + '.'];
+            if (monthStr.includes(monthShorts[i]) || (fullMonth && monthStr.includes(fullMonth))) {
                 monthIdx = i;
                 break;
             }
         }
         return (year * 10000) + (monthIdx * 100) + day;
+    }
+
+    const daysThai = ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'];
+    function getDayOfWeekThai(dateString) {
+        if (!dateString) return '';
+        let parts = dateString.trim().split(/\s+/);
+        if (parts.length < 3) return '';
+        let day = parseInt(parts[0], 10);
+        let monthStr = parts[1];
+        let year = parseInt(parts[2], 10);
+        let adYear = year > 2500 ? year - 543 : year;
+        let monthIdx = 0;
+        for (let i = 0; i < monthShorts.length; i++) {
+            let fullMonth = monthMap[monthShorts[i] + '.'];
+            if (monthStr.includes(monthShorts[i]) || (fullMonth && monthStr.includes(fullMonth))) {
+                monthIdx = i;
+                break;
+            }
+        }
+        let d = new Date(adYear, monthIdx, day);
+        if (isNaN(d.getTime())) return '';
+        return daysThai[d.getDay()];
     }
 
     filtered.sort((a, b) => parseThaiDate(a.date) - parseThaiDate(b.date));
@@ -205,13 +236,17 @@ pages.schedule = function() {
 
     const groupedByDate = {};
     const dateKeys = [];
+    const dateDisplayMap = {};
     filtered.forEach(item => {
-        const d = item.date || 'ไม่ระบุวันที่';
-        if (!groupedByDate[d]) {
-            groupedByDate[d] = [];
-            dateKeys.push(d);
+        const origD = item.date || 'ไม่ระบุวันที่';
+        const parsed = parseThaiDate(origD);
+        const dKey = parsed > 0 ? parsed.toString() : origD.trim().replace(/\s+/g, ' ');
+        if (!groupedByDate[dKey]) {
+            groupedByDate[dKey] = [];
+            dateKeys.push(dKey);
+            dateDisplayMap[dKey] = origD;
         }
-        groupedByDate[d].push(item);
+        groupedByDate[dKey].push(item);
     });
 
     let gridHtml = `
@@ -220,8 +255,10 @@ pages.schedule = function() {
             <table style="width:100%; min-width:1100px; table-layout:fixed; border-collapse:collapse; font-size:0.85rem;">
                 <thead>
                     <tr>
-                        <th style="padding:16px 10px; border:1px solid var(--border-color); background:var(--bg-secondary); border-top:none; border-left:none; text-align:center; width:130px; font-weight:700; color:var(--text-secondary);">
-                            วัน / เวลา
+                        <th style="padding:16px 10px; border:1px solid var(--border-color); background:var(--bg-secondary); border-top:none; border-left:none; text-align:center; width:130px; font-weight:700; color:var(--text-secondary); position:relative;">
+                            <div style="position:absolute; top:0; left:0; width:100%; height:100%; background:linear-gradient(to bottom right, transparent 49%, var(--border-color) 49%, var(--border-color) 51%, transparent 51%);"></div>
+                            <span style="position:absolute; bottom:6px; left:12px;">วัน</span>
+                            <span style="position:absolute; top:6px; right:12px;">เวลา</span>
                         </th>
                         ${timeSlots.map(t => `<th style="padding:12px 4px; border:1px solid var(--border-color); background:var(--bg-secondary); border-top:none; ${t.start===16?'border-right:none;':''} text-align:center; font-weight:600; color:var(--text-secondary);">${t.label}</th>`).join('')}
                     </tr>
@@ -232,16 +269,19 @@ pages.schedule = function() {
     if (dateKeys.length === 0) {
         gridHtml += `<tr><td colspan="${timeSlots.length + 1}" style="text-align:center; padding:50px; color:var(--text-muted);">ไม่พบข้อมูลในเงื่อนไขที่เลือก</td></tr>`;
     } else {
-        dateKeys.forEach((date, rowIdx) => {
-            let displayDate = getFullDate(date);
+        dateKeys.forEach((dKey, rowIdx) => {
+            let origDateStr = dateDisplayMap[dKey];
+            let displayDate = getFullDate(origDateStr);
+            let dayOfWeek = getDayOfWeekThai(origDateStr);
+            let combinedDate = dayOfWeek ? `${dayOfWeek} ${displayDate}` : displayDate;
             let rowHtml = `<tr>
                 <td style="padding:12px 10px; border:1px solid var(--border-color); border-left:none; font-weight:700; text-align:center; vertical-align:middle; background:#f8fafc; white-space:nowrap; color:#334155; font-size:0.85rem;">
-                    ${displayDate}
+                    ${combinedDate}
                 </td>`;
             
             let slotOccupied = new Array(timeSlots.length).fill(false);
             let slotHtml = new Array(timeSlots.length).fill('');
-            let items = groupedByDate[date];
+            let items = groupedByDate[dKey];
 
             items.forEach(item => {
                 let tStr = String(item.time || '').replace(/น\./gi, '').trim();
@@ -270,9 +310,8 @@ pages.schedule = function() {
                             for (let i = startIndex + 1; i <= endIndex; i++) slotOccupied[i] = 'skip';
                             
                             // Determine block color
-                            let title = item.topic || '';
-                            let bgColor = '#f8fafc'; // light slate
-                            let textColor = '#334155';
+                            let bgColor = (item.courseCode && courseColorMap[item.courseCode]) ? courseColorMap[item.courseCode] : '#f8fafc';
+                            let textColor = '#1e293b'; // slightly darker for better contrast on pastel
                             
                             let courseInfo = [];
                             if (item.courseCode) courseInfo.push(item.courseCode);
@@ -299,8 +338,17 @@ pages.schedule = function() {
             for (let i = 0; i < timeSlots.length; i++) {
                 if (slotOccupied[i] === 'skip') continue;
                 if (slotOccupied[i] === false) {
-                    let bRight = (i === timeSlots.length - 1) ? 'border-right:none;' : '';
-                    rowHtml += `<td style="padding:10px; border:1px solid var(--border-color); ${bRight} text-align:center; color:#cbd5e1; font-size:0.8rem; background:#ffffff;">Self-study</td>`;
+                    let span = 1;
+                    for (let j = i + 1; j < timeSlots.length; j++) {
+                        if (slotOccupied[j] === false) span++;
+                        else break;
+                    }
+                    let bRight = ((i + span - 1) === timeSlots.length - 1) ? 'border-right:none;' : '';
+                    rowHtml += `<td colspan="${span}" style="padding:10px; border:1px solid var(--border-color); ${bRight} text-align:center; color:#64748b; font-size:0.8rem; background:#ffffff;">Self-study</td>`;
+                    
+                    for (let j = i + 1; j < i + span; j++) {
+                        slotOccupied[j] = 'skip';
+                    }
                 } else {
                     rowHtml += slotHtml[i];
                 }
