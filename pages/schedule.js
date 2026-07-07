@@ -174,13 +174,11 @@ pages.schedule = function() {
     let gridHtml = `
     <div class="card animate-in animate-delay-1" style="background:white; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.03);">
         <div class="card-body" style="padding:0; overflow-x:auto;">
-            <table style="width:100%; min-width:1100px; border-collapse:collapse; font-size:0.85rem;">
+            <table style="width:100%; min-width:1100px; table-layout:fixed; border-collapse:collapse; font-size:0.85rem;">
                 <thead>
                     <tr>
-                        <th style="padding:16px 10px; border:1px solid var(--border-color); background:var(--bg-secondary); border-top:none; border-left:none; text-align:center; width:130px; font-weight:700; color:var(--text-secondary); position:relative;">
-                            <div style="position:absolute; top:0; left:0; width:100%; height:100%; background:linear-gradient(to bottom right, transparent 49%, var(--border-color) 49%, var(--border-color) 51%, transparent 51%);"></div>
-                            <span style="position:absolute; bottom:6px; left:12px;">วัน</span>
-                            <span style="position:absolute; top:6px; right:12px;">เวลา</span>
+                        <th style="padding:16px 10px; border:1px solid var(--border-color); background:var(--bg-secondary); border-top:none; border-left:none; text-align:center; width:130px; font-weight:700; color:var(--text-secondary);">
+                            วัน / เวลา
                         </th>
                         ${timeSlots.map(t => `<th style="padding:12px 4px; border:1px solid var(--border-color); background:var(--bg-secondary); border-top:none; ${t.start===16?'border-right:none;':''} text-align:center; font-weight:600; color:var(--text-secondary);">${t.label}</th>`).join('')}
                     </tr>
