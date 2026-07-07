@@ -13,8 +13,12 @@ pages.schedule = function() {
         if (!shortDate) return '-';
         let d = shortDate;
         for (let short in monthMap) {
+            let shortNoDot = short.replace(/\.$/, '');
             if (d.includes(short)) {
                 return d.replace(short, monthMap[short]);
+            } else if (d.includes(shortNoDot)) {
+                let regex = new RegExp(shortNoDot.replace(/\./g, '\\.') + '\\.?', 'g');
+                return d.replace(regex, monthMap[short]);
             }
         }
         return d;
@@ -44,6 +48,29 @@ pages.schedule = function() {
     });
 
     const filtered = activeCourse ? preFiltered.filter(s => s.courseCode === activeCourse) : preFiltered;
+
+    const monthShorts = [
+        'ม.ค', 'ก.พ', 'มี.ค', 'เม.ย', 'พ.ค', 'มิ.ย',
+        'ก.ค', 'ส.ค', 'ก.ย', 'ต.ค', 'พ.ย', 'ธ.ค'
+    ];
+    function parseThaiDate(dateString) {
+        if (!dateString) return 0;
+        let parts = dateString.trim().split(/\s+/);
+        if (parts.length < 3) return 0;
+        let day = parseInt(parts[0], 10) || 0;
+        let monthStr = parts[1];
+        let year = parseInt(parts[2], 10) || 0;
+        let monthIdx = 0;
+        for (let i = 0; i < monthShorts.length; i++) {
+            if (monthStr.includes(monthShorts[i])) {
+                monthIdx = i;
+                break;
+            }
+        }
+        return (year * 10000) + (monthIdx * 100) + day;
+    }
+
+    filtered.sort((a, b) => parseThaiDate(a.date) - parseThaiDate(b.date));
 
     // Set filter handlers
     window.changeSchedFilter = function(key, val) {
