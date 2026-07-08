@@ -196,25 +196,27 @@ pages.transcript = function() {
         </div>
         
         <div class="report-paper animate-in animate-delay-1" id="printable-transcript">
-            <div class="report-header">
-                <img src="assets/logo_faculty.png" alt="โลโก้คณะพยาบาลศาสตร์" style="width:70px;height:70px;object-fit:contain;margin-right:20px;">
-                <div class="report-header-text">
-                    <div style="font-size:1.2rem;margin-bottom:4px;">คณะพยาบาลศาสตร์ สถาบันพระบรมราชชนก</div>
-                    <div style="font-size:1rem;font-weight:600;">ระบบทะเบียนและประมวลผลการศึกษา</div>
-                </div>
-            </div>
-            
-            <div class="report-title-center">
-                <div>รายงานผลการเรียนนักศึกษารายปีการศึกษา</div>
-                <div>หลักสูตร${studentProgram}</div>
-                <div>${departmentName}</div>
-                <div>ปีที่เข้าศึกษา ${admissionYear}</div>
-                <div style="margin-top:10px;">รหัสนักศึกษา ${studentId} ชื่อ-สกุลนักศึกษา ${studentPrefix}${studentFirstName} ${studentLastName}</div>
-            </div>
-            
-            <table class="report-table">
+            <table class="report-table" style="width: 100%;">
                 <thead>
-
+                    <tr>
+                        <td colspan="4" style="border: none !important; padding: 0;">
+                            <div class="report-header">
+                                <img src="assets/logo_faculty.png" alt="โลโก้คณะพยาบาลศาสตร์" style="width:70px;height:70px;object-fit:contain;margin-right:20px;">
+                                <div class="report-header-text">
+                                    <div style="font-size:1.2rem;margin-bottom:4px;">คณะพยาบาลศาสตร์ สถาบันพระบรมราชชนก</div>
+                                    <div style="font-size:1rem;font-weight:600;">ระบบทะเบียนและประมวลผลการศึกษา</div>
+                                </div>
+                            </div>
+                            
+                            <div class="report-title-center">
+                                <div>รายงานผลการเรียนนักศึกษารายปีการศึกษา</div>
+                                <div>หลักสูตร${studentProgram}</div>
+                                <div>${departmentName}</div>
+                                <div>ปีที่เข้าศึกษา ${admissionYear}</div>
+                                <div style="margin-top:10px;">รหัสนักศึกษา ${studentId} ชื่อ-สกุลนักศึกษา ${studentPrefix}${studentFirstName} ${studentLastName}</div>
+                            </div>
+                        </td>
+                    </tr>
                     <tr>
                         <th style="width:15%">รหัสวิชา</th>
                         <th style="width:60%">รายวิชา</th>
