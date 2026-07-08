@@ -255,7 +255,7 @@ pages.schedule = function() {
             <table style="width:100%; min-width:1100px; table-layout:fixed; border-collapse:collapse; font-size:0.85rem;">
                 <thead>
                     <tr>
-                        <th style="padding:16px 10px; border:1px solid var(--border-color); background:var(--bg-secondary); border-top:none; border-left:none; text-align:center; width:130px; font-weight:700; color:var(--text-secondary); position:relative;">
+                        <th style="padding:16px 10px; border:1px solid var(--border-color); background:var(--bg-secondary); border-top:none; border-left:none; text-align:center; width:160px; font-weight:700; color:var(--text-secondary); position:relative;">
                             <div style="position:absolute; top:0; left:0; width:100%; height:100%; background:linear-gradient(to bottom right, transparent 49%, var(--border-color) 49%, var(--border-color) 51%, transparent 51%);"></div>
                             <span style="position:absolute; bottom:6px; left:12px;">วัน</span>
                             <span style="position:absolute; top:6px; right:12px;">เวลา</span>
@@ -275,7 +275,7 @@ pages.schedule = function() {
             let dayOfWeek = getDayOfWeekThai(origDateStr);
             let combinedDate = dayOfWeek ? `${dayOfWeek} ${displayDate}` : displayDate;
             let rowHtml = `<tr>
-                <td style="padding:12px 10px; border:1px solid var(--border-color); border-left:none; font-weight:700; text-align:center; vertical-align:middle; background:#f8fafc; white-space:nowrap; color:#334155; font-size:0.85rem;">
+                <td style="padding:12px 10px; border:1px solid var(--border-color); border-left:none; font-weight:700; text-align:center; vertical-align:middle; background:#f8fafc; white-space:normal; line-height:1.4; color:#334155; font-size:0.85rem;">
                     ${combinedDate}
                 </td>`;
             

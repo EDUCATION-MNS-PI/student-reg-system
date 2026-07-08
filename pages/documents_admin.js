@@ -1,4 +1,4 @@
-﻿// ============================
+// ============================
 // Admin Documents Approval Page
 // ============================
 pages['documents-admin'] = function() {
@@ -458,7 +458,7 @@ window.forwardAdminDoc = function(docId) {
                 <div style="display:flex; gap:10px;">
                     <select class="form-select" id="nextPersonSelect" style="flex:1;">
                         <option value="">-- ระบุผู้รับ --</option>
-                        ${nextPersons.map(p => `<option value="${p}" ${doc.nextStep === p ? 'selected' : ''}>${p}</option>`).join('')}
+                        ${[...new Set(nextPersons)].map(p => `<option value="${p}" ${doc.nextStep === p ? 'selected' : ''}>${p}</option>`).join('')}
                     </select>
                 </div>
             </div>

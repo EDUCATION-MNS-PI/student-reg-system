@@ -140,6 +140,18 @@ pages['student-dashboard'] = function () {
         }
     ];
 
+    let currentTermCredits = '-';
+    if (st.grades && Array.isArray(st.grades)) {
+        const targetSemStr = `${MOCK.activeSemester}/${MOCK.activeYear}`;
+        const termData = st.grades.find(g => 
+            g.semester === targetSemStr || 
+            (String(g.semester) === String(MOCK.activeSemester) && String(g.academic_year || g.academicYear) === String(MOCK.activeYear))
+        );
+        if (termData && termData.totalCredits !== undefined) {
+            currentTermCredits = termData.totalCredits + ' หน่วยกิต';
+        }
+    }
+
     return `
     <style>
         .student-dashboard-container {
@@ -480,7 +492,7 @@ pages['student-dashboard'] = function () {
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
                 </div>
                 <div class="student-stat-info">
-                    <div class="student-stat-val">18 หน่วยกิต</div>
+                    <div class="student-stat-val">${currentTermCredits}</div>
                     <div class="student-stat-lbl">ลงทะเบียนเรียนเทอมนี้</div>
                 </div>
             </div>
