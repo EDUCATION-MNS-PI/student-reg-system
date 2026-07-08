@@ -1986,8 +1986,8 @@ input, select, textarea {
 
     /* Ensure tables look good in print */
     .report-table {
-        border: 1px solid #000 !important;
         width: 100% !important;
+        border-collapse: collapse !important;
     }
 
     .report-table th, .report-table td {
@@ -2315,7 +2315,7 @@ input, select, textarea {
     }
 
     .report-table {
-        border: 1px solid #000 !important;
+        border-collapse: collapse !important;
     }
 
     .report-table th, .report-table td {
