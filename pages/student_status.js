@@ -1,4 +1,4 @@
-pages['student-status'] = function () {
+﻿pages['student-status'] = function () {
     // Generate some mock students if MOCK.students is empty or map existing ones
     // We will ensure they have a 'Status' property like 'กำลังศึกษา', 'รักษาสภาพ', 'ลาพัก', 'สำเร็จการศึกษา', 'พ้นสภาพ'
 
@@ -146,7 +146,7 @@ window.updateStudentStatusInline = async function (index, newStatus) {
         return;
     }
 
-    showApiLoading('กำลังส่งข้อมูลไปยัง Google Sheets...');
+    showApiLoading('กำลังส่งข้อมูลไปยัง ฐานข้อมูล...');
     try {
         // 1. Call real API from api.js
         const studentId = student.id;
@@ -164,7 +164,7 @@ window.updateStudentStatusInline = async function (index, newStatus) {
                 }
             }
 
-            alert('อัปเดตสถานะลงใน Google Sheets สำเร็จเรียบร้อยครับ!');
+            alert('อัปเดตสถานะลงใน ฐานข้อมูล สำเร็จเรียบร้อยครับ!');
             renderPage();
         } else {
             throw new Error(result ? result.message : 'ไม่สามารถเชื่อมต่อ Server ได้');
@@ -177,3 +177,4 @@ window.updateStudentStatusInline = async function (index, newStatus) {
         hideApiLoading();
     }
 };
+

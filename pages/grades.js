@@ -1,4 +1,4 @@
-// ============================
+﻿// ============================
 // Grades Page
 // ============================
 
@@ -172,7 +172,7 @@ window.processGradeImport = function() {
     const file = fileInput.files[0];
     const reader = new FileReader();
     reader.onload = async function(e) {
-        showApiLoading('กำลังประมวลผลและบันทึกข้อมูลเกรดลง Google Sheet...');
+        showApiLoading('กำลังประมวลผลและบันทึกข้อมูลเกรดเข้าสู่ระบบ...');
         const text = e.target.result;
         const lines = text.split('\n');
         
@@ -218,7 +218,7 @@ window.processGradeImport = function() {
             
             if (result && result.status === 'success') {
                 closeModal();
-                alert(`นำเข้าข้อมูลสำเร็จ (บันทึกลง Sheet ทั้งหมด ${result.count} รายการ)`);
+                alert(`นำเข้าข้อมูลสำเร็จ (บันทึกเข้าสู่ระบบ ทั้งหมด ${result.count} รายการ)`);
                 
                 // Trigger global sync to refresh all data
                 if (typeof window.syncActiveStudentData === 'function') {
@@ -519,4 +519,5 @@ window.filterGradesOverview = function(query) {
         row.style.display = text.includes(q) ? '' : 'none';
     });
 };
+
 

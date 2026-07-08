@@ -1,4 +1,4 @@
-// ============================
+﻿// ============================
 // Main Application Controller
 // (loaded AFTER core.js, data.js, and page scripts)
 // ============================
@@ -261,7 +261,7 @@ async function bootApp() {
         showApiLoading('กำลังโหลดข้อมูลเบื้องต้น...');
     }
     try {
-        // Fetch all necessary data from Google Sheets API
+        // Fetch all necessary data from ฐานข้อมูล API
         const allData = await fetchData('getAllData');
         if (!allData || allData.status === 'error') throw new Error(allData?.message || 'Failed to fetch data');
 
@@ -511,7 +511,7 @@ async function bootApp() {
             }));
             console.log('Successfully loaded Users from Sheet:', MOCK.users);
         } else {
-            console.warn('No users found in Google Sheets data.');
+            console.warn('No users found in ฐานข้อมูล data.');
         }
 
         if (coursesData && coursesData.length > 0) {
@@ -788,7 +788,7 @@ async function bootApp() {
 }
 
 window.syncActiveStudentData = async function () {
-    // Refresh student data from Google Sheets
+    // Refresh student data from ฐานข้อมูล
     showApiLoading('กำลังอัปเดตข้อมูล...');
     try {
         const [enrollments, payments, documents, exams] = await Promise.all([
@@ -1295,4 +1295,5 @@ if (typeof window.showToast !== 'function') {
 }
 
 bootApp();
+
 

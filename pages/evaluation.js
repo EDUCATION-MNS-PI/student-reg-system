@@ -1,4 +1,4 @@
-// ============================
+﻿// ============================
 // Course Evaluation Page — Wizard-style per-course assessment
 // (ประเมินการจัดการเรียนการสอนของรายวิชา)
 // ============================
@@ -342,7 +342,7 @@ pages['eval-instructor'] = function () {
             </div>`).join('') : `
             <div class="card"><div class="card-body" style="text-align:center; padding:40px; color:var(--text-muted);">
                 <p>ยังไม่มีข้อมูลอาจารย์ผู้สอนในระบบ</p>
-                <p style="font-size:0.85rem;">กรุณาเพิ่มข้อมูลใน Sheet "CourseInstructors"</p>
+                <p style="font-size:0.85rem;">กรุณาเพิ่มข้อมูลในระบบ "CourseInstructors"</p>
             </div></div>`}
         </div>
     </div>`;
@@ -955,3 +955,4 @@ window.quickSkipInstructor = async function (instructorId, courseCode, courseNam
         alert('เกิดข้อผิดพลาดในการบันทึก: ' + err.message);
     }
 };
+

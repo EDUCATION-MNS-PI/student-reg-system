@@ -1,4 +1,4 @@
-// ============================
+﻿// ============================
 // Admin: Manage Evaluations (Per-course questions + Instructor mapping)
 // ============================
 pages['manage-evals'] = function () {
@@ -491,8 +491,9 @@ window.saveEvalImport = function (type, jsonStr) {
             <div style="font-size:3rem;margin-bottom:12px">✅</div>
             <h3 style="margin-bottom:8px">นำเข้าข้อมูลสำเร็จ</h3>
             <p style="color:var(--text-muted)">${dataRows.length} รายการถูกอัปเดตเรียบร้อยแล้ว</p>
-            <p style="color:var(--text-muted); font-size:0.85rem;">หมายเหตุ: ข้อมูลจะแสดงในเซสชันนี้ กรุณาเพิ่มข้อมูลลง Google Sheets โดยตรงเพื่อให้คงอยู่ถาวร</p>
+            <p style="color:var(--text-muted); font-size:0.85rem;">หมายเหตุ: ข้อมูลจะแสดงในเซสชันนี้ กรุณาเพิ่มข้อมูลเข้าสู่ระบบ โดยตรงเพื่อให้คงอยู่ถาวร</p>
             <button class="btn btn-primary" style="margin-top:16px" onclick="closeModal(); renderPage();">ตกลง</button>
         </div>
     `);
 };
+

@@ -1,4 +1,4 @@
-// ============================
+﻿// ============================
 // Admin Documents Approval Page
 // ============================
 pages['documents-admin'] = function() {
@@ -124,7 +124,7 @@ window.downloadAdminDocOriginal = function(docId) {
 };
 
 window.syncAdminDocuments = async function() {
-    showApiLoading('กำลังโหลดข้อมูลเอกสารจาก Google Sheet...');
+    showApiLoading('กำลังโหลดข้อมูลเอกสารจากฐานข้อมูล...');
     try {
         const data = await fetchData('getDocuments');
         if (data && Array.isArray(data)) {
@@ -418,7 +418,7 @@ window.submitSignedDoc = async function(docId) {
         const signedNames = uploadResults.map(r => r.fileName).join(', ');
 
         // 2. Update the status in Sheet with atomic record
-        showApiLoading('กำลังบันทึกข้อมูลสถานะลง Google Sheet...');
+        showApiLoading('กำลังบันทึกข้อมูลสถานะเข้าสู่ระบบ...');
         const updatePayload = {
             id: doc.id,
             studentId: doc.studentId,
@@ -439,7 +439,7 @@ window.submitSignedDoc = async function(docId) {
             MOCK.adminDocsSyncDone = false; // Trigger re-sync
             renderPage();
         } else {
-            alert('อัปโหลดไฟล์สำเร็จ แต่ไม่สามารถอัปเดตสถานะใน Sheet ได้: ' + (updateRes ? updateRes.message : 'Unknown'));
+            alert('อัปโหลดไฟล์สำเร็จ แต่ไม่สามารถอัปเดตสถานะในระบบ ได้: ' + (updateRes ? updateRes.message : 'Unknown'));
         }
     } catch (err) {
         hideApiLoading();
@@ -525,7 +525,7 @@ window.submitForwardDoc = async function(docId) {
     const doc = MOCK.adminDocuments.find(d => d.id === docId);
     if (!doc) return;
 
-    showApiLoading('กำลังบันทึกข้อมูลลง Google Sheet...');
+    showApiLoading('กำลังบันทึกข้อมูลเข้าสู่ระบบ...');
     
     try {
         const payload = {
@@ -547,7 +547,7 @@ window.submitForwardDoc = async function(docId) {
             MOCK.adminDocsSyncDone = false; // Trigger re-sync
             renderPage();
         } else {
-            alert('ไม่สามารถอัปเดตสถานะใน Sheet ได้: ' + (result ? result.message : 'Unknown error'));
+            alert('ไม่สามารถอัปเดตสถานะในระบบ ได้: ' + (result ? result.message : 'Unknown error'));
         }
     } catch (err) {
         hideApiLoading();
@@ -588,5 +588,6 @@ window.searchAdminDocs = function() {
         }
     }
 };
+
 
 

@@ -1,4 +1,4 @@
-// ============================
+﻿// ============================
 // Authentication & Login Control
 // ============================
 
@@ -349,7 +349,7 @@ setInterval(() => {
     
     if (activeStatus === true) {
         if (dot) dot.style.background = '#10b981'; // Success Green
-        if (text) text.textContent = 'เชื่อมต่อกับ Google Sheets แล้ว';
+        if (text) text.textContent = 'เชื่อมต่อกับ ฐานข้อมูล แล้ว';
         buttons.forEach(b => b.disabled = false);
     } else if (activeStatus === 'error') {
         if (dot) dot.style.background = '#ef4444'; // Error Red
@@ -357,7 +357,7 @@ setInterval(() => {
         buttons.forEach(b => b.disabled = true);
     } else {
         if (dot) dot.style.background = '#f59e0b'; // Warning Amber
-        if (text) text.textContent = 'กำลังรอข้อมูลจาก Google Sheets...';
+        if (text) text.textContent = 'กำลังรอข้อมูลจากฐานข้อมูล...';
         buttons.forEach(b => b.disabled = true);
     }
 }, 1000);
@@ -382,4 +382,5 @@ function formatLoginIdCard(input) {
     }
     input.value = formatted;
 }
+
 

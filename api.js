@@ -1,5 +1,5 @@
-// ============================
-// Google Sheets API Integration
+﻿// ============================
+// ฐานข้อมูล API Integration
 // ============================
 
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzVHsCGlF5PGuzHBMU_C0i2pomiljhi9ErUg-JUrnfQ8TuJqoParTIJ30PU0UG27bCg/exec'.trim();
@@ -178,3 +178,4 @@ async function postData(action, payload, timeoutMs = 120000) {
         throw err;
     }
 }
+

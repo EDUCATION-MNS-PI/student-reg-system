@@ -1,4 +1,4 @@
-// ============================
+﻿// ============================
 // New Registration Page (Multi-step Wizard)
 // ============================
 let regData = {}; // เก็บข้อมูลการลงทะเบียน
@@ -391,7 +391,7 @@ async function regSubmit() {
     hideApiLoading();
 
     if (res && res.status === 'success') {
-        openModal('สำเร็จ!', `<div style="text-align:center;padding:20px"><div style="font-size:3rem;margin-bottom:12px">🎉</div><h3 style="margin-bottom:8px">ลงทะเบียนนักศึกษาใหม่สำเร็จ</h3><p style="color:var(--text-muted)">รหัสนักศึกษาใหม่: <strong>${payload['รหัสนักศึกษา']}</strong></p><p style="color:var(--text-muted);font-size:0.85rem;margin-top:8px">ข้อมูลถูกบันทึกลงในฐานข้อมูล (Google Sheets) แล้ว</p><button class="btn btn-primary" style="margin-top:16px" onclick="closeModal();registrationStep=1;regData={};if(typeof bootApp === 'function') bootApp(); else navigateTo('dashboard');">กลับหน้าหลัก</button></div>`);
+        openModal('สำเร็จ!', `<div style="text-align:center;padding:20px"><div style="font-size:3rem;margin-bottom:12px">🎉</div><h3 style="margin-bottom:8px">ลงทะเบียนนักศึกษาใหม่สำเร็จ</h3><p style="color:var(--text-muted)">รหัสนักศึกษาใหม่: <strong>${payload['รหัสนักศึกษา']}</strong></p><p style="color:var(--text-muted);font-size:0.85rem;margin-top:8px">ข้อมูลถูกบันทึกลงในฐานข้อมูล (ฐานข้อมูล) แล้ว</p><button class="btn btn-primary" style="margin-top:16px" onclick="closeModal();registrationStep=1;regData={};if(typeof bootApp === 'function') bootApp(); else navigateTo('dashboard');">กลับหน้าหลัก</button></div>`);
     } else {
         openModal('เกิดข้อผิดพลาด', `<div style="text-align:center;padding:20px"><div style="font-size:3rem;margin-bottom:12px">❌</div><h3 style="margin-bottom:8px">ไม่สามารถบันทึกข้อมูลได้</h3><p style="color:var(--danger)">${res ? res.message : 'Network Error'}</p><button class="btn btn-secondary" style="margin-top:16px" onclick="closeModal()">ปิด</button></div>`);
     }
@@ -555,3 +555,4 @@ window.submitBulkImport = async function() {
     hideApiLoading();
     openModal('นำเข้าข้อมูลเสร็จสิ้น', `<div style="text-align:center;padding:20px"><div style="font-size:3rem;margin-bottom:12px">📋</div><h3 style="margin-bottom:8px">นำเข้าข้อมูลสำเร็จ</h3><p style="color:var(--text-muted)">นำเข้าสำเร็จ <strong>${successCount}</strong> จาก ${bulkImportData.length} รายการ</p><button class="btn btn-primary" style="margin-top:16px" onclick="closeModal();clearBulkImport();if(typeof bootApp === 'function') bootApp();">ตกลง</button></div>`);
 };
+

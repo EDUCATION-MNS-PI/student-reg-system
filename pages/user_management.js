@@ -1,9 +1,9 @@
-// ============================
+﻿// ============================
 // User Management Page (Super Admin Only)
 // ============================
 
 pages['user-management'] = function() {
-    // Use real data from Google Sheets
+    // Use real data from ฐานข้อมูล
     const finalUsers = (MOCK.users || []).map((u, i) => ({
         id: i + 1,
         username: u.Username || u.username,
@@ -169,3 +169,4 @@ window.filterUsers = function(val) {
         rows[i].style.display = text.includes(term) ? '' : 'none';
     }
 };
+

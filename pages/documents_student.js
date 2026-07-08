@@ -1,4 +1,4 @@
-// ============================
+﻿// ============================
 // Student Documents Page
 // ============================
 // ============================
@@ -244,7 +244,7 @@ pages['documents-status'] = function() {
 };
 
 window.syncStudentDocuments = async function() {
-    showApiLoading('กำลังโหลดข้อมูลสถานะเอกสารจาก Google Sheet...');
+    showApiLoading('กำลังโหลดข้อมูลสถานะเอกสารจากฐานข้อมูล...');
     try {
         const data = await fetchData('getDocuments');
         if (data && Array.isArray(data)) {
@@ -735,6 +735,7 @@ window.submitStudentDocument = function () {
         }
     })();
 };
+
 
 
 
