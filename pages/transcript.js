@@ -84,7 +84,7 @@ pages.transcript = function() {
     // Collect all plan courses for matching
     const allPlanCourses = mockPlanData.flatMap(sem => sem.courses.map(c => parseCourseString(c)));
 
-    studentGrades.forEach(semGroup => {
+    studentGrades.forEach((semGroup, semIndex) => {
         let semCreditsTotal = 0;
         let semCreditsGPA = 0;
         let semPointsGPA = 0;
@@ -151,15 +151,17 @@ pages.transcript = function() {
         const formattedSemTitle = `ภาคการศึกษาที่ ${semGroup.term} ปีการศึกษา ${semGroup.year}`;
 
         semesterHtmlRows += `
-            <tr>
-                <td colspan="4" class="center" style="font-weight:700;background:#f9f9f9;padding:10px;">${formattedSemTitle}</td>
-            </tr>
-            ${coursesHtml}
-            <tr>
-                <td colspan="4" class="center" style="font-weight:700; font-size:0.85rem; padding:8px; border-bottom:2px solid #eee;">
-                    หน่วยกิต ${semCreditsTotal} คะแนนเฉลี่ย ${semGPA} หน่วยกิตสะสม ${totalCreditsEarned} คะแนนเฉลี่ย ${cumGPAAtEnd}
-                </td>
-            </tr>
+            <tbody ${semIndex === 2 ? 'style="page-break-after: always; break-after: page;"' : ''}>
+                <tr>
+                    <td colspan="4" class="center" style="font-weight:700;background:#f9f9f9;padding:10px;">${formattedSemTitle}</td>
+                </tr>
+                ${coursesHtml}
+                <tr>
+                    <td colspan="4" class="center" style="font-weight:700; font-size:0.85rem; padding:8px; border-bottom:2px solid #eee;">
+                        หน่วยกิต ${semCreditsTotal} คะแนนเฉลี่ย ${semGPA} หน่วยกิตสะสม ${totalCreditsEarned} คะแนนเฉลี่ย ${cumGPAAtEnd}
+                    </td>
+                </tr>
+            </tbody>
         `;
     });
 
@@ -220,9 +222,7 @@ pages.transcript = function() {
                         <th style="width:13%">ระดับคะแนน</th>
                     </tr>
                 </thead>
-                <tbody>
-                    ${semesterHtmlRows}
-                </tbody>
+                ${semesterHtmlRows}
             </table>
             
             <div class="report-footer" style="padding:0 20px;">
