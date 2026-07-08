@@ -85,12 +85,42 @@ window.downloadAdminDoc = function(docId) {
     if (doc) {
         const urlStr = doc.signedFileUrl || doc.fileUrl;
         if (urlStr) {
-            const firstUrl = urlStr.split(',')[0].trim();
-            window.open(window.getDriveUrl(firstUrl, 'file'), '_blank');
+            const urls = urlStr.split(',').map(u => u.trim()).filter(Boolean);
+            urls.forEach((url, index) => {
+                setTimeout(() => {
+                    const targetUrl = window.getDriveUrl(url, 'file');
+                    const a = document.createElement('a');
+                    a.href = targetUrl;
+                    a.target = '_blank';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                }, index * 800);
+            });
             return;
         }
     }
     alert('ไม่พบลิงก์สำหรับดาวน์โหลดเอกสารนี้');
+};
+
+window.downloadAdminDocOriginal = function(docId) {
+    const doc = MOCK.adminDocuments.find(d => d.id === docId);
+    if (doc && doc.fileUrl) {
+        const urls = doc.fileUrl.split(',').map(u => u.trim()).filter(Boolean);
+        urls.forEach((url, index) => {
+            setTimeout(() => {
+                const targetUrl = window.getDriveUrl(url, 'file');
+                const a = document.createElement('a');
+                a.href = targetUrl;
+                a.target = '_blank';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }, index * 800);
+        });
+        return;
+    }
+    alert('ไม่พบไฟล์ต้นฉบับสำหรับเอกสารนี้');
 };
 
 window.syncAdminDocuments = async function() {
@@ -270,12 +300,12 @@ window.previewAdminDoc = function(docId) {
 
         let downloadBtn = '';
         if (doc.fileUrl) {
-            const firstUrl = doc.fileUrl.split(',')[0].trim();
-            const targetUrl = window.getDriveUrl(firstUrl, 'file');
+            const urls = doc.fileUrl.split(',').map(u => u.trim()).filter(Boolean);
+            const label = urls.length > 1 ? `ดาวน์โหลดต้นฉบับทั้งหมด (${urls.length})` : `เปิดไฟล์ต้นฉบับ`;
             downloadBtn = `
-                <button class="btn btn-primary btn-sm" onclick="window.open('${targetUrl}', '_blank')">
+                <button class="btn btn-primary btn-sm" onclick="window.downloadAdminDocOriginal('${doc.id}')">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                    เปิดไฟล์ต้นฉบับ
+                    ${label}
                 </button>
             `;
         }
