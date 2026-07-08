@@ -225,41 +225,52 @@ pages.transcript = function() {
                     </tr>
                 </thead>
                 ${semesterHtmlRows}
+                <tfoot>
+                    <tr>
+                        <td colspan="4" style="border: none !important; padding: 20px 0 0 0;">
+                            <div class="report-footer" style="padding:0 20px; margin-bottom:20px;">
+                                <div>
+                                    <div style="margin-bottom:8px;">คะแนนเฉลี่ยตลอดปีการศึกษา: ${cumulativeGPACalculated}</div>
+                                    <div>คะแนนเฉลี่ยสะสมตลอดหลักสูตร: ${cumulativeGPACalculated}</div>
+                                </div>
+                                <div>
+                                    <div style="margin-bottom:8px;">รวมหน่วยกิตตลอดปีการศึกษา: ${totalCreditsEarned}</div>
+                                    <div>รวมหน่วยกิตสะสมตลอดหลักสูตร: ${totalCreditsEarned}</div>
+                                </div>
+                            </div>
+                            
+                            <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                                <div class="report-legend" style="margin-top: 0; width: 75%;">
+                                    <strong>หมายเหตุ</strong>
+                                    <div class="report-legend-grid">
+                                        <div>A : ดีเยี่ยม</div>
+                                        <div>B+ : ดีมาก</div>
+                                        <div>B : ดี</div>
+                                        <div>C+ : ค่อนข้างดี</div>
+                                        <div>C : พอใช้</div>
+                                        <div>D+ : อ่อน</div>
+                                        <div>D : อ่อนมาก</div>
+                                        <div>F : ตก</div>
+                                        <div>S : พึงพอใจ</div>
+                                        <div>U : ไม่พึงพอใจ</div>
+                                        <div>I : ยังไม่สมบูรณ์</div>
+                                        <div>W : ถอนรายวิชา</div>
+                                        <div style="grid-column: span 2;">AU : เรียนโดยไม่เข้ารับการประเมิน</div>
+                                        <div>IP : มีความก้าวหน้า</div>
+                                        <div>X : ไม่รายงาน</div>
+                                        <div>P : มีความก้าวหน้า</div>
+                                        <div>N : ไม่มีความก้าวหน้า</div>
+                                    </div>
+                                </div>
+                                <div style="text-align: center; padding-right: 40px; padding-bottom: 5px; font-size: 0.95rem;">
+                                    <div style="margin-bottom: 6px;">รัชฎาพร เขษมโตมณี</div>
+                                    <div>หัวหน้างานทะเบียน</div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
             </table>
-            
-            <div class="report-footer" style="padding:0 20px;">
-                <div>
-                    <div style="margin-bottom:8px;">คะแนนเฉลี่ยตลอดปีการศึกษา: ${cumulativeGPACalculated}</div>
-                    <div>คะแนนเฉลี่ยสะสมตลอดหลักสูตร: ${cumulativeGPACalculated}</div>
-                </div>
-                <div>
-                    <div style="margin-bottom:8px;">รวมหน่วยกิตตลอดปีการศึกษา: ${totalCreditsEarned}</div>
-                    <div>รวมหน่วยกิตสะสมตลอดหลักสูตร: ${totalCreditsEarned}</div>
-                </div>
-            </div>
-            
-            <div class="report-legend">
-                <strong>หมายเหตุ</strong>
-                <div class="report-legend-grid">
-                    <div>A : ดีเยี่ยม</div>
-                    <div>B+ : ดีมาก</div>
-                    <div>B : ดี</div>
-                    <div>C+ : ค่อนข้างดี</div>
-                    <div>C : พอใช้</div>
-                    <div>D+ : อ่อน</div>
-                    <div>D : อ่อนมาก</div>
-                    <div>F : ตก</div>
-                    <div>S : พึงพอใจ</div>
-                    <div>U : ไม่พึงพอใจ</div>
-                    <div>I : ยังไม่สมบูรณ์</div>
-                    <div>W : ถอนรายวิชา</div>
-                    <div style="grid-column: span 2;">AU : เรียนโดยไม่เข้ารับการประเมิน</div>
-                    <div>IP : มีความก้าวหน้า</div>
-                    <div>X : ไม่รายงาน</div>
-                    <div>P : มีความก้าวหน้า</div>
-                    <div>N : ไม่มีความก้าวหน้า</div>
-                </div>
-            </div>
         </div>
     </div>`;
 };
