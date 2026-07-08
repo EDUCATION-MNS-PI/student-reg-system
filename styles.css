@@ -2011,11 +2011,30 @@ input, select, textarea {
     }
 
     /* Prevent breaking inside semester blocks */
-    tr {
+    tbody tr {
         page-break-inside: avoid;
     }
     
-    .report-header, .report-title-center {
+    .report-header {
+        display: block !important;
+        text-align: center;
+        border-bottom: 2px solid #000 !important;
+        padding-bottom: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .report-header img {
+        display: inline-block !important;
+        vertical-align: middle;
+    }
+    
+    .report-header-text {
+        display: inline-block !important;
+        vertical-align: middle;
+        text-align: left;
+    }
+
+    .report-title-center {
         page-break-inside: avoid;
     }
 
