@@ -282,8 +282,8 @@ pages.schedule = function() {
                     <tr>
                         <th style="padding:16px 10px; border:1px solid var(--border-color); background:var(--bg-secondary); border-top:none; border-left:none; text-align:center; width:160px; font-weight:700; color:var(--text-secondary); position:relative;">
                             <div style="position:absolute; top:0; left:0; width:100%; height:100%; background:linear-gradient(to top right, transparent 49%, var(--border-color) 49%, var(--border-color) 51%, transparent 51%);"></div>
-                            <span style="position:absolute; bottom:6px; right:12px;">วัน</span>
-                            <span style="position:absolute; top:6px; left:12px;">เวลา</span>
+                            <span style="position:absolute; bottom:6px; left:12px;">วัน</span>
+                            <span style="position:absolute; top:6px; right:12px;">เวลา</span>
                         </th>
                         ${timeSlots.map(t => `<th style="padding:12px 4px; border:1px solid var(--border-color); background:var(--bg-secondary); border-top:none; ${t.start===16?'border-right:none;':''} text-align:center; font-weight:600; color:var(--text-secondary);">${t.label}</th>`).join('')}
                     </tr>
