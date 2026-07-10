@@ -2,6 +2,12 @@
 // Courses Page
 // ============================
 pages.courses = function() {
+    // Helper: count schedule entries for a given course code
+    const scheduleList = MOCK.scheduleList || [];
+    function getScheduleCount(courseCode) {
+        if (!courseCode) return 0;
+        return scheduleList.filter(s => String(s.courseCode || '').trim() === String(courseCode).trim()).length;
+    }
     return `
     <div class="animate-in">
         <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start">
@@ -47,10 +53,15 @@ pages.courses = function() {
             <div class="card-body" style="padding:0">
                 <div class="table-wrapper">
                     <table class="data-table" id="courseTable">
-                        <thead><tr><th>รหัส</th><th>ชื่อวิชา</th><th>หน่วยกิต</th><th>ประเภท</th><th>อาจารย์</th><th>เวลา</th><th>ห้อง</th><th>ที่นั่ง</th><th>สถานะ</th></tr></thead>
+                        <thead><tr><th>รหัส</th><th>ชื่อวิชา</th><th>หน่วยกิต</th><th>ประเภท</th><th>อาจารย์</th><th>เวลา</th><th>ห้อง</th><th>ที่นั่ง</th><th>ตารางเรียน</th><th>สถานะ</th></tr></thead>
                         <tbody>
-                            ${MOCK.courses.map(c => `
-                                <tr data-type="${c.type}" data-year="${c.year}" data-semester="${c.semester}">
+                            ${MOCK.courses.map(c => {
+                                const schedCount = getScheduleCount(c.code);
+                                const schedBadge = schedCount > 0 
+                                    ? `<a href="javascript:void(0)" onclick="window._courseNavToSchedule('${c.code}')" style="display:inline-flex; align-items:center; gap:4px; text-decoration:none; cursor:pointer; padding:3px 8px; background:var(--accent-primary-glow); color:var(--accent-primary); border-radius:6px; font-size:0.78rem; font-weight:600; transition:all 0.2s;" onmouseover="this.style.background='var(--accent-primary)';this.style.color='white'" onmouseout="this.style.background='var(--accent-primary-glow)';this.style.color='var(--accent-primary)'"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>${schedCount} คาบ</a>`
+                                    : `<span style="font-size:0.78rem; color:var(--text-muted);">-</span>`;
+                                return `
+                                <tr data-type="${c.type}" data-year="${c.year}" data-semester="${c.semester}" data-code="${c.code}">
                                     <td style="color:var(--accent-primary-hover);font-weight:600">${window.formatDisplayCode(c.code)}</td>
                                     <td>${c.name}</td>
                                     <td style="text-align:center">${c.credits}</td>
@@ -59,9 +70,10 @@ pages.courses = function() {
                                     <td>${c.schedule}</td>
                                     <td>${c.room}</td>
                                     <td>${c.enrolled}/${c.seats}</td>
+                                    <td style="text-align:center;">${schedBadge}</td>
                                     <td>${getStatusBadge(c.status)}</td>
-                                </tr>
-                            `).join('')}
+                                </tr>`;
+                            }).join('')}
                         </tbody>
                     </table>
                 </div>
@@ -113,7 +125,7 @@ window.init_courses = function() {
             if (!emptyRow) {
                 emptyRow = document.createElement('tr');
                 emptyRow.id = 'emptyCourseRow';
-                emptyRow.innerHTML = `<td colspan="9" style="text-align:center; padding:30px; color:var(--text-muted);">ไม่พบรายวิชาที่ค้นหา กรุณาเลือกปีการศึกษาและภาคเรียน</td>`;
+                emptyRow.innerHTML = `<td colspan="10" style="text-align:center; padding:30px; color:var(--text-muted);">ไม่พบรายวิชาที่ค้นหา กรุณาเลือกปีการศึกษาและภาคเรียน</td>`;
                 tbody.appendChild(emptyRow);
             } else {
                 emptyRow.style.display = '';
@@ -127,12 +139,52 @@ window.init_courses = function() {
     if (filterYear) filterYear.addEventListener('change', applyFilters);
     if (filterSemester) filterSemester.addEventListener('change', applyFilters);
     
+    // Handle auto-filter from schedule page navigation
+    if (window._courseFilterYear && filterYear) {
+        filterYear.value = window._courseFilterYear;
+    }
+    if (window._courseFilterSem && filterSemester) {
+        filterSemester.value = window._courseFilterSem;
+    }
+    // Highlight specific course if navigating from schedule
+    if (window._courseFilterCode) {
+        const targetCode = window._courseFilterCode;
+        // Clear the navigation state
+        window._courseFilterCode = null;
+        window._courseFilterYear = null;
+        window._courseFilterSem = null;
+        
+        applyFilters();
+        
+        // Highlight the matching row after render
+        setTimeout(() => {
+            const rows = document.querySelectorAll('#courseTable tbody tr');
+            rows.forEach(row => {
+                if (row.dataset.code === targetCode) {
+                    row.style.background = 'var(--accent-primary-glow)';
+                    row.style.transition = 'background 0.5s ease';
+                    row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    setTimeout(() => { row.style.background = ''; }, 3000);
+                }
+            });
+        }, 100);
+        return;
+    }
+    
     // Auto preset active year if available
     if (filterYear && MOCK.activeYear) {
         // filterYear.value = MOCK.activeYear; // Uncomment if we want to auto-fill
     }
     
     applyFilters();
+};
+
+// Navigate to schedule page filtered by course code
+window._courseNavToSchedule = function(courseCode) {
+    if (!courseCode) return;
+    window._schedCourse = courseCode;
+    window._schedView = 'list'; // list view shows more detail for single course
+    navigateTo('schedule');
 };
 
 // ============================

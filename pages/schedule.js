@@ -3,6 +3,13 @@
 // ============================
 pages.schedule = function() {
     const list = MOCK.scheduleList || [];
+    const coursesData = MOCK.courses || [];
+
+    // Helper: look up course details from MOCK.courses by courseCode
+    function findCourseInfo(courseCode) {
+        if (!courseCode) return null;
+        return coursesData.find(c => String(c.code || '').trim() === String(courseCode).trim()) || null;
+    }
 
     const monthMap = {
         'ม.ค.': 'มกราคม', 'ก.พ.': 'กุมภาพันธ์', 'มี.ค.': 'มีนาคม', 'เม.ย.': 'เมษายน',
@@ -109,6 +116,19 @@ pages.schedule = function() {
         navigateTo('schedule');
     };
 
+    // Navigate to courses page filtered by course code
+    window._schedNavToCourse = function(courseCode) {
+        if (!courseCode) return;
+        // Find matching course to auto-set year/semester filters
+        const matchedCourse = (MOCK.courses || []).find(c => String(c.code || '').trim() === String(courseCode).trim());
+        if (matchedCourse) {
+            window._courseFilterCode = courseCode;
+            window._courseFilterYear = matchedCourse.year || '';
+            window._courseFilterSem = matchedCourse.semester || '';
+        }
+        navigateTo('courses');
+    };
+
     // ---- Empty state ----
     if (!list.length) {
         return `
@@ -199,9 +219,14 @@ pages.schedule = function() {
                                </ul>`
                             : `<div style="font-size:0.9rem;">${topicLines[0] || '-'}</div>`;
 
+                        const cInfo = findCourseInfo(s.courseCode);
+                        const creditsHtml = cInfo && cInfo.credits ? `<span style="display:inline-block; padding:1px 6px; background:var(--accent-primary-glow); color:var(--accent-primary); border-radius:4px; font-size:0.75rem; font-weight:600; margin-left:6px;">${cInfo.credits} หน่วยกิต</span>` : '';
+                        const typeHtml = cInfo && cInfo.type ? `<span class="badge ${cInfo.type==='บังคับ'?'purple':cInfo.type==='เลือก'?'info':'neutral'}" style="font-size:0.72rem; padding:1px 6px; margin-left:4px;">${cInfo.type}</span>` : '';
+                        const roomHtml = cInfo && cInfo.room && cInfo.room !== '-' && !s.room ? `<div style="font-size:0.78rem; color:var(--text-muted); margin-top:3px;">🏫 ${cInfo.room}</div>` : (s.room ? `<div style="font-size:0.78rem; color:var(--text-muted); margin-top:3px;">🏫 ${s.room}</div>` : '');
                         const courseHtml = `
-                            ${s.courseCode ? `<div style="font-weight:700; font-size:0.85rem; color:var(--accent-primary);">${s.courseCode}</div>` : ''}
+                            ${s.courseCode ? `<div style="display:flex; align-items:center; flex-wrap:wrap; gap:2px;"><a href="javascript:void(0)" onclick="window._schedNavToCourse('${s.courseCode}')" style="font-weight:700; font-size:0.85rem; color:var(--accent-primary); text-decoration:none; cursor:pointer;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">${s.courseCode}</a>${creditsHtml}${typeHtml}</div>` : ''}
                             ${s.courseName ? `<div style="font-size:0.85rem; color:var(--text-secondary); margin-top:2px;">${s.courseName}</div>` : (s.courseCode ? '' : '-')}
+                            ${roomHtml}
                         `;
 
                         const rowBg = i % 2 === 0 ? '' : 'background:var(--bg-secondary);';
@@ -313,11 +338,13 @@ pages.schedule = function() {
                             let bgColor = (item.courseCode && courseColorMap[item.courseCode]) ? courseColorMap[item.courseCode] : '#f8fafc';
                             let textColor = '#1e293b'; // slightly darker for better contrast on pastel
                             
+                            let cInfoGrid = findCourseInfo(item.courseCode);
                             let courseInfo = [];
                             if (item.courseCode) courseInfo.push(item.courseCode);
                             if (item.courseName) courseInfo.push(item.courseName);
+                            let creditsGrid = cInfoGrid && cInfoGrid.credits ? `<div style="font-size:0.72rem; color:${textColor}; opacity:0.7; margin-top:2px;">${cInfoGrid.credits} หน่วยกิต${cInfoGrid.type ? ' · ' + cInfoGrid.type : ''}</div>` : '';
                             let courseDisplay = courseInfo.length > 0 ? 
-                                `<div style="font-size:0.85rem; font-weight:700; color:${textColor}; line-height:1.4;">${courseInfo.join(' ')}</div>` : '';
+                                `<a href="javascript:void(0)" onclick="window._schedNavToCourse('${item.courseCode || ''}')" style="display:block; text-decoration:none; cursor:pointer;" onmouseover="this.querySelector('.cname').style.textDecoration='underline'" onmouseout="this.querySelector('.cname').style.textDecoration='none'"><div class="cname" style="font-size:0.85rem; font-weight:700; color:${textColor}; line-height:1.4;">${courseInfo.join(' ')}</div>${creditsGrid}</a>` : '';
 
                             slotHtml[startIndex] = `<td colspan="${span}" style="padding:12px; border:1px solid var(--border-color); ${endIndex === timeSlots.length-1 ? 'border-right:none;' : ''} background:${bgColor}; text-align:center; vertical-align:middle; position:relative;">
                                 ${courseDisplay}
