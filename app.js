@@ -1,4 +1,4 @@
-﻿// ============================
+// ============================
 // Main Application Controller
 // (loaded AFTER core.js, data.js, and page scripts)
 // ============================
@@ -527,7 +527,7 @@ async function bootApp() {
                 enrolled: parseInt(c['ลงทะเบียนแล้ว'] || c.enrolled) || 0,
                 schedule: c['วัน-เวลาเรียน'] || c.schedule || '-',
                 room: c['ห้องเรียน'] || c.room || '-',
-                type: c['หมวดหมู่'] || c.type || 'แกน',
+                type: c['ประเภทวิชา'] || c['หมวดหมู่'] || c.type || 'วิชาแกน',
                 status: c['สถานะ'] || c.status || 'เปิด'
             }));
         }

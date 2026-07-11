@@ -34,7 +34,7 @@ pages.schedule = function() {
     const getSemLabel = (sem) => {
         if (sem === '1') return 'ภาคการศึกษาที่ 1';
         if (sem === '2') return 'ภาคการศึกษาที่ 2';
-        if (sem === 'ภาคฤดูร้อน' || sem === 'ฤดูร้อน' || String(sem).toLowerCase() === 's') return 'ภาคการศึกษาฤดูร้อน';
+        if (sem === 'ภาคฤดูร้อน' || sem === 'ฤดูร้อน' || String(sem).toLowerCase() === 's') return 'ภาคฤดูร้อน';
         return sem;
     };
 

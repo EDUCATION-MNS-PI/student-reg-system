@@ -43,9 +43,9 @@ pages.courses = function() {
                 ` : ''}
                 <select class="form-select" style="width:auto;padding:8px 12px;font-size:0.82rem" id="courseFilter">
                     <option value="">ทุกประเภท</option>
-                    <option value="บังคับ">วิชาบังคับ</option>
-                    <option value="เลือก">วิชาเลือก</option>
-                    <option value="ศึกษาทั่วไป">ศึกษาทั่วไป</option>
+                    <option value="วิชาแกน">วิชาแกน</option>
+                    <option value="วิชาเฉพาะสาขา">วิชาเฉพาะสาขา</option>
+                    <option value="วิชาเลือก">วิชาเลือก</option>
                 </select>
             </div>
         </div>
@@ -65,7 +65,7 @@ pages.courses = function() {
                                     <td style="color:var(--accent-primary-hover);font-weight:600">${window.formatDisplayCode(c.code)}</td>
                                     <td>${c.name}</td>
                                     <td style="text-align:center">${c.credits}</td>
-                                    <td><span class="badge ${c.type==='บังคับ'?'purple':c.type==='เลือก'?'info':'neutral'}">${c.type}</span></td>
+                                    <td><span class="badge ${c.type==='วิชาแกน'?'purple':c.type==='วิชาเฉพาะสาขา'?'success':c.type==='วิชาเลือก'?'info':'neutral'}">${c.type}</span></td>
                                     <td>${c.instructor}</td>
                                     <td>${c.schedule}</td>
                                     <td>${c.room}</td>
