@@ -1,4 +1,4 @@
-﻿// ============================
+// ============================
 // Course Evaluation Page — Wizard-style per-course assessment
 // (ประเมินการจัดการเรียนการสอนของรายวิชา)
 // ============================
@@ -127,10 +127,18 @@ pages['eval-course'] = function () {
                 <div style="display:grid; grid-template-columns: 1fr; gap:0;">
                     ${uniqueEnrolled.map(course => {
         const isEval = evals.find(e => e.courseCode === course.code && e.type === 'course' && e.studentId === studentId);
-        // Check if course has questions in EvalQuestions sheet (including common ones)
+        // Check if course has questions in EvalQuestions sheet (including common ones and filtering by semester/year)
         const hasQuestions = (MOCK.evalQuestions || []).some(q => {
             const cCode = normalizeCode(q.course_code);
-            return cCode === normalizeCode(course.code) || cCode === 'ALL' || cCode === '' || cCode === '*';
+            const isCourseMatch = cCode === normalizeCode(course.code) || cCode === 'ALL' || cCode === '' || cCode === '*';
+            
+            const qYear = String(q.AcademicYear || q.academic_year || q.year || '').trim();
+            const qSem = String(q.Semester || q.semester || '').trim();
+            
+            const isYearMatch = !qYear || qYear === String(course.year || '').trim();
+            const isSemMatch = !qSem || qSem === String(course.semester || '').trim();
+            
+            return isCourseMatch && isYearMatch && isSemMatch;
         });
         // Get instructors for this course
         const instructors = (MOCK.courseInstructors || [])
@@ -154,7 +162,7 @@ pages['eval-course'] = function () {
                             <div>
                                 ${isEval
                 ? '<button class="btn btn-sm" disabled style="opacity:0.5;cursor:not-allowed;background:var(--success);color:white;border:none;">ประเมินแล้ว</button>'
-                : `<button class="btn btn-primary btn-sm" onclick="startCourseEvalWizard('${course.code}', '${course.name.replace(/'/g, "\\\\'")}')">
+                : `<button class="btn btn-primary btn-sm" onclick="startCourseEvalWizard('${course.code}', '${course.name.replace(/'/g, "\\\\'")}', '${course.semester || ''}', '${course.year || ''}')">
                                         ${hasQuestions ? 'เริ่มประเมิน →' : 'ประเมินรายวิชา →'}
                                        </button>`
             }
@@ -353,11 +361,19 @@ pages['eval-instructor'] = function () {
 // ============================
 let wizardState = {};
 
-window.startCourseEvalWizard = function (courseCode, courseName) {
-    // Get per-course questions from EvalQuestions sheet, including common questions (ALL, *, or blank)
+window.startCourseEvalWizard = function (courseCode, courseName, semester, year) {
+    // Get per-course questions from EvalQuestions sheet, including common questions (ALL, *, or blank) and filtered by year/sem
     const allQuestions = (MOCK.evalQuestions || []).filter(q => {
         const cCode = String(q.course_code || '').trim().toUpperCase();
-        return cCode === String(courseCode).trim().toUpperCase() || cCode === 'ALL' || cCode === '*' || cCode === '';
+        const isCourseMatch = cCode === String(courseCode).trim().toUpperCase() || cCode === 'ALL' || cCode === '*' || cCode === '';
+        
+        const qYear = String(q.AcademicYear || q.academic_year || q.year || '').trim();
+        const qSem = String(q.Semester || q.semester || '').trim();
+        
+        const isYearMatch = !qYear || qYear === String(year || '').trim();
+        const isSemMatch = !qSem || qSem === String(semester || '').trim();
+        
+        return isCourseMatch && isYearMatch && isSemMatch;
     });
 
     // Group questions by category/section
