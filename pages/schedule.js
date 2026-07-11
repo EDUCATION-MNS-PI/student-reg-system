@@ -31,8 +31,15 @@ pages.schedule = function() {
         return d;
     }
 
+    const getSemLabel = (sem) => {
+        if (sem === '1') return 'ภาคการศึกษาที่ 1';
+        if (sem === '2') return 'ภาคการศึกษาที่ 2';
+        if (sem === 'ภาคฤดูร้อน' || sem === 'ฤดูร้อน' || String(sem).toLowerCase() === 's') return 'ภาคการศึกษาฤดูร้อน';
+        return sem;
+    };
+
     // ---- Filter Controls ----
-    const allSemesters = [...new Set(list.map(s => s.semester).filter(Boolean))];
+    const allSemesters = [...new Set(['1', '2', 'ภาคฤดูร้อน', ...list.map(s => s.semester ? String(s.semester) : null).filter(Boolean)])];
     const allYears     = [...new Set(list.map(s => s.academicYear).filter(Boolean))];
     const activeSem  = window._schedSem  || allSemesters[0] || '';
     const activeYear = window._schedYear || allYears[0]     || '';
@@ -162,7 +169,7 @@ pages.schedule = function() {
                 <label style="font-size:0.85rem; font-weight:600; color:var(--text-secondary);">ภาคเรียน</label>
                 <select class="form-input" style="height:36px; padding:0 10px; min-width:110px;" onchange="changeSchedFilter('Sem', this.value)">
                     <option value="">-- ทั้งหมด --</option>
-                    ${allSemesters.map(s => `<option value="${s}" ${s===activeSem?'selected':''}>${s}</option>`).join('')}
+                    ${allSemesters.map(s => `<option value="${s}" ${s===activeSem?'selected':''}>${getSemLabel(s)}</option>`).join('')}
                 </select>
             </div>` : ''}
             ${allCourses.length > 0 ? `
@@ -404,7 +411,7 @@ pages.schedule = function() {
     <div class="animate-in">
         <div class="page-header" style="margin-bottom:20px;">
             <h1 class="page-title">ตารางการเรียนการสอน</h1>
-            <p class="page-subtitle">ตารางการสอนประจำภาคการศึกษา${activeYear ? ' ปีการศึกษา ' + activeYear : ''}${activeSem ? ' ภาค' + activeSem : ''}</p>
+            <p class="page-subtitle">ตารางการสอนประจำภาคการศึกษา${activeYear ? ' ปีการศึกษา ' + activeYear : ''}${activeSem ? ' ' + getSemLabel(activeSem) : ''}</p>
         </div>
 
         ${filterBar}
