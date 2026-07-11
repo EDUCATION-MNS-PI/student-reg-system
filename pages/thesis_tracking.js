@@ -28,7 +28,7 @@ function calcThesisProgress(track) {
 
 function augmentTrackWithExams(studentId, originalTrack) {
     const track = { ...originalTrack };
-    const exams = window.MOCK && window.MOCK.exams ? window.MOCK.exams : [];
+    const exams = window.MOCK && window.MOCK.allExams ? window.MOCK.allExams : [];
     const studentExams = exams.filter(e => String(e.student_id) === String(studentId));
     
     const mapping = {
