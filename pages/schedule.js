@@ -39,9 +39,10 @@ pages.schedule = function() {
     };
 
     // ---- Filter Controls ----
-    const allSemesters = [...new Set(['1', '2', 'ภาคฤดูร้อน', ...list.map(s => s.semester ? String(s.semester) : null).filter(Boolean)])];
+    const dataSemesters = [...new Set(list.map(s => s.semester ? String(s.semester) : null).filter(Boolean))];
+    const allSemesters = [...new Set(['1', '2', 'ภาคฤดูร้อน', ...dataSemesters])];
     const allYears     = [...new Set(list.map(s => s.academicYear).filter(Boolean))];
-    const activeSem  = window._schedSem  || allSemesters[0] || '';
+    const activeSem  = window._schedSem  || (dataSemesters.length > 0 ? dataSemesters[0] : allSemesters[0]) || '';
     const activeYear = window._schedYear || allYears[0]     || '';
     const activeCourse = window._schedCourse || '';
     const viewMode   = window._schedView || 'grid'; // 'grid' or 'list'
