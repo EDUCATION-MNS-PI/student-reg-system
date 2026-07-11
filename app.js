@@ -527,7 +527,7 @@ async function bootApp() {
                 enrolled: parseInt(c['ลงทะเบียนแล้ว'] || c.enrolled) || 0,
                 schedule: c['วัน-เวลาเรียน'] || c.schedule || '-',
                 room: c['ห้องเรียน'] || c.room || '-',
-                type: c['ประเภทวิชา'] || c['หมวดหมู่'] || c.type || 'วิชาแกน',
+                type: String(c['ประเภทวิชา'] || c['ประเภท'] || c['หมวดหมู่'] || c['วิชา'] || c.type || 'วิชาแกน').trim(),
                 status: c['สถานะ'] || c.status || 'เปิด'
             }));
         }
