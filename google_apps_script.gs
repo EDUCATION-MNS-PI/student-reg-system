@@ -1062,7 +1062,30 @@ function updateExamResult(payload) {
   } else {
     sheet.appendRow(rowData);
   }
-  
+  // --- SYNC WITH THESIS PROGRESS ---
+  if (!payload._fromSync) {
+    let milestoneKey = null;
+    if (type === 'สอบหัวข้อวิทยานิพนธ์') milestoneKey = 'M1';
+    else if (type === 'สอบโครงร่างวิทยานิพนธ์') milestoneKey = 'M3';
+    else if (type === 'สอบป้องกันวิทยานิพนธ์') milestoneKey = 'M7';
+    
+    if (milestoneKey) {
+      let mStatus = '';
+      if (payload.status === 'ผ่าน' || payload.status === 'ผ่านแบบมีเงื่อนไข' || String(payload.status).toLowerCase() === 'pass') mStatus = 'ผ่าน / เสร็จสิ้น';
+      else if (payload.status === 'ไม่ผ่าน' || String(payload.status).toLowerCase() === 'fail') mStatus = 'ยังไม่เริ่ม';
+      else mStatus = 'ยังไม่เริ่ม';
+      
+      const mStr = `${mStatus}|${payload.date || ''}|${payload.note || ''}`;
+      
+      updateThesisMilestone({
+        studentId: sId,
+        milestones: { [milestoneKey]: mStr },
+        _fromSync: true
+      });
+    }
+  }
+  // ----------------------------------
+
   return createResponse({ status: 'success' });
 }
 
@@ -1632,6 +1655,56 @@ function updateThesisMilestone(payload) {
         }
       });
     }
+    // --- SYNC WITH EXAM RESULTS ---
+    if (!payload._fromSync) {
+      const milestones = payload.milestones || {};
+      Object.keys(milestones).forEach(k => {
+        let examType = null;
+        if (k === 'M1') examType = 'สอบหัวข้อวิทยานิพนธ์';
+        else if (k === 'M3') examType = 'สอบโครงร่างวิทยานิพนธ์';
+        else if (k === 'M7') examType = 'สอบป้องกันวิทยานิพนธ์';
+        
+        if (examType) {
+          const parts = String(milestones[k]).split('|');
+          const mStatus = parts[0] || '';
+          const mDate = parts[1] || '';
+          const mNote = parts[2] || '';
+          
+          let eStatus = '';
+          if (mStatus === 'ผ่าน / เสร็จสิ้น') eStatus = 'ผ่าน';
+          else if (mStatus === 'กำลังดำเนินการ') eStatus = 'รอดำเนินการ';
+          else eStatus = 'ไม่ผ่าน';
+          
+          const examsSheet = SS.getSheetByName(SHEETS.EXAMS);
+          if (examsSheet) {
+            const vals = examsSheet.getDataRange().getValues();
+            const heads = vals[0].map(h => String(h).trim());
+            const sIdx = heads.indexOf('student_id');
+            const tIdx = heads.indexOf('exam_type');
+            const iIdx = heads.indexOf('id');
+            
+            let finalId = '';
+            for (let j = vals.length - 1; j > 0; j--) {
+              if (String(vals[j][sIdx]).trim() === studentId && String(vals[j][tIdx]).trim() === examType) {
+                finalId = vals[j][iIdx];
+                break;
+              }
+            }
+            
+            updateExamResult({
+              id: finalId,
+              student_id: studentId,
+              exam_type: examType,
+              status: eStatus,
+              date: mDate,
+              note: mNote,
+              _fromSync: true
+            });
+          }
+        }
+      });
+    }
+    // --------------------------------
 
     return createResponse({ status: 'success', studentId: studentId });
   } catch (err) {
