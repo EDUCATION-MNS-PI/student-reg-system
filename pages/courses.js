@@ -16,10 +16,7 @@ pages.courses = function() {
                 <div style="display:flex; gap:8px; margin-top:8px;">
                     <select class="form-select" id="filterYear" style="width:auto;padding:6px 12px;font-size:0.85rem">
                         <option value="">เลือกปีการศึกษา...</option>
-                        <option value="2566">2566</option>
-                        <option value="2567">2567</option>
-                        <option value="2568">2568</option>
-                        <option value="2569">2569</option>
+                        ${[...new Set((MOCK.courses || []).map(c => String(c.year).trim()).filter(Boolean))].sort().map(y => `<option value="${y}">${y}</option>`).join('')}
                     </select>
                     <select class="form-select" id="filterSemester" style="width:auto;padding:6px 12px;font-size:0.85rem">
                         <option value="">เลือกภาคเรียน...</option>
