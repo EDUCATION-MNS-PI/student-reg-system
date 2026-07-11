@@ -48,8 +48,8 @@ pages.schedule = function() {
     const viewMode   = window._schedView || 'grid'; // 'grid' or 'list'
 
     let preFiltered = list.filter(s => {
-        const semOk  = !activeSem  || s.semester     === activeSem;
-        const yearOk = !activeYear || s.academicYear === activeYear;
+        const semOk  = !activeSem  || String(s.semester)     === String(activeSem);
+        const yearOk = !activeYear || String(s.academicYear) === String(activeYear);
         return semOk && yearOk;
     });
 
