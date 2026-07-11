@@ -3,7 +3,7 @@
 // ============================
 
 const THESIS_MILESTONES = [
-    { id: 'M1',  label: 'เสนอหัวข้อวิทยานิพนธ์',            icon: '📝', fields: [] },
+    { id: 'M1',  label: 'สอบหัวข้อวิทยานิพนธ์',            icon: '📝', fields: [] },
     { id: 'M2',  label: 'แต่งตั้งอาจารย์ที่ปรึกษา',       icon: '👤', fields: [] },
     { id: 'M3',  label: 'สอบโครงร่างวิทยานิพนธ์',           icon: '🎯', fields: [] },
     { id: 'M4',  label: 'พิจารณาจริยธรรมการวิจัย (EC)',     icon: '⚖️', fields: [
