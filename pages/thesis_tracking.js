@@ -26,6 +26,39 @@ function calcThesisProgress(track) {
     return Math.round((done / THESIS_MILESTONES.length) * 100);
 }
 
+function augmentTrackWithExams(studentId, originalTrack) {
+    const track = { ...originalTrack };
+    const exams = window.MOCK && window.MOCK.exams ? window.MOCK.exams : [];
+    const studentExams = exams.filter(e => String(e.student_id) === String(studentId));
+    
+    const mapping = {
+        'สอบหัวข้อวิทยานิพนธ์': 'M1',
+        'สอบโครงร่างวิทยานิพนธ์': 'M3',
+        'สอบป้องกันวิทยานิพนธ์': 'M7'
+    };
+    
+    studentExams.forEach(ex => {
+        const type = String(ex.exam_type).trim();
+        const mKey = mapping[type];
+        if (mKey) {
+            let mStatus = '';
+            const eStatus = String(ex.status).trim();
+            if (eStatus === 'ผ่าน' || eStatus === 'ผ่านแบบมีเงื่อนไข' || eStatus.toLowerCase() === 'pass') mStatus = 'Complete';
+            else if (eStatus === 'รอดำเนินการ' || eStatus === 'กำลังดำเนินการ') mStatus = 'InProgress';
+            else if (eStatus === 'ไม่ผ่าน' || eStatus.toLowerCase() === 'fail') mStatus = 'Pending';
+            else mStatus = 'Pending';
+            
+            if (mStatus !== 'Pending') {
+                track[`${mKey}_Status`] = mStatus;
+                track[`${mKey}_Date`] = ex.date || track[`${mKey}_Date`] || '';
+                track[`${mKey}_Note`] = ex.note || track[`${mKey}_Note`] || '';
+            }
+        }
+    });
+    return track;
+}
+
+
 function formatDateTh(dateStr) {
     if (!dateStr || dateStr === '-') return '-';
     const d = new Date(dateStr);
@@ -52,7 +85,8 @@ function renderAdminDashboard() {
     const studentList  = MOCK.students || [];
 
     const combined = studentList.map(s => {
-        const track = trackingData.find(t => String(t.StudentID) === String(s.studentId)) || {};
+        let track = trackingData.find(t => String(t.StudentID) === String(s.studentId)) || {};
+        track = augmentTrackWithExams(s.studentId, track);
         const prog   = calcThesisProgress(track);
         const done   = THESIS_MILESTONES.filter(m => track[`${m.id}_Status`] === 'Complete').length;
         const curM   = THESIS_MILESTONES.find(m => track[`${m.id}_Status`] !== 'Complete');
@@ -198,7 +232,8 @@ window.filterThesisRows = function(q) {
 // Student personal timeline view
 function renderStudentTimeline() {
     const student = MOCK.student || {};
-    const track   = (MOCK.thesisProgress || []).find(t => String(t.StudentID) === String(student.studentId)) || {};
+    let track   = (MOCK.thesisProgress || []).find(t => String(t.StudentID) === String(student.studentId)) || {};
+    track = augmentTrackWithExams(student.studentId, track);
     const prog    = calcThesisProgress(track);
     const doneCount = THESIS_MILESTONES.filter(m => track[`${m.id}_Status`] === 'Complete').length;
     const nextMs  = THESIS_MILESTONES.find(m => track[`${m.id}_Status`] !== 'Complete');
@@ -285,7 +320,8 @@ function renderStudentTimeline() {
 // Show detailed timeline in a modal for Admin
 window.showThesisDetail = function(studentId) {
     const student = (MOCK.students || []).find(s => String(s.studentId) === String(studentId));
-    const track   = (MOCK.thesisProgress || []).find(t => String(t.StudentID) === String(studentId)) || {};
+    let track   = (MOCK.thesisProgress || []).find(t => String(t.StudentID) === String(studentId)) || {};
+    track = augmentTrackWithExams(studentId, track);
     if (!student) return;
 
     const prog   = calcThesisProgress(track);
@@ -461,7 +497,8 @@ window.loadStudentMilestoneForm = function(studentId) {
     }
 
     const student = (MOCK.students || []).find(s => String(s.studentId) === String(studentId));
-    const track   = (MOCK.thesisProgress || []).find(t => String(t.StudentID) === String(studentId)) || {};
+    let track   = (MOCK.thesisProgress || []).find(t => String(t.StudentID) === String(studentId)) || {};
+    track = augmentTrackWithExams(studentId, track);
     if (!student) return;
 
     const prog   = calcThesisProgress(track);
