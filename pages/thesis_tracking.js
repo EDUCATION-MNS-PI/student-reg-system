@@ -34,7 +34,7 @@ function augmentTrackWithExams(studentId, originalTrack) {
     const mapping = {
         'สอบหัวข้อวิทยานิพนธ์': 'M1',
         'สอบโครงร่างวิทยานิพนธ์': 'M3',
-        'สอบป้องกันวิทยานิพนธ์': 'M7'
+        'สอบป้องกันวิทยานิพนธ์': 'M5'
     };
     
     studentExams.forEach(ex => {
@@ -43,15 +43,25 @@ function augmentTrackWithExams(studentId, originalTrack) {
         if (mKey) {
             let mStatus = '';
             const eStatus = String(ex.status).trim();
-            if (eStatus === 'ผ่าน' || eStatus === 'ผ่านแบบมีเงื่อนไข' || eStatus.toLowerCase() === 'pass') mStatus = 'Complete';
-            else if (eStatus === 'รอดำเนินการ' || eStatus === 'กำลังดำเนินการ') mStatus = 'InProgress';
-            else if (eStatus === 'ไม่ผ่าน' || eStatus.toLowerCase() === 'fail') mStatus = 'Pending';
-            else mStatus = 'Pending';
+            if (eStatus === 'ไม่ผ่าน' || eStatus.includes('ไม่ผ่าน') || eStatus.toLowerCase().includes('fail')) {
+                mStatus = 'Pending';
+            } else if (eStatus.includes('ผ่าน') || eStatus.toLowerCase().includes('pass')) {
+                mStatus = 'Complete';
+            } else if (eStatus.includes('รอ') || eStatus.includes('กำลัง')) {
+                mStatus = 'InProgress';
+            } else {
+                mStatus = 'Pending';
+            }
             
             if (mStatus !== 'Pending') {
                 track[`${mKey}_Status`] = mStatus;
                 track[`${mKey}_Date`] = ex.date || track[`${mKey}_Date`] || '';
                 track[`${mKey}_Note`] = ex.note || track[`${mKey}_Note`] || '';
+                track[`${mKey}_FromExam`] = true;
+                
+                if (mKey === 'M5' && ex.score) {
+                    track['M5_Score'] = ex.score;
+                }
             }
         }
     });
@@ -571,15 +581,16 @@ window.loadStudentMilestoneForm = function(studentId) {
                     </div>
                 </div>`;
         } else {
+            const isSynced = track[`${m.id}_FromExam`];
             extraFieldsHtml = `
                 <div style="padding:12px 16px;display:flex;gap:10px;flex-wrap:wrap;background:white;">
                     <input type="text" id="${m.id}_Note" class="form-input" placeholder="หมายเหตุ / รายละเอียด" value="${cNote}"
-                        style="flex:2;min-width:200px;height:36px;font-size:0.83rem;border-radius:8px;">
+                        style="flex:2;min-width:200px;height:36px;font-size:0.83rem;border-radius:8px;" ${isSynced ? 'disabled' : ''}>
                     ${(m.fields || []).map(f => {
                         const fVal = track[`${m.id}_${f.id}`] || '';
                         const fDateVal = fVal.includes('T') ? fVal.split('T')[0] : fVal;
                         return `<input type="${f.type}" id="${m.id}_${f.id}" class="form-input" placeholder="${f.label}" value="${f.type==='date'?fDateVal:fVal}"
-                            style="flex:1;min-width:160px;height:36px;font-size:0.83rem;border-radius:8px;background:#fafafa;border-color:#94a3b8;">`;  
+                            style="flex:1;min-width:160px;height:36px;font-size:0.83rem;border-radius:8px;background:#fafafa;border-color:#94a3b8;" ${isSynced ? 'disabled' : ''}>`;  
                     }).join('')}
                 </div>`;
         }
@@ -595,13 +606,14 @@ window.loadStudentMilestoneForm = function(studentId) {
                     </div>
                 </div>
                 <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-                    <select id="${m.id}_Status" class="form-select" style="height:36px;padding:0 10px;border-radius:8px;font-size:0.85rem;min-width:155px;">
+                    ${track[`${m.id}_FromExam`] ? `<span style="font-size:0.75rem;color:#10b981;font-weight:600;padding:4px 8px;background:#d1fae5;border-radius:6px;">🔄 ซิงค์จากผลสอบแล้ว</span>` : ''}
+                    <select id="${m.id}_Status" class="form-select" style="height:36px;padding:0 10px;border-radius:8px;font-size:0.85rem;min-width:155px;" ${track[`${m.id}_FromExam`] ? 'disabled' : ''}>
                         <option value="Pending"    ${cStatus==='Pending'   ?'selected':''}>⬜ ยังไม่เริ่ม</option>
                         <option value="InProgress" ${cStatus==='InProgress'?'selected':''}>🔵 กำลังดำเนินการ</option>
                         <option value="Complete"   ${cStatus==='Complete'  ?'selected':''}>✅ ผ่าน / เสร็จสิ้น</option>
                     </select>
                     ${m.id !== 'M4' ? `<input type="date" id="${m.id}_Date" class="form-input" value="${dateVal}"
-                        style="height:36px;border-radius:8px;font-size:0.85rem;width:145px;">` : ''}
+                        style="height:36px;border-radius:8px;font-size:0.85rem;width:145px;" ${track[`${m.id}_FromExam`] ? 'disabled' : ''}>` : ''}
                 </div>
             </div>
             ${extraFieldsHtml}
