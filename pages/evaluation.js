@@ -787,9 +787,15 @@ window.submitWizardEval = async function () {
 // ============================
 window.openInstructorEvalModal = function (instructorId, courseCode, courseName) {
     const instName = getInstructorDisplayName(instructorId);
-    const instQuestions = MOCK.evalInstructorQuestions || [];
-    const questions = instQuestions.length > 0
-        ? instQuestions.map(q => ({ id: q.question_id, text: q.question_text }))
+    
+    // Filter instructor questions by courseCode or 'ALL' / blank (Common questions)
+    const allInstQuestions = (MOCK.evalInstructorQuestions || []).filter(q => {
+        const cCode = String(q.course_code || '').trim().toUpperCase();
+        return cCode === String(courseCode).trim().toUpperCase() || cCode === 'ALL' || cCode === '*' || cCode === '';
+    });
+
+    const questions = allInstQuestions.length > 0
+        ? allInstQuestions.map(q => ({ id: q.question_id, text: q.question_text }))
         : [
             { id: 1, text: 'เนื้อหาตอดคล้องกับวัตถุประสงค์' },
             { id: 2, text: 'เนื้อหาเหมาะสมกับเวลา' },
