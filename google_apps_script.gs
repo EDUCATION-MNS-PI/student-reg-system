@@ -947,7 +947,7 @@ function setupInitialSheets() {
                             'nav-dashboard', 'nav-student-profile', 'nav-teacher-profile', 'nav-special-lecturers', 'nav-alumni', 'nav-new-registration', 'nav-teacher-registration', 'nav-courses', 'nav-study-plan', 
                             'nav-grades', 'nav-schedule', 'nav-eval-course', 'nav-eval-instructor', 'nav-transcript', 'nav-exams', 'nav-graduation', 
                             'nav-thesis-advisor', 'nav-thesis-topic', 'nav-academic-advisor', 'nav-exam-committee', 
-                            'nav-payments', 'nav-petitions-student', 'nav-documents-status', 'nav-documents-admin', 'nav-manage-evals', 'nav-eval-reports', 'nav-teaching-fees', 'nav-calendar', 'nav-announcements', 'nav-settings', 'nav-user-management', 'nav-admission', 'nav-manage-schedule', 'nav-manage-forms', 'nav-thesis-dashboard', 'nav-thesis-update'],
+                            'nav-payments', 'nav-petitions-student', 'nav-documents-status', 'nav-documents-admin', 'nav-manage-evals', 'nav-eval-reports', 'nav-teaching-fees', 'nav-calendar', 'nav-announcements', 'nav-settings', 'nav-user-management', 'nav-menu-permissions', 'nav-admission', 'nav-manage-schedule', 'nav-manage-forms', 'nav-thesis-dashboard', 'nav-thesis-update'],
     [SHEETS.EXAMS]: ['id', 'student_id', 'exam_type', 'status', 'score', 'date', 'note'],
     [SHEETS.EXAM_COMMITTEES]: ['ExamID', 'StudentID', 'ExamType', 'ExamDate', 'ExamTime', 'ExamRoom', 'Advisor', 'ThesisTitle', 'Role', 'Prefix', 'FirstName', 'LastName', 'Position', 'Affiliation'],
     [SHEETS.EVAL_QUESTIONS]: ['course_code', 'section', 'category', 'question_id', 'question_text'],
@@ -972,9 +972,9 @@ function setupInitialSheets() {
   };
 
   const defaultPermissions = [
-    ['admin',   'YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES'],
-    ['teacher', 'NO', 'YES','NO', 'YES','NO', 'YES','YES','YES','YES','YES','YES','NO', 'YES','YES','YES','YES','YES','YES','YES','YES','NO', 'YES','YES','YES','YES','YES','YES','YES','YES','NO', 'YES','YES','YES','YES','NO', 'NO', 'YES','YES'],
-    ['student', 'NO', 'NO', 'NO', 'NO', 'NO', 'NO', 'YES','NO', 'NO', 'NO', 'NO', 'NO', 'YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','NO', 'NO', 'NO', 'YES','YES','YES','NO', 'NO', 'YES','NO']
+    ['admin',   'YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES'],
+    ['teacher', 'NO', 'YES','NO', 'YES','NO', 'YES','YES','YES','YES','YES','YES','NO', 'YES','YES','YES','YES','YES','YES','YES','YES','NO', 'YES','YES','YES','YES','YES','YES','YES','YES','NO', 'YES','YES','YES','YES','NO', 'NO', 'NO', 'YES','YES'],
+    ['student', 'NO', 'NO', 'NO', 'NO', 'NO', 'NO', 'YES','NO', 'NO', 'NO', 'NO', 'NO', 'YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','YES','NO', 'NO', 'NO', 'YES','YES','YES','NO', 'NO', 'NO', 'YES','NO']
   ];
 
   Object.keys(defaultHeaders).forEach(sheetName => {

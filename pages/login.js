@@ -1,4 +1,4 @@
-﻿// ============================
+// ============================
 // Authentication & Login Control
 // ============================
 
@@ -319,8 +319,10 @@ function applyRolePermissions(role) {
 
     // Special case for nav-user-management and other sensitive menus
     // Ensure they stay hidden for non-super admins if not explicitly allowed
+    // Note: 'nav-menu-permissions' is NOT in this list because the page itself
+    // guards access via window.isSuperAdmin (any admin can see the menu link)
     if (!window.isSuperAdmin) {
-        const sensitiveMenus = ['nav-user-management', 'nav-manage-evals', 'nav-teacher-registration', 'nav-menu-permissions'];
+        const sensitiveMenus = ['nav-user-management', 'nav-manage-evals', 'nav-teacher-registration'];
         sensitiveMenus.forEach(id => {
             const el = document.getElementById(id);
             if (el && !window.hasPermission(id)) {
