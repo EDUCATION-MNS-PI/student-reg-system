@@ -201,10 +201,15 @@ window.applyLoginState = function(role, userData) {
     window.currentUserData = userData;
     window.isAdmin = (role === 'admin');
     
-    // Super Admin check: Username must be "Super admin" or Name "Super Admin"
+    // Super Admin check: Username, Name, or Sheet Role must be "Super admin"
     const username = String(userData.username || '').toLowerCase().trim();
     const name = String(userData.name || '').toLowerCase().trim();
-    window.isSuperAdmin = (role === 'admin' && (username === 'super admin' || name === 'super admin'));
+    const sheetRole = String(userData.sheetRole || '').toLowerCase().trim();
+    window.isSuperAdmin = (role === 'admin' && (
+        username === 'super admin' || 
+        name === 'super admin' ||
+        sheetRole === 'super admin'
+    ));
 
     // Bind current user to MOCK globally for profile rendering
     if (role === 'student' && userData.id) {
