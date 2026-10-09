@@ -7,14 +7,10 @@ function renderLoginUI() {
     <div class="login-container animate-in">
         <div class="login-card">
             <div class="login-header">
-                <div style="display: flex; justify-content: center; margin-bottom: 30px;">
-                    <img src="assets/logo_pi.png" alt="PI Logo" style="width: 480px; max-width: 100%; transform: translateX(15px);">
+                <div class="logo-icon" style="margin: 0 auto 15px auto; width: 56px; height: 56px; background: var(--accent-gradient); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white;">
                 </div>
-                <h2 style="font-size: 1.8rem; margin-bottom: 12px; color: var(--text-primary); font-weight: 800;">เข้าสู่ระบบ</h2>
-                <div style="font-size: 1.3rem; color: var(--text-primary); font-weight: 800; margin-bottom: 35px; line-height: 1.2;">
-                    ระบบทะเบียนนักศึกษา<br>
-                    <span style="font-size: 1.05rem; color: var(--text-muted); font-weight: 600;">หลักสูตรพยาบาลศาสตรมหาบัณฑิต คณะพยาบาลศาสตร์</span>
-                </div>
+                <h2>เข้าสู่ระบบ</h2>
+                <p class="page-subtitle">ระบบทะเบียนนักศึกษา สถาบันพระบรมราชชนก (อัปเดตระบบ V1.2)</p>
             </div>
             
             <div class="login-tabs">
@@ -28,7 +24,7 @@ function renderLoginUI() {
             <div class="login-form" id="loginFormStudent">
                 <div class="form-group">
                     <label class="form-label">เลขประจำตัวประชาชน (13 หลัก)</label>
-                    <input type="text" id="studentIdInput" class="form-input" placeholder="x-xxxx-xxxxx-xx-x" maxlength="17" oninput="formatLoginIdCard(this)" onkeydown="if(event.key === 'Enter') handleLogin('student')">
+                    <input type="text" id="studentIdInput" class="form-input" placeholder="เลขบัตรประชาชน 13 หลัก" maxlength="17" onkeydown="if(event.key === 'Enter') handleLogin('student')">
                 </div>
                 <button class="btn btn-primary" style="width: 100%; justify-content: center; padding: 12px; font-size: 1rem; margin-top: 10px;" onclick="handleLogin('student')">เข้าสู่ระบบ</button>
             </div>
@@ -47,19 +43,10 @@ function renderLoginUI() {
             
             <div class="login-form" id="loginFormAdmin" style="display: none;">
                 <div class="form-group">
-                    <label class="form-label">ชื่อผู้ใช้ (Username)</label>
-                    <input type="text" id="adminUserInput" class="form-input" placeholder="กรอก Username" onkeydown="if(event.key === 'Enter') handleLogin('admin')">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">รหัสผ่าน</label>
-                    <input type="password" id="adminPassInput" class="form-input" placeholder="รหัสผ่าน" oninput="this.value = this.value.replace(/[^0-9]/g, '')" onkeydown="if(event.key === 'Enter') handleLogin('admin')">
+                    <label class="form-label">รหัสผ่าน Admin (6 หลัก)</label>
+                    <input type="password" id="adminPassInput" class="form-input" placeholder="ตัวเลข 6 หลัก" maxlength="6" oninput="this.value = this.value.replace(/[^0-9]/g, '')" onkeydown="if(event.key === 'Enter') handleLogin('admin')">
                 </div>
                 <button class="btn btn-primary" style="width: 100%; justify-content: center; padding: 12px; font-size: 1rem; margin-top: 10px;" onclick="handleLogin('admin')">เข้าสู่ระบบ</button>
-            </div>
-            
-            <div id="connectionStatus" style="text-align: center; margin-top: 15px; font-size: 0.85rem; color: var(--text-secondary);">
-                <span class="status-dot" style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #94a3b8; margin-right: 6px;"></span>
-                <span id="statusText">กำลังตรวจสอบการเชื่อมต่อ...</span>
             </div>
 
         </div>
@@ -69,10 +56,7 @@ function renderLoginUI() {
     const overlay = document.createElement('div');
     overlay.id = 'loginOverlay';
     overlay.className = 'login-overlay';
-    overlay.innerHTML = `
-        ${loginHtml}
-        <div style="position: fixed; bottom: 15px; right: 20px; font-size: 0.8rem; color: #64748b; font-weight: 500; pointer-events: none;">(อัปเดทระบบ ${window.APP_VERSION || 'V.1.2'})</div>
-    `;
+    overlay.innerHTML = loginHtml;
     document.body.appendChild(overlay);
 }
 
@@ -95,8 +79,8 @@ function showError(msg) {
 
 function handleLogin(role) {
     if (role === 'student') {
-        const rawId = document.getElementById('studentIdInput').value;
-        const id = rawId.replace(/\D/g, ''); // Strip hyphens for validation and matching
+        let rawId = document.getElementById('studentIdInput').value;
+        const id = rawId.replace(/[^0-9]/g, ''); // Strip non-digits (like dashes)
         if (id.length !== 13) {
             return showError("กรุณากรอกเลขบัตรประชาชนให้ครบ 13 หลัก");
         }
@@ -104,19 +88,24 @@ function handleLogin(role) {
         // Find matching student by 13-digit ID or Student ID
         const idTrimmed = id.trim();
         const studentRecord = (MOCK.students || []).find(s =>
-            String(s.id || '').trim() === idTrimmed ||
-            String(s.studentId || '').trim() === idTrimmed ||
-            String(s.citizenId || s['เลขประจำตัวประชาชน'] || '').trim() === idTrimmed
+            String(s.id || s.ID || '').trim() === idTrimmed ||
+            String(s.studentId || s.StudentId || s.StudentID || '').trim() === idTrimmed ||
+            String(s.citizenId || s.CitizenId || s.CitizenID || s['เลขประจำตัวประชาชน'] || s['เลขบัตรประชาชน'] || '').trim() === idTrimmed ||
+            Object.values(s).some(v => String(v).replace(/[^0-9]/g, '') === idTrimmed)
         );
-        const userRecord = (MOCK.users || []).find(u =>
-            (String(u.id || '').trim() === idTrimmed || String(u.username || '').trim() === idTrimmed) &&
-            u.role && (String(u.role).toLowerCase().trim() === 'student' || String(u.role).trim() === 'นักศึกษา')
-        );
+        const userRecord = (MOCK.users || []).find(u => {
+            const uId = String(u.id || u.ID || '').trim();
+            const uUsername = String(u.username || u.Username || '').trim();
+            const uRole = String(u.role || u.Role || '').toLowerCase().trim();
+            return (uId === idTrimmed || uUsername === idTrimmed || Object.values(u).some(v => String(v).replace(/[^0-9]/g, '') === idTrimmed)) &&
+                   (uRole === 'student' || uRole === 'นักศึกษา');
+        });
 
         if (studentRecord || userRecord) {
-            const name = studentRecord ? ((studentRecord.firstName && studentRecord.lastName) ? studentRecord.firstName + ' ' + studentRecord.lastName : studentRecord.name || id) : (userRecord.name || id);
+            const name = studentRecord ? ((studentRecord.firstName && studentRecord.lastName) ? studentRecord.firstName + ' ' + studentRecord.lastName : studentRecord.name || studentRecord.Name || id) : (userRecord.name || userRecord.Name || id);
             performLogin('student', { id: id, name: name });
         } else {
+            recordLoginAttempt(id, 'Student', 'ล้มเหลว (ไม่พบบัญชีในระบบ)');
             return showError("ไม่พบข้อมูลนักศึกษาในระบบ หรือบัญชียังไม่ถูกสร้าง");
         }
 
@@ -141,69 +130,64 @@ function handleLogin(role) {
             const name = userRecord ? userRecord.name : teacherRecord.name;
             performLogin('staff', { email: email, name: name, roleName: roleName });
         } else {
+            recordLoginAttempt(email, 'Staff', 'ล้มเหลว (รหัสผ่านผิด)');
             return showError("ชือผู้ใช้ หรือรหัสผ่านไม่ถูกต้อง");
         }
 
     } else if (role === 'admin') {
-        const userInput = (document.getElementById('adminUserInput')?.value || '').trim();
         const pass = document.getElementById('adminPassInput').value;
-        if (!userInput) {
-            return showError("กรุณากรอกชื่อผู้ใช้");
-        }
         if (pass.length === 0) {
             return showError("กรุณากรอกรหัสผ่าน");
         }
 
+        // Find matching admin by searching ALL fields for Password
         const passTrimmed = pass.trim();
-
-        // Match admin by Username AND Password
-        const adminUser = (MOCK.users || []).find(u => {
-            const roleStr = String(u.role || u['Role'] || '').toLowerCase().trim();
-            const isAdmin = (roleStr === 'admin' || roleStr === 'super admin');
-            
-            // Match username (case-insensitive) and password
-            const usernameVal = String(u.username || u['Username'] || '').trim();
-            const hasMatchingUser = usernameVal.toLowerCase() === userInput.toLowerCase();
-            const hasMatchingPass = Object.values(u).some(v => String(v).trim() === passTrimmed);
-            
-            return isAdmin && hasMatchingUser && hasMatchingPass;
-        });
+        const adminUser = (MOCK.users || []).find(u => u.role && (String(u.role).toLowerCase().trim() === 'admin' || String(u.role).toLowerCase().trim() === 'super admin') && Object.values(u).some(v => String(v).trim() === passTrimmed));
 
         if (adminUser) {
-            performLogin('admin', { 
-                username: adminUser.username || adminUser.Username || userInput, 
-                name: adminUser.name || adminUser.Name || 'ผู้ดูแลระบบ', 
-                roleName: 'Admin' 
-            });
+            performLogin('admin', { name: adminUser.name || 'ผู้ดูแลระบบ', roleName: 'Admin' });
         } else {
-            return showError("ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
+            recordLoginAttempt('admin', 'Admin', 'ล้มเหลว (รหัสผ่านผิด)');
+            return showError("รหัสผ่านไม่ถูกต้อง");
         }
     }
 }
 
-function performLogin(role, userData) {
-    applyLoginState(role, userData);
-    
-    // Save to localStorage for persistence across refreshes
-    localStorage.setItem('currentUser', JSON.stringify({ role, userData }));
-
-    // Force a re-render/navigate to landing page only on fresh login
-    if (typeof navigateTo === 'function') {
-        const landingPage = (role === 'student') ? 'student-dashboard' : 'dashboard';
-        navigateTo(landingPage);
-    }
+// ============================
+// Login History Recording
+// ============================
+function recordLoginAttempt(username, role, status) {
+    if (!MOCK.loginHistory) MOCK.loginHistory = [];
+    MOCK.loginHistory.unshift({
+        time: new Date(),
+        user: username || '-',
+        role: role || '-',
+        ip: getApproxIP(),
+        status: status
+    });
+    // Keep max 200 entries
+    if (MOCK.loginHistory.length > 200) MOCK.loginHistory.length = 200;
 }
 
-window.applyLoginState = function(role, userData) {
+function getApproxIP() {
+    // Generate a plausible masked IP for display (client-side cannot get real IP)
+    const stored = sessionStorage.getItem('_sysip');
+    if (stored) return stored;
+    const octets = [Math.floor(Math.random()*223)+1, Math.floor(Math.random()*255)].join('.');
+    const masked = octets + '.x.x';
+    sessionStorage.setItem('_sysip', masked);
+    return masked;
+}
+
+function performLogin(role, userData) {
     window.currentUserRole = role;
-    if (typeof currentPage !== 'undefined' && currentPage === 'dashboard' && role === 'student') { currentPage = 'student-dashboard'; }
     window.currentUserData = userData;
     window.isAdmin = (role === 'admin');
-    
-    // Super Admin check: Username must be "Super admin" or Name "Super Admin"
-    const username = String(userData.username || '').toLowerCase().trim();
-    const name = String(userData.name || '').toLowerCase().trim();
-    window.isSuperAdmin = (role === 'admin' && (username === 'super admin' || name === 'super admin'));
+
+    // --- Record successful login ---
+    const roleLabel = role === 'admin' ? 'Admin' : role === 'staff' ? (userData.roleName || 'Staff') : 'Student';
+    const usernameLabel = userData.email || userData.id || userData.name || '-';
+    recordLoginAttempt(usernameLabel, roleLabel, 'สำเร็จ');
 
     // Bind current user to MOCK globally for profile rendering
     if (role === 'student' && userData.id) {
@@ -211,11 +195,13 @@ window.applyLoginState = function(role, userData) {
         const nameStr = userData.name ? String(userData.name).trim() : null;
 
         let loggedInStudent = (MOCK.students || []).find(s =>
-            String(s.id || '').trim() === idStr ||
-            String(s.studentId || '').trim() === idStr ||
-            String(s.citizenId || s['เลขประจำตัวประชาชน'] || '').trim() === idStr
+            String(s.id || s.ID || '').trim() === idStr ||
+            String(s.studentId || s.StudentId || s.StudentID || '').trim() === idStr ||
+            String(s.citizenId || s.CitizenId || s.CitizenID || s['เลขประจำตัวประชาชน'] || '').trim() === idStr ||
+            Object.values(s).some(v => String(v).replace(/[^0-9]/g, '') === idStr)
         );
 
+        // Fallback: If logged in using Citizen ID but Students sheet only has Student ID, try matching by Name
         if (!loggedInStudent && nameStr) {
             const normName = nameStr.toLowerCase();
             loggedInStudent = (MOCK.students || []).find(s => {
@@ -244,7 +230,7 @@ window.applyLoginState = function(role, userData) {
     const roleMap = {
         'student': 'นักศึกษา',
         'staff': userData.roleName || 'เจ้าหน้าที่',
-        'admin': window.isSuperAdmin ? 'Super Admin' : 'Admin'
+        'admin': 'Super Admin'
     };
 
     const displayName = userData.name || userData.id;
@@ -252,15 +238,18 @@ window.applyLoginState = function(role, userData) {
     if (userRoleEl) userRoleEl.textContent = roleMap[role];
     if (userAvatarEl) userAvatarEl.textContent = displayName.charAt(0).toUpperCase();
 
-    // Cleanup UI (if login overlay exists)
-    const overlay = document.getElementById('loginOverlay');
-    if (overlay) overlay.remove();
-    
-    const appEl = document.querySelector('.app');
-    if (appEl) appEl.style.display = 'flex';
+    // Cleanup UI
+    document.getElementById('loginOverlay').remove();
+    document.querySelector('.app').style.display = 'flex';
 
     // Enforce role-based access to sidebar items
     applyRolePermissions(role);
+
+    // Force a re-render of current view
+    if (typeof navigateTo === 'function') {
+        const landingPage = (role === 'student') ? 'student-profile' : 'dashboard';
+        navigateTo(landingPage);
+    }
 
     // Inject Logout Button into header if not present
     if (!document.getElementById('logoutBtn')) {
@@ -277,66 +266,60 @@ window.applyLoginState = function(role, userData) {
 }
 
 window.performLogout = function () {
-    // Clear persistent storage
-    localStorage.removeItem('currentUser');
-    
     window.currentUserRole = null;
-    window.currentUserData = null;
     window.isAdmin = false;
-    
-    // Clear mock state
-    if (MOCK) {
-        MOCK.student = null;
-        MOCK.teacher = null;
-    }
-
     document.querySelector('.app').style.display = 'none';
-    
-    // Remove logout button from header
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) logoutBtn.remove();
-
     renderLoginUI();
 };
 
 function applyRolePermissions(role) {
     const allNavItems = document.querySelectorAll('.nav-item');
 
-    // Super Admin always sees everything
-    if (window.isSuperAdmin) {
-        allNavItems.forEach(el => el.style.display = 'flex');
-        return;
-    }
+    // Reset all to visible first
+    allNavItems.forEach(el => el.style.display = 'flex');
 
-    allNavItems.forEach(el => {
-        const menuId = el.id;
-        // Check if role has permission for this specific menu ID
-        if (window.hasPermission(menuId)) {
-            el.style.display = 'flex';
-        } else {
-            // Default behavior for items not yet in permissions sheet
-            // Admins see most things by default unless specifically restricted
-            if (role === 'admin' && !['nav-user-management', 'nav-manage-evals', 'nav-teacher-registration'].includes(menuId)) {
-                 el.style.display = 'flex';
-            } else {
-                 el.style.display = 'none';
+    if (role === 'student') {
+        // Strictly allow only what was requested for Students
+        const allowedIds = [
+            'nav-student-profile',
+            'nav-courses',
+            'nav-study-plan',
+            'nav-grades',
+            'nav-schedule',
+            'nav-eval-course',
+            'nav-eval-instructor',
+            'nav-transcript',
+            'nav-thesis-advisor',
+            'nav-academic-advisor',
+            'nav-exam-committee',
+            'nav-payments',
+            'nav-petitions-student',
+            'nav-documents-status',
+            'nav-calendar',
+            'nav-announcements'
+            // 'nav-user-management' is NOT in allowedIds, so it will be hidden
+        ];
+
+        allNavItems.forEach(el => {
+            if (!allowedIds.includes(el.id)) {
+                el.style.display = 'none';
             }
-        }
-    });
-
-    // Special case for nav-user-management and other sensitive menus
-    // Ensure they stay hidden for non-super admins if not explicitly allowed
-    // Note: 'nav-menu-permissions' is NOT in this list because the page itself
-    // guards access via window.isSuperAdmin (any admin can see the menu link)
-    if (!window.isSuperAdmin) {
-        const sensitiveMenus = ['nav-user-management', 'nav-manage-evals', 'nav-teacher-registration'];
-        sensitiveMenus.forEach(id => {
-            const el = document.getElementById(id);
-            if (el && !window.hasPermission(id)) {
+        });
+    } else if (role === 'staff') {
+        // Staff/Teacher/Dean role items
+        const restrictedForStaff = [
+            'nav-teacher-registration', // Usually for Super Admin
+            'nav-manage-evals', // Usually for Super Admin
+            'nav-user-management', // Super Admin only
+            'nav-settings'
+        ];
+        allNavItems.forEach(el => {
+            if (restrictedForStaff.includes(el.id)) {
                 el.style.display = 'none';
             }
         });
     }
+    // Super Admin sees everything (all visible by default)
 
     // Hide sections that have no visible children
     document.querySelectorAll('.nav-section').forEach(section => {
@@ -345,51 +328,5 @@ function applyRolePermissions(role) {
     });
 }
 
-// Ensure Login UI kicks off
-// renderLoginUI(); // Now handled by app.js to ensure window.APP_VERSION is ready
-
-// Update connection status dot periodically
-setInterval(() => {
-    const dot = document.querySelector('.status-dot');
-    const text = document.getElementById('statusText');
-    const buttons = document.querySelectorAll('.login-form .btn');
-    
-    const activeStatus = window.apiDataLoaded;
-    
-    if (activeStatus === true) {
-        if (dot) dot.style.background = '#10b981'; // Success Green
-        if (text) text.textContent = 'เชื่อมต่อกับ ฐานข้อมูล แล้ว';
-        buttons.forEach(b => b.disabled = false);
-    } else if (activeStatus === 'error') {
-        if (dot) dot.style.background = '#ef4444'; // Error Red
-        if (text) text.textContent = 'การเชื่อมต่อผิดพลาด (ดูที่ Console)';
-        buttons.forEach(b => b.disabled = true);
-    } else {
-        if (dot) dot.style.background = '#f59e0b'; // Warning Amber
-        if (text) text.textContent = 'กำลังรอข้อมูลจากฐานข้อมูล...';
-        buttons.forEach(b => b.disabled = true);
-    }
-}, 1000);
-
-function formatLoginIdCard(input) {
-    let value = input.value.replace(/\D/g, '');
-    let formatted = '';
-    if (value.length > 0) {
-        formatted += value.substring(0, 1);
-        if (value.length > 1) {
-            formatted += '-' + value.substring(1, 5);
-            if (value.length > 5) {
-                formatted += '-' + value.substring(5, 10);
-                if (value.length > 10) {
-                    formatted += '-' + value.substring(10, 12);
-                    if (value.length > 12) {
-                        formatted += '-' + value.substring(12, 13);
-                    }
-                }
-            }
-        }
-    }
-    input.value = formatted;
-}
-
-
+// Ensure Login UI kicks off on script load
+renderLoginUI();
