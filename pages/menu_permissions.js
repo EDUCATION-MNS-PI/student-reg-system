@@ -2,11 +2,11 @@
 // Menu Permissions Management Page
 // ============================
 pages['menu-permissions'] = function() {
-    if (!window.isSuperAdmin) {
+    if (!window.isAdmin) {
         return `<div class="animate-in" style="padding:40px; text-align:center;">
             <div style="font-size:3rem; margin-bottom:20px;">🚫</div>
             <h2>ไม่มีสิทธิ์เข้าถึงหน้านี้</h2>
-            <p>เฉพาะ Super Admin เท่านั้นที่สามารถจัดการสิทธิ์การเข้าถึงเมนูได้</p>
+            <p>เฉพาะ Admin เท่านั้นที่สามารถจัดการสิทธิ์การเข้าถึงเมนูได้</p>
             <button class="btn btn-primary" onclick="navigateTo('dashboard')" style="margin-top:20px;">กลับหน้าหลัก</button>
         </div>`;
     }
