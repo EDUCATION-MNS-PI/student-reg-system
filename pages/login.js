@@ -47,8 +47,12 @@ function renderLoginUI() {
             
             <div class="login-form" id="loginFormAdmin" style="display: none;">
                 <div class="form-group">
-                    <label class="form-label">รหัสผ่าน Admin (6 หลัก)</label>
-                    <input type="password" id="adminPassInput" class="form-input" placeholder="ตัวเลข 6 หลัก" maxlength="6" oninput="this.value = this.value.replace(/[^0-9]/g, '')" onkeydown="if(event.key === 'Enter') handleLogin('admin')">
+                    <label class="form-label">ชื่อผู้ใช้ (Username)</label>
+                    <input type="text" id="adminUserInput" class="form-input" placeholder="กรอก Username" onkeydown="if(event.key === 'Enter') handleLogin('admin')">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">รหัสผ่าน</label>
+                    <input type="password" id="adminPassInput" class="form-input" placeholder="รหัสผ่าน" oninput="this.value = this.value.replace(/[^0-9]/g, '')" onkeydown="if(event.key === 'Enter') handleLogin('admin')">
                 </div>
                 <button class="btn btn-primary" style="width: 100%; justify-content: center; padding: 12px; font-size: 1rem; margin-top: 10px;" onclick="handleLogin('admin')">เข้าสู่ระบบ</button>
             </div>
@@ -141,35 +145,39 @@ function handleLogin(role) {
         }
 
     } else if (role === 'admin') {
+        const userInput = (document.getElementById('adminUserInput')?.value || '').trim();
         const pass = document.getElementById('adminPassInput').value;
+        if (!userInput) {
+            return showError("กรุณากรอกชื่อผู้ใช้");
+        }
         if (pass.length === 0) {
             return showError("กรุณากรอกรหัสผ่าน");
         }
 
         const passTrimmed = pass.trim();
-        console.log('Admin Login Attempt. Entered password:', passTrimmed);
-        console.log('Validating against MOCK.users:', MOCK.users);
 
-        // Find matching admin by checking role and ANY field matching the password
+        // Match admin by Username AND Password
         const adminUser = (MOCK.users || []).find(u => {
             const roleStr = String(u.role || u['Role'] || '').toLowerCase().trim();
             const isAdmin = (roleStr === 'admin' || roleStr === 'super admin');
             
-            // Check all values in the user object for a match with password
+            // Match username (case-insensitive) and password
+            const usernameVal = String(u.username || u['Username'] || '').trim();
+            const hasMatchingUser = usernameVal.toLowerCase() === userInput.toLowerCase();
             const hasMatchingPass = Object.values(u).some(v => String(v).trim() === passTrimmed);
             
-            return isAdmin && hasMatchingPass;
+            return isAdmin && hasMatchingUser && hasMatchingPass;
         });
 
         if (adminUser) {
             performLogin('admin', { 
-                username: adminUser.username || adminUser.Username, 
-                name: adminUser.name || 'ผู้ดูแลระบบ', 
+                username: adminUser.username || adminUser.Username || userInput, 
+                name: adminUser.name || adminUser.Name || 'ผู้ดูแลระบบ', 
+                sheetRole: adminUser.role || adminUser.Role || '',
                 roleName: 'Admin' 
             });
         } else {
-            console.error('Admin Login Failed: No matching admin record found for password:', passTrimmed);
-            return showError("รหัสผ่านไม่ถูกต้อง");
+            return showError("ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
         }
     }
 }
