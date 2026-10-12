@@ -56,7 +56,7 @@ function doGet(e) {
     }
   }
 
-  setupInitialSheets(); // Ensure all sheets and headers exist
+  // setupInitialSheets(); // ปิดเพื่อความเร็วสูงสุด (เนื่องจากชีตทั้งหมดถูกสร้างไว้เรียบร้อยแล้ว)
   const action = e.parameter.action;
   let data = [];
   

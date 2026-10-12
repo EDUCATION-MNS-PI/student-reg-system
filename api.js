@@ -1,4 +1,4 @@
-﻿// ============================
+// ============================
 // ฐานข้อมูล API Integration
 // ============================
 
@@ -33,13 +33,51 @@ function hideApiLoading() {
     if (loader) loader.style.display = 'none';
 }
 
-// Fetch Data (GET)
-// parameters: action (e.g. 'getStudents', 'getCourses')
-async function fetchData(action) {
+// Fetch Data (GET) with Caching & Background Refresh
+// parameters: action (e.g. 'getAllData', 'getStudents', 'getCourses')
+// forceRefresh: boolean (if true, bypass cache and fetch directly)
+async function fetchData(action, forceRefresh = false) {
     if (!SCRIPT_URL || SCRIPT_URL.includes('your-script-url')) {
         console.error('API Error: SCRIPT_URL is not configured correctly in api.js');
         return null;
     }
+
+    const cacheKey = `cache_api_${action}`;
+    const cacheTimeKey = `cache_time_${action}`;
+    const CACHE_TTL_MS = 15 * 60 * 1000; // แคชมีอายุ 15 นาที
+
+    // 1. ตรวจสอบข้อมูลใน Local Cache ก่อน
+    if (!forceRefresh) {
+        try {
+            const cachedDataStr = localStorage.getItem(cacheKey);
+            const cachedTime = localStorage.getItem(cacheTimeKey);
+            const now = Date.now();
+
+            if (cachedDataStr && cachedTime) {
+                const age = now - parseInt(cachedTime, 10);
+                const cachedData = JSON.parse(cachedDataStr);
+
+                // ถ้ามีแคช ให้ส่งคืนแคชทันทีเพื่อให้หน้าเว็บเปิดทำงานได้ทันใจ (0 วินาที)
+                console.log(`[Cache Hit] Action: ${action} (อายุแคช: Math.round(${age / 1000})s)`);
+
+                // หากแคชเริ่มเก่า (> 5 นาที) ให้แอบดึงข้อมูลล่าสุดจาก Sheets มาอัปเดตแบบเบื้องหลัง (Background Sync)
+                if (age > 5 * 60 * 1000) {
+                    console.log(`[Background Sync] กำลังดึงข้อมูลล่าสุดของ ${action} มาอัปเดตในแคช...`);
+                    fetchData(action, true).then(freshData => {
+                        if (freshData && freshData.status !== 'error') {
+                            console.log(`[Background Sync Complete] อัปเดตข้อมูล ${action} เรียบร้อยแล้ว`);
+                        }
+                    }).catch(e => console.warn(`[Background Sync Fail]`, e));
+                }
+
+                return cachedData;
+            }
+        } catch (cacheErr) {
+            console.warn('[Cache Read Error]', cacheErr);
+        }
+    }
+
+    // 2. หากไม่มีแคช หรือต้องการบังคับดึงข้อมูลสด
     try {
         const url = `${SCRIPT_URL}?action=${action}`;
         console.log(`Fetching from: ${url}`);
@@ -52,10 +90,29 @@ async function fetchData(action) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const result = await response.json();
+
+        // บันทึกลง Local Cache สำหรับรอบต่อไป
+        if (result && result.status !== 'error') {
+            try {
+                localStorage.setItem(cacheKey, JSON.stringify(result));
+                localStorage.setItem(cacheTimeKey, Date.now().toString());
+            } catch (storageErr) {
+                console.warn('[Cache Write Error - Quota Exceeded?]', storageErr);
+            }
+        }
+
         return result;
     } catch (error) {
         console.error(`API Error (${action}):`, error);
-        throw error; // Re-throw so bootApp can catch the failure
+        
+        // กรณีเกิดข้อผิดพลาดในการเชื่อมต่อเน็ต แต่มีแคชเก่าอยู่ ให้กู้คืนแคชเก่ามาใช้แก้ขัด
+        const fallback = localStorage.getItem(cacheKey);
+        if (fallback) {
+            console.warn(`[Offline Fallback] ใช้ข้อมูลเก่าในเครื่องแทนสำหรับ ${action}`);
+            return JSON.parse(fallback);
+        }
+
+        throw error;
     }
 }
 
@@ -167,6 +224,15 @@ async function postData(action, payload, timeoutMs = 120000) {
 
         const data = await response.json();
         console.log(`[API] Result:`, data);
+
+        // เมื่อมีการแก้ไข/บันทึกข้อมูลสำเร็จ ให้ล้างแคช getAllData เพื่อให้ดึงข้อมูลใหม่ที่อัปเดตแล้ว
+        if (data && data.status === 'success') {
+            try {
+                localStorage.removeItem('cache_api_getAllData');
+                localStorage.removeItem('cache_time_getAllData');
+            } catch (e) {}
+        }
+
         return data;
     } catch (err) {
         clearTimeout(timeoutId);
