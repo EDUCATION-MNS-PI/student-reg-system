@@ -140,6 +140,15 @@ pages['student-dashboard'] = function () {
         }
     ];
 
+    // กรองเมนูตามสิทธิ์ที่ตั้งค่าไว้ในระบบ (hasPermission)
+    // หาก Admin ปิดสิทธิ์เมนูใดของนักศึกษา การ์ดเมนูนั้นจะไม่แสดงบนแดชบอร์ด
+    const visibleMenuItems = menuItems.filter(item => {
+        if (typeof window.hasPermission === 'function') {
+            return window.hasPermission('nav-' + item.page);
+        }
+        return true;
+    });
+
     let currentTermCredits = '-';
     if (st.grades && Array.isArray(st.grades)) {
         const targetSemStr = `${MOCK.activeSemester}/${MOCK.activeYear}`;
@@ -533,7 +542,7 @@ pages['student-dashboard'] = function () {
             <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0 0 20px 0;" class="animate-in animate-delay-2">เข้าใช้งานระบบต่าง ๆ ของสถาบันผ่านทางลัดด้านล่าง</p>
             
             <div class="student-grid">
-                ${menuItems.map((item, idx) => `
+                ${visibleMenuItems.map((item, idx) => `
                     <div class="student-menu-card animate-in" style="--menu-accent-color: ${item.gradient.split(',')[1].replace(')', '')}; animation-delay: ${0.1 + idx * 0.03}s;" onclick="navigateTo('${item.page}')">
                         <div class="student-menu-card-header">
                             <div class="student-menu-icon" style="background: ${item.gradient};">

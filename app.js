@@ -58,6 +58,16 @@ document.querySelectorAll('.nav-item').forEach(item => {
 });
 
 function navigateTo(page) {
+    // ป้องกันการเข้าถึงหน้าเมนูโดยตรง หากไม่มีสิทธิ์ (สำหรับนักศึกษา)
+    if (window.currentUserRole === 'student' && typeof window.hasPermission === 'function') {
+        const hasAccess = window.hasPermission('nav-' + page);
+        // หน้าแดชบอร์ดนักศึกษาเปิดได้เสมอ
+        if (!hasAccess && page !== 'student-dashboard') {
+            alert('ขออภัย เมนูนี้อยู่ระหว่างการปรับปรุงระบบหรือท่านไม่มีสิทธิ์เข้าใช้งาน');
+            return;
+        }
+    }
+
     currentPage = page;
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     const activeNav = document.querySelector(`[data-page="${page}"]`);
