@@ -773,7 +773,14 @@ async function bootApp() {
                 syncActiveStudentData();
             }
         }
-        if (allData.permissions && allData.permissions.length > 0) { MOCK.permissions = allData.permissions; }
+        if (allData.permissions && allData.permissions.length > 0) { 
+            MOCK.permissions = allData.permissions; 
+        }
+
+        // อัปเดตการแสดงผลเมนูแถบซ้าย (Sidebar) ให้ตรงกับสิทธิ์ที่เพิ่งดึงมาล่าสุด
+        if (window.currentUserRole && typeof applyRolePermissions === 'function') {
+            applyRolePermissions(window.currentUserRole);
+        }
 
         // Set sync flags to prevent redundant per-page syncs
         MOCK.adminDocsSyncDone = true;
