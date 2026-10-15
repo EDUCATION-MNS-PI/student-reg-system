@@ -126,6 +126,8 @@ function renderStudentExams(st) {
             </div>
         `).join('');
 
+        const guideId = `guide-body-${typeIdx}`;
+
         cardsHtml += `
             <div class="card animate-in" id="exam-card-${typeIdx}" style="margin-bottom:30px; animation-delay: ${typeIdx * 0.1}s">
                 <div class="card-header" style="display:flex; justify-content:space-between; align-items:center;">
@@ -137,11 +139,14 @@ function renderStudentExams(st) {
                 </div>
                 <div class="card-body">
                     <div class="mechanism-box">
-                        <div class="mechanism-header">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-                            กลไกและขั้นตอนการดำเนินการ (Preparation Guide)
+                        <div class="mechanism-header" onclick="toggleGuide('${guideId}')" style="cursor:pointer; display:flex; justify-content:space-between; align-items:center; user-select:none;">
+                            <div style="display:flex; align-items:center; gap:6px;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                                กลไกและขั้นตอนการดำเนินการ (Preparation Guide)
+                            </div>
+                            <svg id="icon-${guideId}" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transition:transform 0.25s ease; flex-shrink:0;"><polyline points="18 15 12 9 6 15"/></svg>
                         </div>
-                        <div class="mechanism-body">
+                        <div class="mechanism-body" id="${guideId}">
                             ${mechanismHtml}
                         </div>
                     </div>
@@ -554,3 +559,39 @@ function parseCSV(text) {
     }
     return result;
 }
+
+/**
+ * ซ่อน/ขยาย ส่วน Preparation Guide ของแต่ละการสอบ
+ */
+window.toggleGuide = function(guideId) {
+    const body = document.getElementById(guideId);
+    const icon = document.getElementById('icon-' + guideId);
+    if (!body) return;
+
+    const isOpen = body.style.display !== 'none';
+    if (isOpen) {
+        // ซ่อน
+        body.style.maxHeight = body.scrollHeight + 'px';
+        body.style.overflow = 'hidden';
+        body.style.transition = 'max-height 0.3s ease, opacity 0.3s ease';
+        requestAnimationFrame(() => {
+            body.style.maxHeight = '0';
+            body.style.opacity = '0';
+        });
+        setTimeout(() => { body.style.display = 'none'; }, 310);
+        if (icon) icon.style.transform = 'rotate(180deg)';
+    } else {
+        // ขยาย
+        body.style.display = '';
+        body.style.maxHeight = '0';
+        body.style.opacity = '0';
+        body.style.overflow = 'hidden';
+        body.style.transition = 'max-height 0.3s ease, opacity 0.3s ease';
+        requestAnimationFrame(() => {
+            body.style.maxHeight = body.scrollHeight + 'px';
+            body.style.opacity = '1';
+        });
+        setTimeout(() => { body.style.maxHeight = ''; body.style.overflow = ''; }, 310);
+        if (icon) icon.style.transform = 'rotate(0deg)';
+    }
+};
